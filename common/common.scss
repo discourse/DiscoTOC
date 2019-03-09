@@ -1,0 +1,198 @@
+@import "common/foundation/variables";
+
+.d-toc-regular {
+  .cooked {
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      &:before {
+        display: block;
+        content: "";
+        height: 70px;
+        margin-top: -70px;
+        opacity: 0;
+      }
+    }
+  }
+  .d-toc-ignore {
+    font-size: $font-up-1;
+    margin: 0 0 10px 0;
+    font-weight: bold;
+  }
+  .highlighted {
+    animation: fadein 1s;
+  }
+  .d-toc {
+    transform: translate3d(0, 0, 0);
+    transition: opacity 0.25s;
+    ul,
+    li {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      border: none;
+      line-height: 30px;
+    }
+    .d-toc-item {
+      a {
+        color: $primary-high;
+      }
+      &.d-toc-active {
+        position: relative;
+        &:before {
+          border-left: 1px solid $tertiary;
+          height: 100%;
+          content: "";
+          width: 1px;
+          position: absolute;
+          top: 0;
+        }
+        a {
+          color: $primary;
+          text-shadow: 0.1px 0.1px currentColor, -0.1px -0.1px currentColor;
+        }
+      }
+    }
+    .d-toc-heading {
+      padding-left: 10px;
+      .d-toc-active:before {
+        left: -10px;
+      }
+    }
+    .d-toc-subheading {
+      padding-left: 20px;
+      .d-toc-active:before {
+        left: -30px;
+      }
+      .d-toc-subheading {
+        padding-left: 30px;
+        .d-toc-active:before {
+          left: -60px;
+        }
+        .d-toc-subheading {
+          padding-left: 40px;
+          .d-toc-active:before {
+            left: -70px;
+          }
+          .d-toc-subheading {
+            padding-left: 50px;
+            .d-toc-active:before {
+              left: -80px;
+            }
+          }
+        }
+      }
+    }
+    .d-toc-subheading li {
+      font-size: 12px;
+    }
+  }
+  .d-toc-anchor-link {
+    margin-left: 5px;
+    font-size: initial;
+    color: $primary-medium;
+  }
+}
+
+// large screens
+@media screen and (min-width: $large-width) {
+  .d-toc-toggle,
+  .d-toc-close-wrapper,
+  .d-toc-subheading {
+    display: none;
+  }
+  .d-toc-post {
+    .topic-body {
+      border-top: none;
+    }
+    .d-toc {
+      max-height: 85vh;
+      padding-left: 0;
+      margin-left: 0;
+      margin-top: 50px;
+      margin-left: -1px;
+      position: sticky;
+      top: 75px;
+      margin-bottom: 135px;
+      max-width: 350px;
+      overflow-y: auto;
+      overflow-x: hidden;
+      align-self: flex-start;
+      flex: 1 1 auto;
+    }
+    .d-toc-article {
+      display: flex;
+      > .row {
+        border-right: 1px solid $primary-low;
+      }
+    }
+    #topic-title {
+      margin-bottom: 0;
+      .title-wrapper {
+        border-bottom: 1px solid $primary-low;
+        padding-bottom: 0.5em;
+        width: auto;
+      }
+    }
+  }
+}
+
+// small screens
+@media screen and (max-width: $large-width) {
+  .d-toc-regular {
+    #d-toc {
+      z-index: z("header") + 1;
+      background: $secondary;
+      position: fixed;
+      right: 0;
+      top: 0;
+      margin-left: -1px;
+      height: 100vh;
+      width: 100vw;
+      max-width: 500px;
+      overflow: scroll;
+      transition: transform 0.5s, opacity 0.25s;
+      transform: translatex(100%);
+      opacity: 0;
+      &.d-toc-mobile {
+        transform: translatex(0);
+        opacity: 1;
+      }
+      .d-toc-active {
+        &:before {
+          margin-left: -1px;
+        }
+      }
+    }
+    .d-toc-close-wrapper {
+      height: 3em;
+      background: $secondary;
+      padding-right: 1em;
+      margin-bottom: 1em;
+      position: sticky;
+      top: 0;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+    }
+    .d-toc-toggle {
+      position: fixed;
+      bottom: 5px;
+      right: 16px;
+      padding: 0.5em 1em;
+      background: $tertiary;
+      color: $secondary;
+      z-index: 3;
+    }
+    #d-toc > ul {
+      margin-left: 20px;
+      border-left: 1px solid $primary-low;
+      &:last-child {
+        margin-bottom: 5em;
+      }
+    }
+  }
+}
