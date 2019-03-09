@@ -203,9 +203,10 @@
   }
 }
 
-.d-editor-preview [data-theme-toc] {
+.topic .d-editor-preview [data-theme-toc] {
   background: $tertiary;
   color: $secondary;
+  border-top: 2px solid $secondary;
   position: sticky;
   top: 0;
   height: 30px;
