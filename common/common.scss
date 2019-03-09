@@ -149,14 +149,14 @@
     }
   }
   .d-toc-anchor-link {
+    font-size: initial;
+    color: $primary-medium;
     .ltr & {
       margin-left: 5px;
     }
     .rtl & {
       margin-right: 5px;
     }
-    font-size: initial;
-    color: $primary-medium;
   }
 }
 
@@ -178,12 +178,7 @@
       max-height: 85vh;
       padding-left: 0;
       margin-top: 50px;
-      .ltr & {
-        margin-left: -1px;
-      }
-      .rtl & {
-        margin-right: -1px;
-      }
+
       position: sticky;
       top: 75px;
       margin-bottom: 135px;
@@ -192,6 +187,12 @@
       overflow-x: hidden;
       align-self: flex-start;
       flex: 1 1 auto;
+      .ltr & {
+        margin-left: -1px;
+      }
+      .rtl & {
+        margin-right: -1px;
+      }
     }
     .d-toc-article {
       display: flex;
@@ -224,7 +225,7 @@
       position: fixed;
       right: 0;
       top: 0;
-      margin-left: -1px;
+
       height: 100vh;
       width: 100vw;
       max-width: 500px;
@@ -232,6 +233,12 @@
       transition: transform 0.5s, opacity 0.25s;
       transform: translatex(100%);
       opacity: 0;
+      .ltr & {
+        margin-left: -1px;
+      }
+      .rtl & {
+        margin-right: -1px;
+      }
       &.d-toc-mobile {
         transform: translatex(0);
         opacity: 1;
@@ -251,32 +258,33 @@
       height: 3em;
       background: $secondary;
 
-      .ltr & {
-        padding-right: 1em;
-      }
-      .rtl & {
-        padding-left: 1em;
-      }
       margin-bottom: 1em;
       position: sticky;
       top: 0;
       display: flex;
       align-items: center;
       justify-content: flex-end;
+      .ltr & {
+        padding-right: 1em;
+      }
+      .rtl & {
+        padding-left: 1em;
+      }
     }
     .d-toc-toggle {
       position: fixed;
       bottom: 5px;
+
+      padding: 0.5em 1em;
+      background: $tertiary;
+      color: $secondary;
+      z-index: 3;
       .ltr & {
         right: 16px;
       }
       .rtl & {
         left: 16px;
       }
-      padding: 0.5em 1em;
-      background: $tertiary;
-      color: $secondary;
-      z-index: 3;
     }
     #d-toc > ul {
       .ltr & {
