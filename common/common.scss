@@ -46,7 +46,7 @@
       &.d-toc-active {
         position: relative;
         &:before {
-          .ltr & {
+          :not(.rtl) & {
             border-left: 1px solid $tertiary;
           }
           .rtl & {
@@ -65,14 +65,14 @@
       }
     }
     .d-toc-heading {
-      .ltr & {
+      :not(.rtl) & {
         padding-left: 10px;
       }
       .rtl & {
         padding-right: 10px;
       }
       .d-toc-active:before {
-        .ltr & {
+        :not(.rtl) & {
           left: -10px;
         }
         .rtl & {
@@ -81,14 +81,14 @@
       }
     }
     .d-toc-subheading {
-      .ltr & {
+      :not(.rtl) & {
         padding-left: 20px;
       }
       .rtl & {
         padding-right: 20px;
       }
       .d-toc-active:before {
-        .ltr & {
+        :not(.rtl) & {
           left: -30px;
         }
         .rtl & {
@@ -96,14 +96,14 @@
         }
       }
       .d-toc-subheading {
-        .ltr & {
+        :not(.rtl) & {
           padding-left: 30px;
         }
         .rtl & {
           padding-right: 30px;
         }
         .d-toc-active:before {
-          .ltr & {
+          :not(.rtl) & {
             left: -60px;
           }
           .rtl & {
@@ -111,14 +111,14 @@
           }
         }
         .d-toc-subheading {
-          .ltr & {
+          :not(.rtl) & {
             padding-left: 40px;
           }
           .rtl & {
             padding-right: 40px;
           }
           .d-toc-active:before {
-            .ltr & {
+            :not(.rtl) & {
               left: -70px;
             }
             .rtl & {
@@ -126,14 +126,14 @@
             }
           }
           .d-toc-subheading {
-            .ltr & {
+            :not(.rtl) & {
               padding-left: 50px;
             }
             .rtl & {
               padding-right: 50px;
             }
             .d-toc-active:before {
-              .ltr & {
+              :not(.rtl) & {
                 left: -80px;
               }
               .rtl & {
@@ -151,7 +151,7 @@
   .d-toc-anchor-link {
     font-size: initial;
     color: $primary-medium;
-    .ltr & {
+    :not(.rtl) & {
       margin-left: 5px;
     }
     .rtl & {
@@ -187,7 +187,7 @@
       overflow-x: hidden;
       align-self: flex-start;
       flex: 1 1 auto;
-      .ltr & {
+      :not(.rtl) & {
         margin-left: -1px;
       }
       .rtl & {
@@ -197,7 +197,7 @@
     .d-toc-article {
       display: flex;
       > .row {
-        .ltr & {
+        :not(.rtl) & {
           border-right: 1px solid $primary-low;
         }
         .rtl & {
@@ -233,7 +233,7 @@
       transition: transform 0.5s, opacity 0.25s;
       transform: translatex(100%);
       opacity: 0;
-      .ltr & {
+      :not(.rtl) & {
         margin-left: -1px;
       }
       .rtl & {
@@ -245,7 +245,7 @@
       }
       .d-toc-active {
         &:before {
-          .ltr & {
+          :not(.rtl) & {
             margin-left: -1px;
           }
           .rtl & {
@@ -264,7 +264,7 @@
       display: flex;
       align-items: center;
       justify-content: flex-end;
-      .ltr & {
+      :not(.rtl) & {
         padding-right: 1em;
       }
       .rtl & {
@@ -279,7 +279,7 @@
       background: $tertiary;
       color: $secondary;
       z-index: 3;
-      .ltr & {
+      :not(.rtl) & {
         right: 16px;
       }
       .rtl & {
@@ -287,7 +287,7 @@
       }
     }
     #d-toc > ul {
-      .ltr & {
+      :not(.rtl) & {
         margin-left: 20px;
         border-left: 1px solid $primary-low;
       }
