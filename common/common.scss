@@ -17,6 +17,9 @@
       }
     }
   }
+  [data-theme-toc] {
+      display: none;
+  }
   .d-toc-ignore {
     font-size: $font-up-1;
     margin: 0 0 10px 0;
@@ -52,7 +55,7 @@
         }
         a {
           color: $primary;
-          text-shadow: 0.1px 0.1px currentColor, -0.1px -0.1px currentColor;
+          text-shadow: 0.1px 0.1px $primary, -0.1px -0.1px $primary;
         }
       }
     }
@@ -99,7 +102,9 @@
 
 // large screens
 @media screen and (min-width: $large-width) {
-  .d-toc-toggle,
+  .d-toc-toggle {
+    display: none !important;
+  }
   .d-toc-close-wrapper,
   .d-toc-subheading {
     display: none;
@@ -195,4 +200,15 @@
       }
     }
   }
+}
+
+.d-editor-preview [data-theme-toc] {
+  background: $tertiary;
+  color: $secondary;
+  position: sticky;
+  top: 0;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
