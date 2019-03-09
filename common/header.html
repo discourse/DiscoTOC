@@ -313,7 +313,7 @@ api.modifyClass("component:topic-timeline", {
   }
 });
 api.onAppEvent("topic:current-post-changed", post => {
-  if (!$(".d-toc-timeline").length) return;
+  if (!$(".d-toc-regular").length) return;
   if (post.post.post_number === 1) {
     $(".d-toc-timeline").hide();
     $(".d-toc-toggle").fadeIn();
