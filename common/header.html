@@ -267,7 +267,11 @@ I18n.translations[I18n.currentLocale()].js.composer.contains_dtoc = I18n.t(
 $.fn.dtoc = $elem => {
   run.scheduleOnce("sync", () => {
     if ($elem.hasClass("d-editor-preview")) return;
+    if (!$elem.parents("article#post_1").length) return
     const dToc = $elem.find(`[data-theme-toc="true"]`);
+    
+    
+
 
     if (!dToc.length) return this;
 
