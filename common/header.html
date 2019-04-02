@@ -328,7 +328,7 @@ api.addToolbarPopupMenuOptionsCallback(() => {
     action: "insertDtoc",
     icon: "align-left",
     label: themePrefix("insert_table_of_contents"),
-    condition: !composerController.get("model.canCategorize")
+    condition: composerController.get("model.canCategorize")
   };
 });
 api.modifyClass("controller:composer", {
