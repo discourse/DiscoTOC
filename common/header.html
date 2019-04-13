@@ -241,7 +241,7 @@
 
       if (!dToc.length) return this;
       const body = $elem;
-      body.find("div, aside, blockquote, article").each(function() {
+      body.find("div, aside, blockquote, article, details").each(function() {
         $(this)
           .children("h1,h2,h3,h4,h5,h6")
           .each(function() {
@@ -250,6 +250,7 @@
             );
           });
       });
+
       let dTocHeadingSelectors = "h1,h2,h3,h4,h5,h6";
       if (!body.has(">h1").length) {
         dTocHeadingSelectors = "h2,h3,h4,h5,h6";
@@ -266,6 +267,7 @@
           }
         }
       }
+
       body.find(dTocHeadingSelectors).each(function() {
         if ($(this).hasClass("d-toc-ignore")) return;
         let heading = $(this),
@@ -281,6 +283,7 @@
         heading.append(createAnchors(id));
         heading.addClass("d-toc-post-heading");
       });
+
       body
         .addClass("d-toc-cooked")
         .prepend(
@@ -303,10 +306,12 @@
         )
         .parents(".topic-post")
         .addClass("d-toc-post");
+
       $("#d-toc").dToc({
         cooked: body,
         selectors: dTocHeadingSelectors
       });
+
       $(".d-toc-post").on(
         "click.toggleDtoc",
         ".d-toc-toggle, .d-toc-close",
@@ -349,6 +354,7 @@
         condition: composerController.get("model.canCategorize")
       };
     });
+
     api.modifyClass("controller:composer", {
       actions: {
         insertDtoc() {
