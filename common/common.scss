@@ -187,6 +187,12 @@
     }
     .d-toc-article {
       display: flex;
+      .post-notice {
+        display: none;
+      }
+      .topic-map {
+        margin-bottom: 0;
+      }
       > .row {
         :not(.rtl) & {
           border-right: 1px solid $primary-low;
