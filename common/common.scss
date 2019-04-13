@@ -305,4 +305,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  &:before {
+    content: "#{$composer_toc_text}";
+  }
 }
