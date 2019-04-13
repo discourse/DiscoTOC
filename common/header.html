@@ -6,6 +6,9 @@
     closeIcon = iconHTML("times"),
     dtocIcon = iconHTML("align-left"),
     items = [],
+    currUser =  api.getCurrentUser(),
+    currUserTrustLevel =  currUser ? currUser.trust_level : '';
+    minimumTrustLevel = settings.minimum_trust_level_to_create_TOC;
     cleanUp = item => {
       return item
         .trim()
@@ -324,15 +327,17 @@
       $(".d-toc-toggle").fadeOut();
     }
   });
-  api.addToolbarPopupMenuOptionsCallback(() => {
-    composerController = api.container.lookup("controller:composer");
-    return {
-      action: "insertDtoc",
-      icon: "align-left",
-      label: themePrefix("insert_table_of_contents"),
-      condition: composerController.get("model.canCategorize")
-    };
-  });
+  if (currUserTrustLevel >= minimumTrustLevel) {
+   api.addToolbarPopupMenuOptionsCallback(() => {
+     const composerController = api.container.lookup("controller:composer");
+     return {
+       action: "insertDtoc",
+       icon: "align-left",
+       label: themePrefix("insert_table_of_contents"),
+       condition: composerController.get("model.canCategorize")
+     };
+   });
+  }
   api.modifyClass("controller:composer", {
     actions: {
       insertDtoc() {
