@@ -134,14 +134,6 @@
   }
 
   .d-toc-post-heading {
-    &:before {
-      display: block;
-      content: "";
-      height: 70px;
-      margin-top: -70px;
-      pointer-events: none;
-      opacity: 0;
-    }
     .d-toc-anchor-link {
       font-size: initial;
       color: transparent;

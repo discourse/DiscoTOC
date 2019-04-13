@@ -1,6 +1,6 @@
 <script type="text/discourse-plugin" version="0.1">
   const computed = require("ember-addons/ember-computed-decorators").default;
-
+  const minimumOffset = require("discourse/lib/offset-calculator").minimumOffset;
   const mobileView = $("html").hasClass("mobile-view"),
     { iconHTML } = require("discourse-common/lib/icon-library"),
     { run } = Ember,
@@ -136,17 +136,20 @@
         $(window).on("scroll.d-toc", function() {
           if (!dTocTimeout) {
             dTocTimeout = setTimeout(function() {
-              $("html")
+              $("html, body")
                 .promise()
                 .done(function() {
-                  let winScrollTop = $(window).scrollTop(),
-                    elem;
+                  const winScrollTop = $(window).scrollTop();
+
                   let closestAnchorDistance = null,
                     closestAnchorIdx = null,
                     anchors = $(self.options.cooked).find("[data-d-toc]"),
+                    elem,
                     anchorText;
                   anchors.each(function(idx) {
-                    let distance = Math.abs($(this).offset().top - winScrollTop);
+                    let distance = Math.abs(
+                      $(this).offset().top - minimumOffset() - winScrollTop
+                    );
                     if (
                       closestAnchorDistance == null ||
                       distance < closestAnchorDistance
@@ -218,10 +221,11 @@
         $.Widget.prototype._setOptions.apply(this, arguments);
       },
       scrollTo: function(elem) {
-        let currentDiv = $(`[data-d-toc="${elem.attr("data-d-toc")}"]`);
+        const currentDiv = $(`[data-d-toc="${elem.attr("data-d-toc")}"]`);
+
         $("html, body").animate(
           {
-            scrollTop: currentDiv.offset().top + "px"
+            scrollTop: `${currentDiv.offset().top - minimumOffset()}`
           },
           {
             duration: 750
