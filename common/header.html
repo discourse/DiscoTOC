@@ -1,4 +1,6 @@
 <script type="text/discourse-plugin" version="0.1">
+  const computed = require("ember-addons/ember-computed-decorators").default;
+
   const mobileView = $("html").hasClass("mobile-view"),
     { iconHTML } = require("discourse-common/lib/icon-library"),
     { run } = Ember,
@@ -6,9 +8,9 @@
     closeIcon = iconHTML("times"),
     dtocIcon = iconHTML("align-left"),
     items = [],
-    currUser =  api.getCurrentUser(),
-    currUserTrustLevel =  currUser ? currUser.trust_level : '';
-    minimumTrustLevel = settings.minimum_trust_level_to_create_TOC;
+    currUser = api.getCurrentUser(),
+    currUserTrustLevel = currUser ? currUser.trust_level : "",
+    minimumTrustLevel = settings.minimum_trust_level_to_create_TOC,
     cleanUp = item => {
       return item
         .trim()
@@ -29,9 +31,11 @@
     dtocMobile = () => {
       $(".d-toc").toggleClass("d-toc-mobile");
     };
+
   I18n.translations[I18n.currentLocale()].js.composer.contains_dtoc = I18n.t(
     themePrefix("topic_will_contain_a_table_of_contents")
   );
+
   (function(dToc) {
     dToc($, window);
     $.widget("discourse.dToc", {
@@ -226,8 +230,11 @@
       }
     });
   })(() => {});
-  $.fn.dtoc = $elem => {
-    run.scheduleOnce("sync", () => {
+
+  api.decorateCooked($elem => {
+    run.scheduleOnce("afterRender", () => {
+      //console.log($elem);
+
       if ($elem.hasClass("d-editor-preview")) return;
       if (!$elem.parents("article#post_1").length) return;
       const dToc = $elem.find(`[data-theme-toc="true"]`);
@@ -266,20 +273,20 @@
         if (id.length) {
           heading.attr("id", id);
           heading.append(createAnchors(id));
-          heading.addClass('d-toc-post-heading');
+          heading.addClass("d-toc-post-heading");
           return;
         }
         id = cleanUp(heading.text());
         heading.attr("id", id);
         heading.append(createAnchors(id));
-        heading.addClass('d-toc-post-heading');
+        heading.addClass("d-toc-post-heading");
       });
       body
         .addClass("d-toc-cooked")
         .prepend(
           `<span class="d-toc-toggle">
-           ${dtocIcon} ${I18n.t(themePrefix("table_of_contents"))}
-           </span>`
+                ${dtocIcon} ${I18n.t(themePrefix("table_of_contents"))}
+                </span>`
         )
         .parents(".regular")
         .addClass("d-toc-regular")
@@ -287,12 +294,12 @@
         .addClass("d-toc-article")
         .append(
           `<ul id="d-toc">
-             <div class="d-toc-close-wrapper">
-               <div class="d-toc-close">
-                 ${closeIcon}
-               </div>
-             </div>
-           </ul>`
+                  <div class="d-toc-close-wrapper">
+                    <div class="d-toc-close">
+                      ${closeIcon}
+                    </div>
+                  </div>
+                </ul>`
         )
         .parents(".topic-post")
         .addClass("d-toc-post");
@@ -305,49 +312,110 @@
         ".d-toc-toggle, .d-toc-close",
         dtocMobile
       );
+
+      $(".selected-posts")
+        .next()
+        .addClass("d-toc-timeline");
     });
-    $(".selected-posts")
-      .next()
-      .addClass("d-toc-timeline");
-  };
-  api.decorateCooked($elem => $elem.dtoc($elem));
+  });
+
   api.modifyClass("component:topic-timeline", {
     willDestroyElement() {
       $(window).off("scroll.d-toc");
       $(".d-toc-post").off("click.toggleDtoc");
+      $(".d-toc-timeline").removeClass("d-toc-timeline");
     }
   });
+
   api.onAppEvent("topic:current-post-changed", post => {
-    if (!$(".d-toc-regular").length) return;
-    if (post.post.post_number === 1) {
-      $(".d-toc-timeline").hide();
-      $(".d-toc-toggle").fadeIn();
+    if (!$(".d-toc-regular").length) {
+    }
+    if (post.post.post_number <= 2) {
+      $(".d-toc-timeline").fadeOut(150);
+      $(".d-toc-toggle").fadeIn(150);
     } else {
-      $(".d-toc-timeline").fadeIn();
-      $(".d-toc-toggle").fadeOut();
+      $(".d-toc-timeline").fadeIn(150);
+      $(".d-toc-toggle").fadeOut(150);
     }
   });
 
   if (currUserTrustLevel >= minimumTrustLevel) {
-   api.addToolbarPopupMenuOptionsCallback(() => {
-     const composerController = api.container.lookup("controller:composer");
-     return {
-       action: "insertDtoc",
-       icon: "align-left",
-       label: themePrefix("insert_table_of_contents"),
-       condition: composerController.get("model.canCategorize")
-     };
-   });
-   api.modifyClass("controller:composer", {
-     actions: {
-       insertDtoc() {
-         this.get("toolbarEvent").applySurround(
-           `<div data-theme-toc="true">`,
-           `</div>`,
-           "contains_dtoc"
-         );
-       }
-     }
-   });
+    api.addToolbarPopupMenuOptionsCallback(() => {
+      const composerController = api.container.lookup("controller:composer");
+      return {
+        action: "insertDtoc",
+        icon: "align-left",
+        label: themePrefix("insert_table_of_contents"),
+        condition: composerController.get("model.canCategorize")
+      };
+    });
+    api.modifyClass("controller:composer", {
+      actions: {
+        insertDtoc() {
+          this.get("toolbarEvent").applySurround(
+            `<div data-theme-toc="true">`,
+            `</div>`,
+            "contains_dtoc"
+          );
+        }
+      }
+    });
   }
+
+  /* fix the timeline issue
+      api.modifyClass("component:topic-progress", {
+        @computed(
+          "postStream.loaded",
+          "topic.currentPost",
+          "postStream.filteredPostsCount"
+        )
+        hideProgress(loaded, currentPost, filteredPostsCount) {
+         //console.log('hide fires');
+         console.log(isToc);
+         //console.log(this.progressPosition);
+         console.log(this.topic);
+          return (
+            !loaded ||
+            !currentPost ||
+            (!this.site.mobileView && filteredPostsCount < 2)
+          );
+        }
+      });
+
+      api.modifyClass("component:topic-navigation", {
+        _performCheckSize() {
+          if (!this.element || this.isDestroying || this.isDestroyed) {
+            return;
+          }
+          console.log('size check fires');
+
+          let info = this.get("info");
+
+          if (info.get("topicProgressExpanded")) {
+            info.setProperties({
+              renderTimeline: true,
+              renderAdminMenuButton: true
+            });
+          } else {
+            let renderTimeline = this.site.mobileView;
+
+            if (renderTimeline) {
+              const width = $(window).width();
+              let height = $(window).height();
+
+              if (this.get("composerOpen")) {
+                height -= $("#reply-control").height();
+              }
+
+              renderTimeline = width > 924 && height > 520;
+            }
+
+            info.setProperties({
+              renderTimeline,
+              renderAdminMenuButton: !renderTimeline
+            });
+          }
+        }
+      });
+      */
 </script>
