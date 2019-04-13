@@ -2,7 +2,7 @@
   const mobileView = $("html").hasClass("mobile-view"),
     { iconHTML } = require("discourse-common/lib/icon-library"),
     { run } = Ember,
-    linkIcon = iconHTML("link"),
+    linkIcon = iconHTML("hashtag"),
     closeIcon = iconHTML("times"),
     dtocIcon = iconHTML("align-left"),
     items = [],
@@ -263,11 +263,13 @@
         if (id.length) {
           heading.attr("id", id);
           heading.append(createAnchors(id));
+          heading.addClass('d-toc-post-heading');
           return;
         }
         id = cleanUp(heading.text());
         heading.attr("id", id);
         heading.append(createAnchors(id));
+        heading.addClass('d-toc-post-heading');
       });
       body
         .addClass("d-toc-cooked")

@@ -1,23 +1,6 @@
 @import "common/foundation/variables";
 
 .d-toc-regular {
-  .cooked {
-    h1,
-    h2,
-    h3,
-    h4,
-    h5,
-    h6 {
-      &:before {
-        display: block;
-        content: "";
-        height: 70px;
-        margin-top: -70px;
-        pointer-events: none;
-        opacity: 0;
-      }
-    }
-  }
   [data-theme-toc] {
     display: none;
   }
@@ -149,14 +132,29 @@
       font-size: 0.8em;
     }
   }
-  .d-toc-anchor-link {
-    font-size: initial;
-    color: $primary-medium;
-    :not(.rtl) & {
-      margin-left: 5px;
+
+  .d-toc-post-heading {
+    &:before {
+      display: block;
+      content: "";
+      height: 70px;
+      margin-top: -70px;
+      pointer-events: none;
+      opacity: 0;
     }
-    .rtl & {
-      margin-right: 5px;
+    .d-toc-anchor-link {
+      font-size: initial;
+      color: transparent;
+      transition: color 0.15s linear;
+      :not(.rtl) & {
+        margin-left: 5px;
+      }
+      .rtl & {
+        margin-right: 5px;
+      }
+    }
+    &:hover .d-toc-anchor-link {
+      color: rgba($primary-medium, 0.6);
     }
   }
 }
