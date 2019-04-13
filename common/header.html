@@ -316,17 +316,17 @@
         selectors: dTocHeadingSelectors
       });
 
-      $(".d-toc-post").on(
-        "click.toggleDtoc",
-        ".d-toc-toggle, .d-toc-close",
-        dtocMobile
-      );
-
       $(".selected-posts")
         .next()
         .addClass("d-toc-timeline");
     });
   });
+
+  $("#main").on(
+    "click.toggleDtoc",
+    ".d-toc-toggle, .d-toc-close",
+    dtocMobile
+  );
 
   api.modifyClass("component:topic-timeline", {
     willDestroyElement() {
