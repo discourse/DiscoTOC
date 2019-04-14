@@ -132,7 +132,6 @@
       font-size: 0.8em;
     }
   }
-
   .d-toc-post-heading {
     .d-toc-anchor-link {
       font-size: initial;
@@ -296,6 +295,21 @@
       &:last-child {
         margin-bottom: 5em;
       }
+    }
+  }
+}
+
+.d-toc-timeline {
+  .timeline-container,
+  #topic-progress-wrapper {
+    opacity: 0;
+    pointer-events: none;
+  }
+  &.d-toc-timeline-visible {
+    .timeline-container,
+    #topic-progress-wrapper {
+      opacity: 1;
+      pointer-events: initial;
     }
   }
 }
