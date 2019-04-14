@@ -1,8 +1,9 @@
 <script type="text/discourse-plugin" version="0.1">
   const computed = require("ember-addons/ember-computed-decorators").default;
   const minimumOffset = require("discourse/lib/offset-calculator").minimumOffset;
-  const mobileView = $("html").hasClass("mobile-view"),
-    { iconHTML } = require("discourse-common/lib/icon-library"),
+  const mobileView = $("html").hasClass("mobile-view");
+
+   const { iconHTML } = require("discourse-common/lib/icon-library"),
     { run } = Ember,
     linkIcon = iconHTML("hashtag"),
     closeIcon = iconHTML("times"),
@@ -10,8 +11,10 @@
     items = [],
     currUser = api.getCurrentUser(),
     currUserTrustLevel = currUser ? currUser.trust_level : "",
-    minimumTrustLevel = settings.minimum_trust_level_to_create_TOC,
-    cleanUp = item => {
+    minimumTrustLevel = settings.minimum_trust_level_to_create_TOC;
+
+
+   const cleanUp = item => {
       return item
         .trim()
         .toLowerCase()
@@ -32,7 +35,9 @@
       $(".d-toc").toggleClass("d-toc-mobile");
     };
 
-  I18n.translations[I18n.currentLocale()].js.composer.contains_dtoc = '';
+    const SCROLL_THROTTLE = 200;
+
+  I18n.translations[I18n.currentLocale()].js.composer.contains_dtoc = "";
 
   (function(dToc) {
     dToc($, window);
@@ -41,6 +46,7 @@
         this.generateDtoc();
         this.setEventHandlers();
       },
+
       generateDtoc: function() {
         let self = this,
           primaryHeadings = $(this.options.cooked).find(
@@ -67,6 +73,7 @@
             });
         });
       },
+
       nestElements: function(self, index) {
         let unique = self.attr("id"),
           text = self.text(),
@@ -86,6 +93,7 @@
         self.attr({ "data-d-toc": unique });
         return item;
       },
+
       subheadings: function(self, ul) {
         let index = $(this).index(self.options.selectors),
           previousHeader = $(self.options.selectors).eq(index - 1),
@@ -115,111 +123,105 @@
             .append(self.nestElements($(this), index));
         }
       },
+
       setEventHandlers: function() {
-        let self = this,
-          scrollThrottle = mobileView ? 10 : 50,
-          dTocTimeout;
+        const self = this;
+
         this.element.on("click.d-toc", "li", function() {
           self.element.find(".d-toc-active").removeClass("d-toc-active");
           $(this).addClass("d-toc-active");
           if (!mobileView) {
             let elem = $(`li[data-d-toc="${$(this).attr("data-d-toc")}"]`);
-            self.triggerShow(elem);
+            self.triggerShowHide(elem);
           }
           self.scrollTo($(this));
           if (mobileView) {
             $("#d-toc").removeClass("d-toc-mobile");
           }
         });
-        $(window).on("scroll.d-toc", function() {
-          if (!dTocTimeout) {
-            dTocTimeout = setTimeout(function() {
-              $("html, body")
-                .promise()
-                .done(function() {
-                  const winScrollTop = $(window).scrollTop();
 
-                  let closestAnchorDistance = null,
-                    closestAnchorIdx = null,
-                    anchors = $(self.options.cooked).find("[data-d-toc]"),
-                    elem,
-                    anchorText;
-                  anchors.each(function(idx) {
-                    let distance = Math.abs(
-                      $(this).offset().top - minimumOffset() - winScrollTop
-                    );
-                    if (
-                      closestAnchorDistance == null ||
-                      distance < closestAnchorDistance
-                    ) {
-                      closestAnchorDistance = distance;
-                      closestAnchorIdx = idx;
-                    } else {
-                      return false;
-                    }
-                  });
-                  anchorText = $(anchors[closestAnchorIdx]).attr("data-d-toc");
-                  elem = $(`li[data-d-toc="${anchorText}"]`);
-                  if (elem.length) {
-                    self.element
-                      .find(".d-toc-active")
-                      .removeClass("d-toc-active");
-                    elem.addClass("d-toc-active");
-                  }
-                  self.triggerShow(elem, true);
-                });
-              dTocTimeout = null;
-            }, scrollThrottle);
-          }
-        });
+        const onScroll = () => {
+          run.throttle(this, self.highlightItems, self, SCROLL_THROTTLE);
+        };
+
+        $(window).on("scroll.d-toc", onScroll);
       },
+
+      highlightItems: self => {
+        $("html")
+          .promise()
+          .done(function() {
+            const winScrollTop = $(window).scrollTop();
+
+            let closestAnchorDistance = null,
+              closestAnchorIdx = null,
+              anchors = $(self.options.cooked).find("[data-d-toc]"),
+              elem,
+              anchorText;
+            anchors.each(function(idx) {
+              let distance = Math.abs(
+                $(this).offset().top - minimumOffset() - winScrollTop
+              );
+              if (
+                closestAnchorDistance == null ||
+                distance < closestAnchorDistance
+              ) {
+                closestAnchorDistance = distance;
+                closestAnchorIdx = idx;
+              } else {
+                return false;
+              }
+            });
+            anchorText = $(anchors[closestAnchorIdx]).attr("data-d-toc");
+            elem = $(`li[data-d-toc="${anchorText}"]`);
+            if (elem.length) {
+              self.element.find(".d-toc-active").removeClass("d-toc-active");
+              elem.addClass("d-toc-active");
+            }
+            if (!mobileView) {
+              self.triggerShowHide(elem);
+            }
+          });
+      },
+
+      showHide: function(elem) {
+        return elem.is(":visible") ? this.hide(elem) : this.show(elem);
+      },
+
+      hide: function(elem) {
+        $(".d-toc-subheading")
+          .not(elem)
+          .not(elem.parent(".d-toc-subheading:has(.d-toc-active)"))
+          .slideUp("fast");
+      },
+
       show: function(elem) {
-        if (!elem.is(":visible")) {
-          if (
-            !elem.find(".d-toc-subheading").length &&
-            !elem.parent().is(".d-toc-heading") &&
-            !elem.parent().is(":visible")
-          ) {
-            elem = elem.parents(".d-toc-subheading").add(elem);
-          } else if (
-            !elem.children(".d-toc-subheading").length &&
-            !elem.parent().is(".d-toc-heading")
-          ) {
-            elem = elem.closest(".d-toc-subheading");
-          }
-          elem.slideDown("medium");
-        }
-        if (!mobileView) {
-          if (elem.parent().is(".d-toc-heading")) {
-            $(".d-toc-subheading")
-              .not(elem)
-              .slideUp("medium");
-            $(".d-toc-subheading")
-              .not(
-                elem
-                  .closest(".d-toc-heading")
-                  .find(".d-toc-subheading")
-                  .not(elem.siblings())
-              )
-              .slideUp("medium");
-          }
-        }
+        elem.slideDown("fast");
       },
-      triggerShow: function(elem, scroll) {
+
+      triggerShowHide: function(elem, scroll) {
         if (
           elem.parent().is(".d-toc-heading") ||
           elem.next().is(".d-toc-subheading")
         ) {
-          this.show(elem.next(".d-toc-subheading"), scroll);
+          this.showHide(elem.next(".d-toc-subheading"), scroll);
         } else if (elem.parent().is(".d-toc-subheading")) {
-          this.show(elem.parent(), scroll);
+          this.showHide(elem.parent(), scroll);
         }
       },
+
       setOptions: function() {
         $.Widget.prototype._setOptions.apply(this, arguments);
       },
+
       scrollTo: function(elem) {
         const currentDiv = $(`[data-d-toc="${elem.attr("data-d-toc")}"]`);
+
+        $("html")
+          .promise()
+          .done(() => {
+            this.triggerShowHide(currentDiv);
+          });
 
         $("html, body").animate(
           {
@@ -235,10 +237,10 @@
 
   api.decorateCooked($elem => {
     run.scheduleOnce("afterRender", () => {
-      //console.log($elem);
 
       if ($elem.hasClass("d-editor-preview")) return;
       if (!$elem.parents("article#post_1").length) return;
+
       const dToc = $elem.find(`[data-theme-toc="true"]`);
 
       if (!dToc.length) return this;
@@ -307,43 +309,40 @@
                 </ul>`
         )
         .parents(".topic-post")
-        .addClass("d-toc-post");
+        .addClass("d-toc-post")
+        .parents("body")
+        .addClass("d-toc-timeline");
 
       $("#d-toc").dToc({
         cooked: body,
         selectors: dTocHeadingSelectors
       });
 
-      $(".selected-posts")
-        .next()
-        .addClass("d-toc-timeline");
+      $("#main").on(
+        "click.toggleDtoc",
+        ".d-toc-toggle, .d-toc-close",
+        dtocMobile
+      );
     });
   });
 
-  $("#main").on(
-    "click.toggleDtoc",
-    ".d-toc-toggle, .d-toc-close",
-    dtocMobile
-  );
-
-  api.modifyClass("component:topic-timeline", {
-    willDestroyElement() {
-      $(window).off("scroll.d-toc");
-      $(".d-toc-post").off("click.toggleDtoc");
-      $(".d-toc-timeline").removeClass("d-toc-timeline");
-    }
+  api.cleanupStream(() => {
+    $(window).off("scroll.d-toc");
+    $("#main").off("click.toggleDtoc");
+    $(".d-toc-timeline").removeClass("d-toc-timeline d-toc-timeline-visible");
   });
 
   api.onAppEvent("topic:current-post-changed", post => {
-    if (!$(".d-toc-regular").length) {
-    }
-    if (post.post.post_number <= 2) {
-      $(".d-toc-timeline").fadeOut(150);
-      $(".d-toc-toggle").fadeIn(150);
-    } else {
-      $(".d-toc-timeline").fadeIn(150);
-      $(".d-toc-toggle").fadeOut(150);
-    }
+    if (!$(".d-toc-timeline").length) return;
+    run.scheduleOnce("afterRender", () => {
+      if (post.post.post_number <= 2) {
+        $("body").removeClass("d-toc-timeline-visible");
+        $(".d-toc-toggle").fadeIn(100);
+      } else {
+        $("body").addClass("d-toc-timeline-visible");
+        $(".d-toc-toggle").fadeOut(100);
+      }
+    });
   });
 
   if (currUserTrustLevel >= minimumTrustLevel) {
