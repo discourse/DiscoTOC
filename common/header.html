@@ -1,345 +1,391 @@
 <script type="text/discourse-plugin" version="0.1">
-const mobileView = $("html").hasClass("mobile-view"),
-  { iconHTML } = require("discourse-common/lib/icon-library"),
-  { run } = Ember,
-  linkIcon = iconHTML("link"),
-  closeIcon = iconHTML("times"),
-  dtocIcon = iconHTML("align-left"),
-  items = [],
-  cleanUp = item => {
-    return item
+  const computed = require("ember-addons/ember-computed-decorators").default;
+  const minimumOffset = require("discourse/lib/offset-calculator").minimumOffset;
+  const { iconHTML } = require("discourse-common/lib/icon-library");
+  const { run } = Ember;
+
+  const mobileView = $("html").hasClass("mobile-view");
+  const isSafari = !!navigator.userAgent.match(/Version\/[\d\.]+.*Safari/);
+  const scrollElemnt = isSafari ? "body" : "html";
+
+  const linkIcon = iconHTML("hashtag");
+  const closeIcon = iconHTML("times");
+  const dtocIcon = iconHTML("align-left");
+  const currUser = api.getCurrentUser();
+  const currUserTrustLevel = currUser ? currUser.trust_level : "";
+  const minimumTrustLevel = settings.minimum_trust_level_to_create_TOC;
+
+  const SCROLL_THROTTLE = 300;
+  const SMOOTH_SCROLL_SPEED = 300;
+  const TOC_ANIMATION_SPEED = 300;
+
+  const cleanUp = item => {
+    const cleanItem = item
       .trim()
       .toLowerCase()
       .replace(/[^\w]+/g, "-")
       .replace(/^\-/, "")
       .replace(/\-$/, "")
       .replace(/\-\-+/g, "-");
-  },
-  createAnchors = id => {
-    let link = $("<a/>", {
+
+    return cleanItem;
+  };
+
+  const createAnchors = id => {
+    const link = $("<a/>", {
       href: `#${id}`,
       class: "d-toc-anchor-link",
       html: linkIcon
     });
+
     return link;
-  },
-  dtocMobile = () => {
-    $(".d-toc").toggleClass("d-toc-mobile");
   };
-I18n.translations[I18n.currentLocale()].js.composer.contains_dtoc = I18n.t(
-  themePrefix("topic_will_contain_a_table_of_contents")
-);
-(function(dToc) {
-  dToc($, window);
-  $.widget("discourse.dToc", {
-    _create: function() {
-      this.generateDtoc();
-      this.setEventHandlers();
-    },
-    generateDtoc: function() {
-      let self = this,
-        primaryHeadings = $(this.options.cooked).find(
+
+  const setUpTocItem = function(item) {
+    const unique = item.attr("id");
+    const text = item.text();
+
+    item.attr({ "data-d-toc": unique });
+
+    const tocItem = $("<li/>", {
+      class: "d-toc-item",
+      "data-d-toc": unique
+    });
+
+    tocItem.append(
+      $("<a/>", {
+        text: text
+      })
+    );
+
+    return tocItem;
+  };
+
+  (function(dToc) {
+    dToc($, window);
+    $.widget("discourse.dToc", {
+      _create: function() {
+        this.generateDtoc();
+        this.setEventHandlers();
+      },
+
+      generateDtoc: function() {
+        const self = this;
+
+        const primaryHeadings = $(this.options.cooked).find(
           this.options.selectors.substr(0, this.options.selectors.indexOf(","))
         );
-      self.element.addClass("d-toc");
-      primaryHeadings.each(function(index) {
-        let selectors = self.options.selectors,
-          ul = $("<ul/>", {
-            id: `d-toc-top-heading-${index}`,
-            class: "d-toc-heading"
-          });
-        ul.append(self.nestElements($(this), index));
-        self.element.append(ul);
-        $(this)
-          .nextUntil(this.nodeName.toLowerCase())
-          .each(function() {
-            headings = $(this).find(selectors).length
-              ? $(this).find(selectors)
-              : $(this).filter(selectors);
-            headings.each(function() {
-              self.subheadings.call(this, self, ul);
-            });
-          });
-      });
-    },
-    nestElements: function(self, index) {
-      let unique = self.attr("id"),
-        text = self.text(),
-        arr,
-        item;
-      arr = $.grep(items, i => i === text);
-      items.push(text);
-      item = $("<li/>", {
-        class: "d-toc-item",
-        "data-d-toc": unique
-      });
-      item.append(
-        $("<a/>", {
-          text: text
-        })
-      );
-      self.attr({ "data-d-toc": unique });
-      return item;
-    },
-    subheadings: function(self, ul) {
-      let index = $(this).index(self.options.selectors),
-        previousHeader = $(self.options.selectors).eq(index - 1),
-        currentTagName = +$(this)
-          .prop("tagName")
-          .charAt(1),
-        previousTagName = +previousHeader.prop("tagName").charAt(1);
-      if (currentTagName < previousTagName) {
-        self.element
-          .find(`.d-toc-subheading[data-tag="${currentTagName}"]`)
-          .last()
-          .append(self.nestElements($(this), index));
-      } else if (currentTagName === previousTagName) {
-        ul.find(".d-toc-item")
-          .last()
-          .after(self.nestElements($(this), index));
-      } else {
-        ul.find(".d-toc-item")
-          .last()
-          .after(
-            $("<ul/>", {
-              class: "d-toc-subheading",
-              "data-tag": currentTagName
-            })
-          )
-          .next(".d-toc-subheading")
-          .append(self.nestElements($(this), index));
-      }
-    },
-    setEventHandlers: function() {
-      let self = this,
-        scrollThrottle = mobileView ? 10 : 50,
-        dTocTimeout;
-      this.element.on("click.d-toc", "li", function() {
-        self.element.find(".d-toc-active").removeClass("d-toc-active");
-        $(this).addClass("d-toc-active");
-        if (!mobileView) {
-          let elem = $(`li[data-d-toc="${$(this).attr("data-d-toc")}"]`);
-          self.triggerShow(elem);
-        }
-        self.scrollTo($(this));
-        if (mobileView) {
-          $("#d-toc").removeClass("d-toc-mobile");
-        }
-      });
-      $(window).on("scroll.d-toc", function() {
-        if (!dTocTimeout) {
-          dTocTimeout = setTimeout(function() {
-            $("html")
-              .promise()
-              .done(function() {
-                let winScrollTop = $(window).scrollTop(),
-                  elem;
-                let closestAnchorDistance = null,
-                  closestAnchorIdx = null,
-                  anchors = $(self.options.cooked).find("[data-d-toc]"),
-                  anchorText;
-                anchors.each(function(idx) {
-                  let distance = Math.abs($(this).offset().top - winScrollTop);
-                  if (
-                    closestAnchorDistance == null ||
-                    distance < closestAnchorDistance
-                  ) {
-                    closestAnchorDistance = distance;
-                    closestAnchorIdx = idx;
-                  } else {
-                    return false;
-                  }
-                });
-                anchorText = $(anchors[closestAnchorIdx]).attr("data-d-toc");
-                elem = $(`li[data-d-toc="${anchorText}"]`);
-                if (elem.length) {
-                  self.element
-                    .find(".d-toc-active")
-                    .removeClass("d-toc-active");
-                  elem.addClass("d-toc-active");
-                }
-                self.triggerShow(elem, true);
-              });
-            dTocTimeout = null;
-          }, scrollThrottle);
-        }
-      });
-    },
-    show: function(elem) {
-      if (!elem.is(":visible")) {
-        if (
-          !elem.find(".d-toc-subheading").length &&
-          !elem.parent().is(".d-toc-heading") &&
-          !elem.parent().is(":visible")
-        ) {
-          elem = elem.parents(".d-toc-subheading").add(elem);
-        } else if (
-          !elem.children(".d-toc-subheading").length &&
-          !elem.parent().is(".d-toc-heading")
-        ) {
-          elem = elem.closest(".d-toc-subheading");
-        }
-        elem.slideDown("medium");
-      }
-      if (!mobileView) {
-        if (elem.parent().is(".d-toc-heading")) {
-          $(".d-toc-subheading")
-            .not(elem)
-            .slideUp("medium");
-          $(".d-toc-subheading")
-            .not(
-              elem
-                .closest(".d-toc-heading")
-                .find(".d-toc-subheading")
-                .not(elem.siblings())
-            )
-            .slideUp("medium");
-        }
-      }
-    },
-    triggerShow: function(elem, scroll) {
-      if (
-        elem.parent().is(".d-toc-heading") ||
-        elem.next().is(".d-toc-subheading")
-      ) {
-        this.show(elem.next(".d-toc-subheading"), scroll);
-      } else if (elem.parent().is(".d-toc-subheading")) {
-        this.show(elem.parent(), scroll);
-      }
-    },
-    setOptions: function() {
-      $.Widget.prototype._setOptions.apply(this, arguments);
-    },
-    scrollTo: function(elem) {
-      let currentDiv = $(`[data-d-toc="${elem.attr("data-d-toc")}"]`);
-      $("html").animate(
-        {
-          scrollTop: currentDiv.offset().top + "px"
-        },
-        {
-          duration: 750
-        }
-      );
-    }
-  });
-})(() => {});
-$.fn.dtoc = $elem => {
-  run.scheduleOnce("sync", () => {
-    if ($elem.hasClass("d-editor-preview")) return;
-    if (!$elem.parents("article#post_1").length) return;
-    const dToc = $elem.find(`[data-theme-toc="true"]`);
 
-    if (!dToc.length) return this;
-    const body = $elem;
-    body.find("div, aside, blockquote, article").each(function() {
-      $(this)
-        .children("h1,h2,h3,h4,h5,h6")
-        .each(function() {
-          $(this).replaceWith(
-            `<div class="d-toc-ignore">${$(this).html()}</div>`
-          );
+        self.element.addClass("d-toc");
+
+        primaryHeadings.each(function(index) {
+          const selectors = self.options.selectors,
+            ul = $("<ul/>", {
+              id: `d-toc-top-heading-${index}`,
+              class: "d-toc-heading"
+            });
+
+          ul.append(setUpTocItem($(this)));
+          self.element.append(ul);
+
+          $(this)
+            .nextUntil(this.nodeName.toLowerCase())
+            .each(function() {
+              const headings = $(this).find(selectors).length
+                ? $(this).find(selectors)
+                : $(this).filter(selectors);
+
+              headings.each(function() {
+                self.nestTocItem.call(this, self, ul);
+              });
+            });
         });
+      },
+
+      nestTocItem: function(self, ul) {
+        const index = $(this).index(self.options.selectors);
+        const previousHeader = $(self.options.selectors).eq(index - 1);
+        const previousTagName = previousHeader.prop("tagName").charAt(1);
+
+        const currentTagName = $(this)
+          .prop("tagName")
+          .charAt(1);
+
+        if (currentTagName < previousTagName) {
+          self.element
+            .find(`.d-toc-subheading[data-tag="${currentTagName}"]`)
+            .last()
+            .append(setUpTocItem($(this)));
+        } else if (currentTagName === previousTagName) {
+          ul.find(".d-toc-item")
+            .last()
+            .after(setUpTocItem($(this)));
+        } else {
+          ul.find(".d-toc-item")
+            .last()
+            .after(
+              $("<ul/>", {
+                class: "d-toc-subheading",
+                "data-tag": currentTagName
+              })
+            )
+            .next(".d-toc-subheading")
+            .append(setUpTocItem($(this)));
+        }
+      },
+
+      setEventHandlers: function() {
+        const self = this;
+
+        const dtocMobile = () => {
+          $(".d-toc").toggleClass("d-toc-mobile");
+        };
+
+        this.element.on("click.d-toc", "li", function() {
+          self.element.find(".d-toc-active").removeClass("d-toc-active");
+          $(this).addClass("d-toc-active");
+          if (mobileView) {
+            dtocMobile();
+          } else {
+            let elem = $(`li[data-d-toc="${$(this).attr("data-d-toc")}"]`);
+            self.triggerShowHide(elem);
+          }
+
+          self.scrollTo($(this));
+        });
+
+        $("#main").on(
+          "click.toggleDtoc",
+          ".d-toc-toggle, .d-toc-close",
+          dtocMobile
+        );
+
+        const onScroll = () => {
+          run.throttle(this, self.highlightItemsOnScroll, self, SCROLL_THROTTLE);
+        };
+
+        $(window).on("scroll.d-toc", onScroll);
+      },
+
+      highlightItemsOnScroll: self => {
+        $(scrollElemnt)
+          .promise()
+          .done(function() {
+            const winScrollTop = $(window).scrollTop();
+            const anchors = $(self.options.cooked).find("[data-d-toc]");
+
+            let closestAnchorDistance = null;
+            let closestAnchorIdx = null;
+
+            anchors.each(function(idx) {
+              const distance = Math.abs(
+                $(this).offset().top - minimumOffset() - winScrollTop
+              );
+              if (
+                closestAnchorDistance == null ||
+                distance < closestAnchorDistance
+              ) {
+                closestAnchorDistance = distance;
+                closestAnchorIdx = idx;
+              } else {
+                return false;
+              }
+            });
+
+            const anchorText = $(anchors[closestAnchorIdx]).attr("data-d-toc");
+            const elem = $(`li[data-d-toc="${anchorText}"]`);
+
+            if (elem.length) {
+              self.element.find(".d-toc-active").removeClass("d-toc-active");
+              elem.addClass("d-toc-active");
+            }
+
+            if (!mobileView) {
+              self.triggerShowHide(elem);
+            }
+          });
+      },
+
+      triggerShowHide: function(elem) {
+        if (
+          elem.parent().is(".d-toc-heading") ||
+          elem.next().is(".d-toc-subheading")
+        ) {
+          this.showHide(elem.next(".d-toc-subheading"));
+        } else if (elem.parent().is(".d-toc-subheading")) {
+          this.showHide(elem.parent());
+        }
+      },
+
+      showHide: function(elem) {
+        return elem.is(":visible") ? this.hide(elem) : this.show(elem);
+      },
+
+      hide: function(elem) {
+        const target = $(".d-toc-subheading")
+          .not(elem)
+          .not(elem.parent(".d-toc-subheading:has(.d-toc-active)"));
+
+        return isSafari
+          ? target.fadeOut(TOC_ANIMATION_SPEED)
+          : target.slideUp(TOC_ANIMATION_SPEED);
+      },
+
+      show: function(elem) {
+        return isSafari
+          ? elem.fadeIn(TOC_ANIMATION_SPEED)
+          : elem.slideDown(TOC_ANIMATION_SPEED);
+      },
+
+      scrollTo: function(elem) {
+        const currentDiv = $(`[data-d-toc="${elem.attr("data-d-toc")}"]`);
+
+        $(scrollElemnt).animate(
+          {
+            scrollTop: `${currentDiv.offset().top - minimumOffset()}`
+          },
+          {
+            duration: SMOOTH_SCROLL_SPEED
+          }
+        );
+      },
+
+      setOptions: () => {
+        $.Widget.prototype._setOptions.apply(this, arguments);
+      }
     });
-    let dTocHeadingSelectors = "h1,h2,h3,h4,h5,h6";
-    if (!body.has(">h1").length) {
-      dTocHeadingSelectors = "h2,h3,h4,h5,h6";
-      if (!body.has(">h2").length) {
-        dTocHeadingSelectors = "h3,h4,h5,h6";
-        if (!body.has(">h3").length) {
-          dTocHeadingSelectors = "h4,h5,h6";
-          if (!body.has(">h4").length) {
-            dTocHeadingSelectors = "h5,h6";
-            if (!body.has(">h5").length) {
-              dTocHeadingSelectors = "h6";
+  })(() => {});
+
+  api.decorateCooked($elem => {
+    run.scheduleOnce("afterRender", () => {
+      if ($elem.hasClass("d-editor-preview")) return;
+      if (!$elem.parents("article#post_1").length) return;
+
+      const dToc = $elem.find(`[data-theme-toc="true"]`);
+
+      if (!dToc.length) return this;
+      const body = $elem;
+      body.find("div, aside, blockquote, article, details").each(function() {
+        $(this)
+          .children("h1,h2,h3,h4,h5,h6")
+          .each(function() {
+            $(this).replaceWith(
+              `<div class="d-toc-ignore">${$(this).html()}</div>`
+            );
+          });
+      });
+
+      let dTocHeadingSelectors = "h1,h2,h3,h4,h5,h6";
+      if (!body.has(">h1").length) {
+        dTocHeadingSelectors = "h2,h3,h4,h5,h6";
+        if (!body.has(">h2").length) {
+          dTocHeadingSelectors = "h3,h4,h5,h6";
+          if (!body.has(">h3").length) {
+            dTocHeadingSelectors = "h4,h5,h6";
+            if (!body.has(">h4").length) {
+              dTocHeadingSelectors = "h5,h6";
+              if (!body.has(">h5").length) {
+                dTocHeadingSelectors = "h6";
+              }
             }
           }
         }
       }
-    }
-    body.find(dTocHeadingSelectors).each(function() {
-      if ($(this).hasClass("d-toc-ignore")) return;
-      let heading = $(this),
-        id = heading.attr("id") || "";
-      if (id.length) {
-        heading.attr("id", id);
-        heading.append(createAnchors(id));
-        return;
-      }
-      id = cleanUp(heading.text());
-      heading.attr("id", id);
-      heading.append(createAnchors(id));
+
+      body.find(dTocHeadingSelectors).each(function() {
+        if ($(this).hasClass("d-toc-ignore")) return;
+        const heading = $(this);
+
+        let id = heading.attr("id") || "";
+
+        if (id.length) {
+          heading
+            .attr("id", id)
+            .append(createAnchors(id))
+            .addClass("d-toc-post-heading");
+        } else {
+          id = cleanUp(heading.text());
+          heading
+            .attr("id", id)
+            .append(createAnchors(id))
+            .addClass("d-toc-post-heading");
+        }
+      });
+
+      body
+        .addClass("d-toc-cooked")
+        .prepend(
+          `<span class="d-toc-toggle">
+                ${dtocIcon} ${I18n.t(themePrefix("table_of_contents"))}
+                </span>`
+        )
+        .parents(".regular")
+        .addClass("d-toc-regular")
+        .parents("article")
+        .addClass("d-toc-article")
+        .append(
+          `<ul id="d-toc">
+                  <div class="d-toc-close-wrapper">
+                    <div class="d-toc-close">
+                      ${closeIcon}
+                    </div>
+                  </div>
+                </ul>`
+        )
+        .parents(".topic-post")
+        .addClass("d-toc-post")
+        .parents("body")
+        .addClass("d-toc-timeline");
+
+      $("#d-toc").dToc({
+        cooked: body,
+        selectors: dTocHeadingSelectors
+      });
     });
-    body
-      .addClass("d-toc-cooked")
-      .prepend(
-        `<span class="d-toc-toggle">
-         ${dtocIcon} ${I18n.t(themePrefix("table_of_contents"))}
-         </span>`
-      )
-      .parents(".regular")
-      .addClass("d-toc-regular")
-      .parents("article")
-      .addClass("d-toc-article")
-      .append(
-        `<ul id="d-toc">
-           <div class="d-toc-close-wrapper">
-             <div class="d-toc-close">
-               ${closeIcon}
-             </div>
-           </div>
-         </ul>`
-      )
-      .parents(".topic-post")
-      .addClass("d-toc-post");
-    $("#d-toc").dToc({
-      cooked: body,
-      selectors: dTocHeadingSelectors
-    });
-    $(".d-toc-post").on(
-      "click.toggleDtoc",
-      ".d-toc-toggle, .d-toc-close",
-      dtocMobile
-    );
   });
-  $(".selected-posts")
-    .next()
-    .addClass("d-toc-timeline");
-};
-api.decorateCooked($elem => $elem.dtoc($elem));
-api.modifyClass("component:topic-timeline", {
-  willDestroyElement() {
+
+  api.cleanupStream(() => {
     $(window).off("scroll.d-toc");
-    $(".d-toc-post").off("click.toggleDtoc");
+    $("#main").off("click.toggleDtoc");
+    $(".d-toc-timeline").removeClass("d-toc-timeline d-toc-timeline-visible");
+  });
+
+  api.onAppEvent("topic:current-post-changed", post => {
+    if (!$(".d-toc-timeline").length) return;
+    run.scheduleOnce("afterRender", () => {
+      if (post.post.post_number <= 2) {
+        $("body").removeClass("d-toc-timeline-visible");
+        $(".d-toc-toggle").fadeIn(100);
+      } else {
+        $("body").addClass("d-toc-timeline-visible");
+        $(".d-toc-toggle").fadeOut(100);
+      }
+    });
+  });
+
+  if (currUserTrustLevel >= minimumTrustLevel) {
+    I18n.translations[I18n.currentLocale()].js.composer.contains_dtoc = "";
+
+    api.addToolbarPopupMenuOptionsCallback(() => {
+      const composerController = api.container.lookup("controller:composer");
+      return {
+        action: "insertDtoc",
+        icon: "align-left",
+        label: themePrefix("insert_table_of_contents"),
+        condition: composerController.get("model.canCategorize")
+      };
+    });
+
+    api.modifyClass("controller:composer", {
+      actions: {
+        insertDtoc() {
+          this.get("toolbarEvent").applySurround(
+            `<div data-theme-toc="true">`,
+            `</div>`,
+            "contains_dtoc"
+          );
+        }
+      }
+    });
   }
-});
-api.onAppEvent("topic:current-post-changed", post => {
-  if (!$(".d-toc-regular").length) return;
-  if (post.post.post_number === 1) {
-    $(".d-toc-timeline").hide();
-    $(".d-toc-toggle").fadeIn();
-  } else {
-    $(".d-toc-timeline").fadeIn();
-    $(".d-toc-toggle").fadeOut();
-  }
-});
-api.addToolbarPopupMenuOptionsCallback(() => {
-  composerController = api.container.lookup("controller:composer");
-  return {
-    action: "insertDtoc",
-    icon: "align-left",
-    label: themePrefix("insert_table_of_contents"),
-    condition: composerController.get("model.canCategorize")
-  };
-});
-api.modifyClass("controller:composer", {
-  actions: {
-    insertDtoc() {
-      this.get("toolbarEvent").applySurround(
-        `<div data-theme-toc="true">`,
-        `</div>`,
-        "contains_dtoc"
-      );
-    }
-  }
-});
 </script>

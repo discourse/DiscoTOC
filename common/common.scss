@@ -1,23 +1,6 @@
 @import "common/foundation/variables";
 
 .d-toc-regular {
-  .cooked {
-    h1,
-    h2,
-    h3,
-    h4,
-    h5,
-    h6 {
-      &:before {
-        display: block;
-        content: "";
-        height: 70px;
-        margin-top: -70px;
-        pointer-events: none;
-        opacity: 0;
-      }
-    }
-  }
   [data-theme-toc] {
     display: none;
   }
@@ -38,9 +21,9 @@
       margin: 0;
       padding: 0;
       border: none;
-      line-height: 30px;
     }
     .d-toc-item {
+      padding: 6px 0;
       a {
         color: $primary-high;
       }
@@ -149,14 +132,20 @@
       font-size: 0.8em;
     }
   }
-  .d-toc-anchor-link {
-    font-size: initial;
-    color: $primary-medium;
-    :not(.rtl) & {
-      margin-left: 5px;
+  .d-toc-post-heading {
+    .d-toc-anchor-link {
+      font-size: initial;
+      color: transparent;
+      transition: color 0.15s linear;
+      :not(.rtl) & {
+        margin-left: 5px;
+      }
+      .rtl & {
+        margin-right: 5px;
+      }
     }
-    .rtl & {
-      margin-right: 5px;
+    &:hover .d-toc-anchor-link {
+      color: rgba($primary-medium, 0.6);
     }
   }
 }
@@ -179,7 +168,7 @@
       max-height: 85vh;
       padding-left: 0;
       margin-top: 50px;
-
+      position: -webkit-sticky;
       position: sticky;
       top: 75px;
       margin-bottom: 135px;
@@ -197,6 +186,12 @@
     }
     .d-toc-article {
       display: flex;
+      .post-notice {
+        display: none;
+      }
+      .topic-map {
+        margin-bottom: 0;
+      }
       > .row {
         :not(.rtl) & {
           border-right: 1px solid $primary-low;
@@ -260,6 +255,7 @@
       background: $secondary;
 
       margin-bottom: 1em;
+      position: -webkit-sticky;
       position: sticky;
       top: 0;
       display: flex;
@@ -303,14 +299,33 @@
   }
 }
 
+.d-toc-timeline {
+  .timeline-container,
+  #topic-progress-wrapper {
+    opacity: 0;
+    pointer-events: none;
+  }
+  &.d-toc-timeline-visible {
+    .timeline-container,
+    #topic-progress-wrapper {
+      opacity: 1;
+      pointer-events: initial;
+    }
+  }
+}
+
 .edit-title .d-editor-preview [data-theme-toc] {
   background: $tertiary;
   color: $secondary;
   border-top: 2px solid $secondary;
+  position: -webkit-sticky;
   position: sticky;
   top: 0;
   height: 30px;
   display: flex;
   align-items: center;
   justify-content: center;
+  &:before {
+    content: "#{$composer_toc_text}";
+  }
 }
