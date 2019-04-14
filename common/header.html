@@ -364,9 +364,6 @@
   });
 
   if (currUserTrustLevel >= minimumTrustLevel) {
-    // We need this to add an empty string when composer button is used.
-    // The actual text prompt is added with CSS so that it doesn't leak into stuff
-    // like emails
     I18n.translations[I18n.currentLocale()].js.composer.contains_dtoc = "";
 
     api.addToolbarPopupMenuOptionsCallback(() => {
@@ -391,61 +388,4 @@
       }
     });
   }
-
-  /* fix the timeline issue
-      api.modifyClass("component:topic-progress", {
-        @computed(
-          "postStream.loaded",
-          "topic.currentPost",
-          "postStream.filteredPostsCount"
-        )
-        hideProgress(loaded, currentPost, filteredPostsCount) {
-         //console.log('hide fires');
-         console.log(isToc);
-         //console.log(this.progressPosition);
-         console.log(this.topic);
-          return (
-            !loaded ||
-            !currentPost ||
-            (!this.site.mobileView && filteredPostsCount < 2)
-          );
-        }
-      });
-
-      api.modifyClass("component:topic-navigation", {
-        _performCheckSize() {
-          if (!this.element || this.isDestroying || this.isDestroyed) {
-            return;
-          }
-          console.log('size check fires');
-
-          let info = this.get("info");
-
-          if (info.get("topicProgressExpanded")) {
-            info.setProperties({
-              renderTimeline: true,
-              renderAdminMenuButton: true
-            });
-          } else {
-            let renderTimeline = this.site.mobileView;
-
-            if (renderTimeline) {
-              const width = $(window).width();
-              let height = $(window).height();
-
-              if (this.get("composerOpen")) {
-                height -= $("#reply-control").height();
-              }
-
-              renderTimeline = width > 924 && height > 520;
-            }
-
-            info.setProperties({
-              renderTimeline,
-              renderAdminMenuButton: !renderTimeline
-            });
-          }
-        }
-      });
-      */
 </script>
