@@ -304,6 +304,7 @@
   #topic-progress-wrapper {
     opacity: 0;
     pointer-events: none;
+    transition: opacity 0.25s;
   }
   &.d-toc-timeline-visible {
     .timeline-container,
