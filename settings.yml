@@ -1,5 +1,5 @@
 minimum_trust_level_to_create_TOC:
-  default: 1
+  default: 0
   type: enum
   choices:
     - 0
