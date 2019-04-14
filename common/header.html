@@ -5,6 +5,9 @@
   const { run } = Ember;
 
   const mobileView = $("html").hasClass("mobile-view");
+  const isSafari = !!navigator.userAgent.match(/Version\/[\d\.]+.*Safari/);
+  const scrollElemnt = isSafari ? "body" : "html";
+
   const linkIcon = iconHTML("hashtag");
   const closeIcon = iconHTML("times");
   const dtocIcon = iconHTML("align-left");
@@ -12,8 +15,9 @@
   const currUserTrustLevel = currUser ? currUser.trust_level : "";
   const minimumTrustLevel = settings.minimum_trust_level_to_create_TOC;
 
-  const SCROLL_THROTTLE = 200;
-  const SMOOTH_SCROLL_SPEED = 750;
+  const SCROLL_THROTTLE = 300;
+  const SMOOTH_SCROLL_SPEED = 300;
+  const TOC_ANIMATION_SPEED = 300;
 
   const cleanUp = item => {
     const cleanItem = item
@@ -164,7 +168,7 @@
       },
 
       highlightItemsOnScroll: self => {
-        $("html")
+        $(scrollElemnt)
           .promise()
           .done(function() {
             const winScrollTop = $(window).scrollTop();
@@ -218,24 +222,25 @@
       },
 
       hide: function(elem) {
-        $(".d-toc-subheading")
+        const target = $(".d-toc-subheading")
           .not(elem)
-          .not(elem.parent(".d-toc-subheading:has(.d-toc-active)"))
-          .slideUp("fast");
+          .not(elem.parent(".d-toc-subheading:has(.d-toc-active)"));
+
+        return isSafari
+          ? target.fadeOut(TOC_ANIMATION_SPEED)
+          : target.slideUp(TOC_ANIMATION_SPEED);
       },
 
       show: function(elem) {
-        elem.slideDown("fast");
+        return isSafari
+          ? elem.fadeIn(TOC_ANIMATION_SPEED)
+          : elem.slideDown(TOC_ANIMATION_SPEED);
       },
 
       scrollTo: function(elem) {
         const currentDiv = $(`[data-d-toc="${elem.attr("data-d-toc")}"]`);
 
-        if (!mobileView) {
-          this.triggerShowHide(currentDiv);
-        }
-
-        $("html, body").animate(
+        $(scrollElemnt).animate(
           {
             scrollTop: `${currentDiv.offset().top - minimumOffset()}`
           },
