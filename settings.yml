@@ -1,12 +1,11 @@
 minimum_trust_level_to_create_TOC:
-  default: "0"
+  default: 0
   type: enum
   choices:
-    - "0"
-    - "1"
-    - "2"
-    - "3"
-    - "4"
+    - 1
+    - 2
+    - 3
+    - 4
   description:
     en: "The minimum trust level a user must have in order to see the TOC button in the composer"
 composer_toc_text:
