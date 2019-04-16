@@ -257,7 +257,7 @@
   })(() => {});
 
   api.decorateCooked($elem => {
-    run.scheduleOnce("afterRender", () => {
+    run.scheduleOnce("actions", () => {
       if ($elem.hasClass("d-editor-preview")) return;
       if (!$elem.parents("article#post_1").length) return;
 
