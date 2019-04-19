@@ -23,10 +23,13 @@
     const cleanItem = item
       .trim()
       .toLowerCase()
-      .replace(/[^\w]+/g, "-")
+      .replace(
+        /[\{\}\[\]\\\/\<\>\(\)\|\+\?\*\^\'\`\'\"\.\_\d\s~!@#$%&,;:=]/gi,
+        "-"
+      )
+      .replace(/\-\-+/g, "-")
       .replace(/^\-/, "")
-      .replace(/\-$/, "")
-      .replace(/\-\-+/g, "-");
+      .replace(/\-$/, "");
 
     return cleanItem;
   };
@@ -44,8 +47,6 @@
   const setUpTocItem = function(item) {
     const unique = item.attr("id");
     const text = item.text();
-
-    item.attr({ "data-d-toc": unique });
 
     const tocItem = $("<li/>", {
       class: "d-toc-item",
@@ -298,18 +299,17 @@
 
         let id = heading.attr("id") || "";
 
-        if (id.length) {
-          heading
-            .attr("id", id)
-            .append(createAnchors(id))
-            .addClass("d-toc-post-heading");
-        } else {
+        if (!id.length) {
           id = cleanUp(heading.text());
-          heading
-            .attr("id", id)
-            .append(createAnchors(id))
-            .addClass("d-toc-post-heading");
         }
+
+        heading
+          .attr({
+            id: id,
+            "data-d-toc": id
+          })
+          .append(createAnchors(id))
+          .addClass("d-toc-post-heading");
       });
 
       body
