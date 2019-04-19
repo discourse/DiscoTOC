@@ -23,10 +23,10 @@
     const cleanItem = item
       .trim()
       .toLowerCase()
-      .replace(/[^\w]+/g, "-")
+      .replace(/[\{\}\[\]\\\/\<\>\(\)\|\+\?\*\^\'\`\'\"\.\_\d\s~!@#$%&,;:=]/gi, "-")
+      .replace(/\-\-+/g, "-")
       .replace(/^\-/, "")
       .replace(/\-$/, "")
-      .replace(/\-\-+/g, "-");
 
     return cleanItem;
   };
