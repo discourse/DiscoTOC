@@ -364,7 +364,11 @@
   });
 
   if (currUserTrustLevel >= minimumTrustLevel) {
-    I18n.translations[I18n.currentLocale()].js.composer.contains_dtoc = "";
+    if (!I18n.translations[I18n.currentLocale()].js.composer) {
+      I18n.translations[I18n.currentLocale()].js.composer = {};
+    }
+    I18n.translations[I18n.currentLocale()].js.composer.contains_dtoc = " ";
+
 
     api.addToolbarPopupMenuOptionsCallback(() => {
       const composerController = api.container.lookup("controller:composer");
