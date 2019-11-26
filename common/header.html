@@ -5,7 +5,6 @@
   const { run } = Ember;
 
   const mobileView = $("html").hasClass("mobile-view");
-  const scrollElemnt = 'html, body';
 
   const linkIcon = iconHTML("hashtag");
   const closeIcon = iconHTML("times");
@@ -168,7 +167,7 @@
       },
 
       highlightItemsOnScroll: self => {
-        $(scrollElemnt)
+        $('html, body')
           .promise()
           .done(function() {
             const winScrollTop = $(window).scrollTop();
