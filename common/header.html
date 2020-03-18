@@ -32,11 +32,27 @@
     return cleanItem;
   };
 
+  //see https://stackoverflow.com/questions/22581345/click-button-copy-to-clipboard-using-jquery/30905277#30905277
+  const copyToClipboard = text => {
+    var $temp = $("<input>");
+    $("body").append($temp);
+    $temp.val(text).select();
+    document.execCommand("copy");
+    $temp.remove();
+  }
+  
   const createAnchors = id => {
+    const href = `#${id}`;
     const link = $("<a/>", {
-      href: `#${id}`,
+      href,
       class: "d-toc-anchor-link",
-      html: linkIcon
+      html: linkIcon,
+      on: {
+        click: function(event) {
+          const url=`${window.location.origin}${window.location.pathname}${href}`;
+          copyToClipboard(url);
+        }
+      }
     });
 
     return link;
