@@ -276,11 +276,15 @@
       background: $tertiary;
       color: $secondary;
       z-index: 3;
+      margin-bottom: env(safe-area-inset-bottom);
       :not(.rtl) & {
         right: 16px;
       }
       .rtl & {
         left: 16px;
+      }
+      body.footer-nav-visible & {
+        bottom: 49px;
       }
     }
     #d-toc > ul {
