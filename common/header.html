@@ -1,12 +1,11 @@
-<script type="text/discourse-plugin"
-        version="0.1">
+<script type="text/discourse-plugin" version="0.1">
   const minimumOffset = require("discourse/lib/offset-calculator").minimumOffset;
   const { iconHTML } = require("discourse-common/lib/icon-library");
   const { run } = Ember;
 
   const mobileView = $("html").hasClass("mobile-view");
 
-  const linkIcon = iconHTML("hashtag");
+  const linkIcon = iconHTML(settings.anchor_icon);
   const closeIcon = iconHTML("times");
   const dtocIcon = iconHTML("align-left");
   const currUser = api.getCurrentUser();
@@ -223,7 +222,7 @@
       hide: function(elem) {
         const target = $(".d-toc-subheading")
           .not(elem)
-          .not(elem.parent(".d-toc-subheading:has(.d-toc-active)"));
+          .not(elem.parents(".d-toc-subheading:has(.d-toc-active)"));
 
         return target.slideUp(TOC_ANIMATION_SPEED);
       },
