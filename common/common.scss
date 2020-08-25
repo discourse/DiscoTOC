@@ -25,16 +25,16 @@
     .d-toc-item {
       padding: 6px 0;
       a {
-        color: $primary-high;
+        color: var(--primary-high, $primary-high);
       }
       &.d-toc-active {
         position: relative;
         &:before {
           :not(.rtl) & {
-            border-left: 1px solid $tertiary;
+            border-left: 1px solid var(--tertiary, $tertiary);
           }
           .rtl & {
-            border-right: 1px solid $tertiary;
+            border-right: 1px solid var(--tertiary, $tertiary);
           }
           height: 100%;
           content: "";
@@ -43,8 +43,9 @@
           top: 0;
         }
         a {
-          color: $primary;
-          text-shadow: 0.1px 0.1px $primary, -0.1px -0.1px $primary;
+          color: var(--primary, $primary);
+          text-shadow: 0.1px 0.1px var(--primary, $primary),
+            -0.1px -0.1px var(--primary, $primary);
         }
       }
     }
@@ -145,7 +146,8 @@
       }
     }
     &:hover .d-toc-anchor-link {
-      color: rgba($primary-medium, 0.6);
+      color: var(--primary-medium, $primary-medium);
+      opacity: 0.6;
     }
   }
 }
@@ -194,17 +196,17 @@
       }
       > .row {
         :not(.rtl) & {
-          border-right: 1px solid $primary-low;
+          border-right: 1px solid var(--primary-low, $primary-low);
         }
         .rtl & {
-          border-left: 1px solid $primary-low;
+          border-left: 1px solid var(--primary-low, $primary-low);
         }
       }
     }
     #topic-title {
       margin-bottom: 0;
       .title-wrapper {
-        border-bottom: 1px solid $primary-low;
+        border-bottom: 1px solid var(--primary-low, $primary-low);
         padding-bottom: 0.5em;
         width: auto;
       }
@@ -217,7 +219,7 @@
   .d-toc-regular {
     #d-toc {
       z-index: z("header") + 1;
-      background: $secondary;
+      background: var(--secondary, $secondary);
       position: fixed;
       right: 0;
       top: 0;
@@ -252,7 +254,7 @@
     }
     .d-toc-close-wrapper {
       height: 3em;
-      background: $secondary;
+      background: var(--secondary, $secondary);
 
       margin-bottom: 1em;
       position: -webkit-sticky;
@@ -273,8 +275,8 @@
       bottom: 5px;
 
       padding: 0.5em 1em;
-      background: $tertiary;
-      color: $secondary;
+      background: var(--tertiary, $tertiary);
+      color: var(--secondary, $secondary);
       z-index: 3;
       margin-bottom: env(safe-area-inset-bottom);
       :not(.rtl) & {
@@ -290,11 +292,11 @@
     #d-toc > ul {
       :not(.rtl) & {
         margin-left: 20px;
-        border-left: 1px solid $primary-low;
+        border-left: 1px solid var(--primary-low, $primary-low);
       }
       .rtl & {
         margin-right: 20px;
-        border-right: 1px solid $primary-low;
+        border-right: 1px solid var(--primary-low, $primary-low);
       }
       &:last-child {
         margin-bottom: 5em;
@@ -320,9 +322,9 @@
 }
 
 .edit-title .d-editor-preview [data-theme-toc] {
-  background: $tertiary;
-  color: $secondary;
-  border-top: 2px solid $secondary;
+  background: var(--tertiary, $tertiary);
+  color: var(--secondary, $secondary);
+  border-top: 2px solid var(--secondary, $secondary);
   position: -webkit-sticky;
   position: sticky;
   top: 0;
