@@ -1,6 +1,6 @@
 {
   "name": "DiscoTOC",
-  "about_url": "",
+  "about_url": "https://meta.discourse.org/t/discotoc-automatic-table-of-contents/111143",
   "component": true,
-  "license_url": "https://github.com/discourse/DiscoTOC/blob/master/LICENSE"
+  "license_url": "https://github.com/discourse/DiscoTOC/blob/main/LICENSE"
 }
