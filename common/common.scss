@@ -180,6 +180,7 @@
       overflow-x: hidden;
       align-self: flex-start;
       flex: 1 1 auto;
+      width: 250px;
       :not(.rtl) & {
         margin-left: -1px;
       }
