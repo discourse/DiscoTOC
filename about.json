@@ -2,5 +2,8 @@
   "name": "DiscoTOC",
   "about_url": "https://meta.discourse.org/t/discotoc-automatic-table-of-contents/111143",
   "component": true,
-  "license_url": "https://github.com/discourse/DiscoTOC/blob/main/LICENSE"
+  "license_url": "https://github.com/discourse/DiscoTOC/blob/main/LICENSE",
+  "assets": {
+    "icons-sprite": "/assets/sprite.svg"
+  }
 }
