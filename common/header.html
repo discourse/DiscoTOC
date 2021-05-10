@@ -152,7 +152,7 @@
 
         $("#main").on(
           "click.toggleDtoc",
-          ".d-toc-toggle, .d-toc-close",
+          ".d-toc-toggle, .d-toc-close, .post-bottom-wrapper a",
           dtocMobile
         );
 
@@ -310,8 +310,8 @@
           .addClass("d-toc-cooked")
           .prepend(
             `<span class="d-toc-toggle">
-                    ${dtocIcon} ${I18n.t(themePrefix("table_of_contents"))}
-                    </span>`
+                      ${dtocIcon} ${I18n.t(themePrefix("table_of_contents"))}
+                      </span>`
           )
           .parents(".regular")
           .addClass("d-toc-regular")
@@ -319,20 +319,25 @@
           .addClass("d-toc-article")
           .append(
             `<div class="d-toc-main">
-                <div class="post-bottom-wrapper">
-                  <a href="#bottom-anchor" title="${I18n.t(
-                    themePrefix("post_bottom_tooltip")
-                  )}">${iconHTML("bottom")}</a>
-                  </div>
-                  <ul id="d-toc">
-                        <div class="d-toc-close-wrapper">
-                          <div class="d-toc-close">
-                            ${closeIcon}
+                  <div class="post-bottom-wrapper dekstop">
+                    <a href="#bottom-anchor" title="${I18n.t(
+                      themePrefix("post_bottom_tooltip")
+                    )}">${iconHTML("bottom")}</a>
+                    </div>
+                    <ul id="d-toc">
+                          <div class="d-toc-close-wrapper mobile">
+                            <div class="post-bottom-wrapper">
+                              <a href="#bottom-anchor" title="${I18n.t(
+                                themePrefix("post_bottom_tooltip")
+                              )}">${iconHTML("bottom")}</a>
+                              </div>
+                            <div class="d-toc-close">
+                              ${closeIcon}
+                            </div>
                           </div>
-                        </div>
-                      </ul>
-                </div>
-            `
+                        </ul>
+                  </div>
+              `
           )
 
           .parents(".topic-post")
