@@ -41,7 +41,7 @@
     return link;
   };
 
-  const setUpTocItem = function(item) {
+  const setUpTocItem = function (item) {
     const unique = item.attr("id");
     const text = item.text();
 
@@ -59,15 +59,15 @@
     return tocItem;
   };
 
-  (function(dToc) {
+  (function (dToc) {
     dToc($, window);
     $.widget("discourse.dToc", {
-      _create: function() {
+      _create: function () {
         this.generateDtoc();
         this.setEventHandlers();
       },
 
-      generateDtoc: function() {
+      generateDtoc: function () {
         const self = this;
 
         const primaryHeadings = $(this.options.cooked).find(
@@ -76,7 +76,7 @@
 
         self.element.addClass("d-toc");
 
-        primaryHeadings.each(function(index) {
+        primaryHeadings.each(function (index) {
           const selectors = self.options.selectors,
             ul = $("<ul/>", {
               id: `d-toc-top-heading-${index}`,
@@ -88,26 +88,24 @@
 
           $(this)
             .nextUntil(this.nodeName.toLowerCase())
-            .each(function() {
+            .each(function () {
               const headings = $(this).find(selectors).length
                 ? $(this).find(selectors)
                 : $(this).filter(selectors);
 
-              headings.each(function() {
+              headings.each(function () {
                 self.nestTocItem.call(this, self, ul);
               });
             });
         });
       },
 
-      nestTocItem: function(self, ul) {
+      nestTocItem: function (self, ul) {
         const index = $(this).index(self.options.selectors);
         const previousHeader = $(self.options.selectors).eq(index - 1);
         const previousTagName = previousHeader.prop("tagName").charAt(1);
 
-        const currentTagName = $(this)
-          .prop("tagName")
-          .charAt(1);
+        const currentTagName = $(this).prop("tagName").charAt(1);
 
         if (currentTagName < previousTagName) {
           self.element
@@ -132,14 +130,14 @@
         }
       },
 
-      setEventHandlers: function() {
+      setEventHandlers: function () {
         const self = this;
 
         const dtocMobile = () => {
           $(".d-toc").toggleClass("d-toc-mobile");
         };
 
-        this.element.on("click.d-toc", "li", function() {
+        this.element.on("click.d-toc", "li", function () {
           self.element.find(".d-toc-active").removeClass("d-toc-active");
           $(this).addClass("d-toc-active");
           if (mobileView) {
@@ -166,16 +164,16 @@
       },
 
       highlightItemsOnScroll: self => {
-        $('html, body')
+        $("html, body")
           .promise()
-          .done(function() {
+          .done(function () {
             const winScrollTop = $(window).scrollTop();
             const anchors = $(self.options.cooked).find("[data-d-toc]");
 
             let closestAnchorDistance = null;
             let closestAnchorIdx = null;
 
-            anchors.each(function(idx) {
+            anchors.each(function (idx) {
               const distance = Math.abs(
                 $(this).offset().top - minimumOffset() - winScrollTop
               );
@@ -204,7 +202,7 @@
           });
       },
 
-      triggerShowHide: function(elem) {
+      triggerShowHide: function (elem) {
         if (
           elem.parent().is(".d-toc-heading") ||
           elem.next().is(".d-toc-subheading")
@@ -215,11 +213,11 @@
         }
       },
 
-      showHide: function(elem) {
+      showHide: function (elem) {
         return elem.is(":visible") ? this.hide(elem) : this.show(elem);
       },
 
-      hide: function(elem) {
+      hide: function (elem) {
         const target = $(".d-toc-subheading")
           .not(elem)
           .not(elem.parents(".d-toc-subheading:has(.d-toc-active)"));
@@ -227,14 +225,14 @@
         return target.slideUp(TOC_ANIMATION_SPEED);
       },
 
-      show: function(elem) {
+      show: function (elem) {
         return elem.slideDown(TOC_ANIMATION_SPEED);
       },
 
-      scrollTo: function(elem) {
+      scrollTo: function (elem) {
         const currentDiv = $(`[data-d-toc="${elem.attr("data-d-toc")}"]`);
 
-        $('html, body').animate(
+        $("html, body").animate(
           {
             scrollTop: `${currentDiv.offset().top - minimumOffset()}`
           },
@@ -250,92 +248,95 @@
     });
   })(() => {});
 
-  api.decorateCooked($elem => {
-    run.scheduleOnce("actions", () => {
-      if ($elem.hasClass("d-editor-preview")) return;
-      if (!$elem.parents("article#post_1").length) return;
+  api.decorateCooked(
+    $elem => {
+      run.scheduleOnce("actions", () => {
+        if ($elem.hasClass("d-editor-preview")) return;
+        if (!$elem.parents("article#post_1").length) return;
 
-      const dToc = $elem.find(`[data-theme-toc="true"]`);
+        const dToc = $elem.find(`[data-theme-toc="true"]`);
 
-      if (!dToc.length) return this;
-      const body = $elem;
-      body.find("div, aside, blockquote, article, details").each(function() {
-        $(this)
-          .children("h1,h2,h3,h4,h5,h6")
-          .each(function() {
-            $(this).replaceWith(
-              `<div class="d-toc-ignore">${$(this).html()}</div>`
-            );
-          });
-      });
+        if (!dToc.length) return this;
+        const body = $elem;
+        body.find("div, aside, blockquote, article, details").each(function () {
+          $(this)
+            .children("h1,h2,h3,h4,h5,h6")
+            .each(function () {
+              $(this).replaceWith(
+                `<div class="d-toc-ignore">${$(this).html()}</div>`
+              );
+            });
+        });
 
-      let dTocHeadingSelectors = "h1,h2,h3,h4,h5,h6";
-      if (!body.has(">h1").length) {
-        dTocHeadingSelectors = "h2,h3,h4,h5,h6";
-        if (!body.has(">h2").length) {
-          dTocHeadingSelectors = "h3,h4,h5,h6";
-          if (!body.has(">h3").length) {
-            dTocHeadingSelectors = "h4,h5,h6";
-            if (!body.has(">h4").length) {
-              dTocHeadingSelectors = "h5,h6";
-              if (!body.has(">h5").length) {
-                dTocHeadingSelectors = "h6";
+        let dTocHeadingSelectors = "h1,h2,h3,h4,h5,h6";
+        if (!body.has(">h1").length) {
+          dTocHeadingSelectors = "h2,h3,h4,h5,h6";
+          if (!body.has(">h2").length) {
+            dTocHeadingSelectors = "h3,h4,h5,h6";
+            if (!body.has(">h3").length) {
+              dTocHeadingSelectors = "h4,h5,h6";
+              if (!body.has(">h4").length) {
+                dTocHeadingSelectors = "h5,h6";
+                if (!body.has(">h5").length) {
+                  dTocHeadingSelectors = "h6";
+                }
               }
             }
           }
         }
-      }
 
-      body.find(dTocHeadingSelectors).each(function() {
-        if ($(this).hasClass("d-toc-ignore")) return;
-        const heading = $(this);
+        body.find(dTocHeadingSelectors).each(function () {
+          if ($(this).hasClass("d-toc-ignore")) return;
+          const heading = $(this);
 
-        let id = heading.attr("id") || "";
+          let id = heading.attr("id") || "";
 
-        if (!id.length) {
-          id = cleanUp(heading.text());
-        }
+          if (!id.length) {
+            id = cleanUp(heading.text());
+          }
 
-        heading
-          .attr({
-            id: id,
-            "data-d-toc": id
-          })
-          .append(createAnchors(id))
-          .addClass("d-toc-post-heading");
-      });
+          heading
+            .attr({
+              id: id,
+              "data-d-toc": id
+            })
+            .append(createAnchors(id))
+            .addClass("d-toc-post-heading");
+        });
 
-      body
-        .addClass("d-toc-cooked")
-        .prepend(
-          `<span class="d-toc-toggle">
-                ${dtocIcon} ${I18n.t(themePrefix("table_of_contents"))}
-                </span>`
-        )
-        .parents(".regular")
-        .addClass("d-toc-regular")
-        .parents("article")
-        .addClass("d-toc-article")
-        .append(
-          `<ul id="d-toc">
-                  <div class="d-toc-close-wrapper">
-                    <div class="d-toc-close">
-                      ${closeIcon}
+        body
+          .addClass("d-toc-cooked")
+          .prepend(
+            `<span class="d-toc-toggle">
+                  ${dtocIcon} ${I18n.t(themePrefix("table_of_contents"))}
+                  </span>`
+          )
+          .parents(".regular")
+          .addClass("d-toc-regular")
+          .parents("article")
+          .addClass("d-toc-article")
+          .append(
+            `<ul id="d-toc">
+                    <div class="d-toc-close-wrapper">
+                      <div class="d-toc-close">
+                        ${closeIcon}
+                      </div>
                     </div>
-                  </div>
-                </ul>`
-        )
-        .parents(".topic-post")
-        .addClass("d-toc-post")
-        .parents("body")
-        .addClass("d-toc-timeline");
+                  </ul>`
+          )
+          .parents(".topic-post")
+          .addClass("d-toc-post")
+          .parents("body")
+          .addClass("d-toc-timeline");
 
-      $("#d-toc").dToc({
-        cooked: body,
-        selectors: dTocHeadingSelectors
+        $("#d-toc").dToc({
+          cooked: body,
+          selectors: dTocHeadingSelectors
+        });
       });
-    });
-  }, {id: "disco-toc"});
+    },
+    { id: "disco-toc" }
+  );
 
   api.cleanupStream(() => {
     $(window).off("scroll.d-toc");
@@ -361,7 +362,6 @@
       I18n.translations[I18n.currentLocale()].js.composer = {};
     }
     I18n.translations[I18n.currentLocale()].js.composer.contains_dtoc = " ";
-
 
     api.addToolbarPopupMenuOptionsCallback(() => {
       const composerController = api.container.lookup("controller:composer");
