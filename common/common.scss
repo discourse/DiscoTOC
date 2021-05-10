@@ -150,6 +150,21 @@
       opacity: 0.6;
     }
   }
+  #bottom-anchor {
+    opacity: 0;
+    height: 0;
+    margin: 0;
+  }
+
+  .post-bottom-wrapper {
+    padding: 0.8em 0.5em 0 0.5em;
+    a {
+      color: var(--primary-med-or-secondary-med);
+    }
+  }
+  .d-toc {
+    margin-top: 1em;
+  }
 }
 
 // large screens
@@ -169,7 +184,6 @@
     .d-toc {
       max-height: 85vh;
       padding-left: 0;
-      margin-top: 50px;
       position: -webkit-sticky;
       position: sticky;
       top: 75px;
@@ -217,6 +231,9 @@
 // small screens
 @media screen and (max-width: $large-width) {
   .d-toc-regular {
+    .post-bottom-wrapper {
+      display: none;
+    }
     #d-toc {
       z-index: z("header") + 1;
       background: var(--secondary, $secondary);

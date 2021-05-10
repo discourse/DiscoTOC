@@ -268,6 +268,8 @@
             });
         });
 
+        body.append(`<span id="bottom-anchor" class="d-toc-igonore"></span>`);
+
         let dTocHeadingSelectors = "h1,h2,h3,h4,h5,h6";
         if (!body.has(">h1").length) {
           dTocHeadingSelectors = "h2,h3,h4,h5,h6";
@@ -316,14 +318,21 @@
           .parents("article")
           .addClass("d-toc-article")
           .append(
-            `<ul id="d-toc">
-                    <div class="d-toc-close-wrapper">
-                      <div class="d-toc-close">
-                        ${closeIcon}
+            `<div class="d-toc-main">
+              <div class="post-bottom-wrapper">
+                <a href="#bottom-anchor">${iconHTML("bottom")}</a>
+                </div>
+                <ul id="d-toc">
+                      <div class="d-toc-close-wrapper">
+                        <div class="d-toc-close">
+                          ${closeIcon}
+                        </div>
                       </div>
-                    </div>
-                  </ul>`
+                    </ul>
+              </div>
+          `
           )
+
           .parents(".topic-post")
           .addClass("d-toc-post")
           .parents("body")
