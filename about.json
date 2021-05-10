@@ -2,5 +2,8 @@
   "name": "DiscoTOC",
   "about_url": "https://github.com/UiPath-Forum/DiscoTOC",
   "component": true,
-  "license_url": "https://github.com/discourse/DiscoTOC/blob/main/LICENSE"
+  "license_url": "https://github.com/discourse/DiscoTOC/blob/main/LICENSE",
+  "assets": {
+    "icons-sprite": "/assets/sprite.svg"
+  }
 }

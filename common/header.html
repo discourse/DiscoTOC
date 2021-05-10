@@ -268,6 +268,8 @@
             });
         });
 
+        body.append(`<span id="bottom-anchor" class="d-toc-igonore"></span>`);
+
         let dTocHeadingSelectors = "h1,h2,h3,h4,h5,h6";
         if (!body.has(">h1").length) {
           dTocHeadingSelectors = "h2,h3,h4,h5,h6";
@@ -308,22 +310,31 @@
           .addClass("d-toc-cooked")
           .prepend(
             `<span class="d-toc-toggle">
-                  ${dtocIcon} ${I18n.t(themePrefix("table_of_contents"))}
-                  </span>`
+                    ${dtocIcon} ${I18n.t(themePrefix("table_of_contents"))}
+                    </span>`
           )
           .parents(".regular")
           .addClass("d-toc-regular")
           .parents("article")
           .addClass("d-toc-article")
           .append(
-            `<ul id="d-toc">
-                    <div class="d-toc-close-wrapper">
-                      <div class="d-toc-close">
-                        ${closeIcon}
-                      </div>
-                    </div>
-                  </ul>`
+            `<div class="d-toc-main">
+                <div class="post-bottom-wrapper">
+                  <a href="#bottom-anchor" title="${I18n.t(
+                    themePrefix("post_bottom_tooltip")
+                  )}">${iconHTML("bottom")}</a>
+                  </div>
+                  <ul id="d-toc">
+                        <div class="d-toc-close-wrapper">
+                          <div class="d-toc-close">
+                            ${closeIcon}
+                          </div>
+                        </div>
+                      </ul>
+                </div>
+            `
           )
+
           .parents(".topic-post")
           .addClass("d-toc-post")
           .parents("body")
