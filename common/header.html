@@ -31,16 +31,6 @@
     return cleanItem;
   };
 
-  const createAnchors = id => {
-    const link = $("<a/>", {
-      href: `#${id}`,
-      class: "d-toc-anchor-link",
-      html: linkIcon
-    });
-
-    return link;
-  };
-
   const setUpTocItem = function (item) {
     const unique = item.attr("id");
     const text = item.text();
@@ -302,7 +292,6 @@
               id: id,
               "data-d-toc": id
             })
-            .append(createAnchors(id))
             .addClass("d-toc-post-heading");
         });
 
