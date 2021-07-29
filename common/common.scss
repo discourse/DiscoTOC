@@ -133,23 +133,6 @@
       font-size: 0.8em;
     }
   }
-  .d-toc-post-heading {
-    .d-toc-anchor-link {
-      font-size: initial;
-      color: transparent;
-      transition: color 0.15s linear;
-      :not(.rtl) & {
-        margin-left: 5px;
-      }
-      .rtl & {
-        margin-right: 5px;
-      }
-    }
-    &:hover .d-toc-anchor-link {
-      color: var(--primary-medium, $primary-medium);
-      opacity: 0.6;
-    }
-  }
   #bottom-anchor {
     opacity: 0;
     height: 0;
