@@ -1,0 +1,6 @@
+.discourse-sidebar .d-toc-regular .d-toc-article .row {
+  width: 75%;
+  @media screen and (max-width: 1200px) {
+    width: 65%;
+  }
+}
