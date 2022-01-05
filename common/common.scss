@@ -27,16 +27,16 @@
     .d-toc-item {
       padding: 6px 0;
       a {
-        color: var(--primary-high, $primary-high);
+        color: var(--primary-high);
       }
       &.d-toc-active {
         position: relative;
         &:before {
           :not(.rtl) & {
-            border-left: 1px solid var(--tertiary, $tertiary);
+            border-left: 1px solid var(--tertiary);
           }
           .rtl & {
-            border-right: 1px solid var(--tertiary, $tertiary);
+            border-right: 1px solid var(--tertiary);
           }
           height: 100%;
           content: "";
@@ -45,9 +45,9 @@
           top: 0;
         }
         a {
-          color: var(--primary, $primary);
-          text-shadow: 0.1px 0.1px var(--primary, $primary),
-            -0.1px -0.1px var(--primary, $primary);
+          color: var(--primary);
+          text-shadow: 0.1px 0.1px var(--primary),
+            -0.1px -0.1px var(--primary);
         }
       }
     }
@@ -201,17 +201,17 @@
       }
       > .row {
         :not(.rtl) & {
-          border-right: 1px solid var(--primary-low, $primary-low);
+          border-right: 1px solid var(--primary-low);
         }
         .rtl & {
-          border-left: 1px solid var(--primary-low, $primary-low);
+          border-left: 1px solid var(--primary-low);
         }
       }
     }
     #topic-title {
       margin-bottom: 0;
       .title-wrapper {
-        border-bottom: 1px solid var(--primary-low, $primary-low);
+        border-bottom: 1px solid var(--primary-low);
         padding-bottom: 0.5em;
         width: auto;
       }
@@ -230,7 +230,7 @@
     }
     #d-toc {
       z-index: z("header") + 1;
-      background: var(--secondary, $secondary);
+      background: var(--secondary);
       position: fixed;
       right: 0;
       top: 0;
@@ -265,7 +265,7 @@
     }
     .d-toc-close-wrapper {
       height: 3em;
-      background: var(--secondary, $secondary);
+      background: var(--secondary);
       color: var(--primary-med-or-secondary-med);
       margin-bottom: 1em;
       position: -webkit-sticky;
@@ -283,8 +283,8 @@
       bottom: 5px;
 
       padding: 0.5em 1em;
-      background: var(--tertiary, $tertiary);
-      color: var(--secondary, $secondary);
+      background: var(--tertiary);
+      color: var(--secondary);
       z-index: 3;
       margin-bottom: env(safe-area-inset-bottom);
       :not(.rtl) & {
@@ -300,11 +300,11 @@
     #d-toc > ul {
       :not(.rtl) & {
         margin-left: 20px;
-        border-left: 1px solid var(--primary-low, $primary-low);
+        border-left: 1px solid var(--primary-low);
       }
       .rtl & {
         margin-right: 20px;
-        border-right: 1px solid var(--primary-low, $primary-low);
+        border-right: 1px solid var(--primary-low);
       }
       &:last-child {
         margin-bottom: 5em;
@@ -330,9 +330,9 @@
 }
 
 .edit-title .d-editor-preview [data-theme-toc] {
-  background: var(--tertiary, $tertiary);
-  color: var(--secondary, $secondary);
-  border-top: 2px solid var(--secondary, $secondary);
+  background: var(--tertiary);
+  color: var(--secondary);
+  border-top: 2px solid var(--secondary);
   position: -webkit-sticky;
   position: sticky;
   top: 0;
