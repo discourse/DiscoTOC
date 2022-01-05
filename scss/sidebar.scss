@@ -16,7 +16,7 @@
       }
       #d-toc {
         z-index: z("header") + 1;
-        background: var(--secondary, $secondary);
+        background: var(--secondary);
         position: fixed;
         right: 0;
         top: 0;
@@ -51,7 +51,7 @@
       }
       .d-toc-close-wrapper {
         height: 3em;
-        background: var(--secondary, $secondary);
+        background: var(--secondary);
         color: var(--primary-med-or-secondary-med);
         margin-bottom: 1em;
         position: -webkit-sticky;
@@ -69,8 +69,8 @@
         bottom: 5px;
 
         padding: 0.5em 1em;
-        background: var(--tertiary, $tertiary);
-        color: var(--secondary, $secondary);
+        background: var(--tertiary);
+        color: var(--secondary);
         z-index: 3;
         margin-bottom: env(safe-area-inset-bottom);
         :not(.rtl) & {
@@ -86,11 +86,11 @@
       #d-toc > ul {
         :not(.rtl) & {
           margin-left: 20px;
-          border-left: 1px solid var(--primary-low, $primary-low);
+          border-left: 1px solid var(--primary-low);
         }
         .rtl & {
           margin-right: 20px;
-          border-right: 1px solid var(--primary-low, $primary-low);
+          border-right: 1px solid var(--primary-low);
         }
         &:last-child {
           margin-bottom: 5em;
