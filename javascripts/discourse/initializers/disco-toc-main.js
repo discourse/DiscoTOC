@@ -60,11 +60,11 @@ export default {
               document.querySelector(".d-toc-wrapper").appendChild(dToc);
             }
 
-            const nodes = el.querySelectorAll(dTocHeadingSelectors);
-            const startingLevel = parseInt(nodes[0].tagName.substring(1)) - 1;
+            const startingLevel =
+              parseInt(headings[0].tagName.substring(1)) - 1;
             let result = document.createElement("div");
             result.setAttribute("id", "d-toc");
-            buildTOC(nodes, result, startingLevel || 1);
+            buildTOC(headings, result, startingLevel || 1);
             document.querySelector(".d-toc-main").appendChild(result);
             document.addEventListener("click", this.clickTOC, false);
           }
