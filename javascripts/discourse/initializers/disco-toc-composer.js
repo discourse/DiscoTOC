@@ -6,10 +6,13 @@ export default {
   initialize() {
     withPluginApi("1.0.0", (api) => {
       const currentUser = api.getCurrentUser();
-      const currentUserTL = currentUser ? currentUser.trust_level : "";
+      if (!currentUser) {
+        return;
+      }
+
       const minimumTL = settings.minimum_trust_level_to_create_TOC;
 
-      if (currentUserTL >= minimumTL) {
+      if (currentUser.trust_level >= minimumTL) {
         if (!I18n.translations[I18n.currentLocale()].js.composer) {
           I18n.translations[I18n.currentLocale()].js.composer = {};
         }
