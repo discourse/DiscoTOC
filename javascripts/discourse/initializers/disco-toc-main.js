@@ -3,6 +3,7 @@ import { headerOffset } from "discourse/lib/offset-calculator";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import { slugify } from "discourse/lib/utilities";
 import { withPluginApi } from "discourse/lib/plugin-api";
+import I18n from "I18n";
 
 export default {
   name: "disco-toc-main",
@@ -61,7 +62,7 @@ export default {
             }
 
             const startingLevel =
-              parseInt(headings[0].tagName.substring(1)) - 1;
+              parseInt(headings[0].tagName.substring(1), 10) - 1;
             let result = document.createElement("div");
             result.setAttribute("id", "d-toc");
             buildTOC(headings, result, startingLevel || 1);
@@ -200,9 +201,9 @@ function buildTOC(nodesList, elm, lv = 1) {
   let node;
   if (node) {
     let li, cnt;
-    let curLv = parseInt(node.tagName.substring(1));
+    let curLv = parseInt(node.tagName.substring(1), 10);
 
-    if (curLv == lv) {
+    if (curLv === lv) {
       // same level
       cnt = 0;
     } else if (curLv < lv) {
