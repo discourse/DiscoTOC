@@ -21,11 +21,13 @@ export default {
               return;
             }
 
-            el.classList.add("d-toc-cooked");
-
             let dTocHeadingSelectors =
               ":scope > h1, :scope > h2, :scope > h3, :scope > h4, :scope > h5, :scope > h6";
             const headings = el.querySelectorAll(dTocHeadingSelectors);
+
+            if (headings.length < 1) {
+              return;
+            }
 
             headings.forEach((h) => {
               const id =
@@ -37,6 +39,8 @@ export default {
               h.classList.add("d-toc-post-heading");
             });
 
+            el.classList.add("d-toc-cooked");
+
             const dToc = document.createElement("div");
             dToc.classList.add("d-toc-main");
             dToc.innerHTML = `<div class="d-toc-icons">
@@ -45,14 +49,22 @@ export default {
               )}">${iconHTML("downward")}</a>
               <a href="" class="d-toc-close">${iconHTML("times")}</a></div>`;
 
-            document.querySelector(".d-toc-wrapper").appendChild(dToc);
-
-            const nodes = el.querySelectorAll(
-              ":scope > h1, :scope > h2,:scope > h3,:scope > h4,:scope > h5,:scope > h6"
+            const existing = document.querySelector(
+              ".d-toc-wrapper .d-toc-main"
             );
+            if (existing) {
+              document
+                .querySelector(".d-toc-wrapper")
+                .replaceChild(dToc, existing);
+            } else {
+              document.querySelector(".d-toc-wrapper").appendChild(dToc);
+            }
+
+            const nodes = el.querySelectorAll(dTocHeadingSelectors);
+            const startingLevel = parseInt(nodes[0].tagName.substring(1)) - 1;
             let result = document.createElement("div");
             result.setAttribute("id", "d-toc");
-            buildTOC(nodes, result);
+            buildTOC(nodes, result, startingLevel || 1);
             document.querySelector(".d-toc-main").appendChild(result);
             document.addEventListener("click", this.clickTOC, false);
           }
