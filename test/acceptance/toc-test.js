@@ -46,7 +46,8 @@ acceptance("DiscoTOC", function (needs) {
               can_wiki: true,
               link_counts: [
                 {
-                  url: "http://127.0.0.1:4200/t/modernizing-the-antiquated-boxing-scoring-system/71/2",
+                  url:
+                    "http://127.0.0.1:4200/t/modernizing-the-antiquated-boxing-scoring-system/71/2",
                   internal: true,
                   reflection: false,
                   title: "Modernizing the antiquated boxing scoring system",
