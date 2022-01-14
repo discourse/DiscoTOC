@@ -18,18 +18,6 @@ export default {
         }
         I18n.translations[I18n.currentLocale()].js.composer.contains_dtoc = " ";
 
-        api.addToolbarPopupMenuOptionsCallback(() => {
-          const composerController = api.container.lookup(
-            "controller:composer"
-          );
-          return {
-            action: "insertDtoc",
-            icon: "align-left",
-            label: themePrefix("insert_table_of_contents"),
-            condition: composerController.get("model.canCategorize"),
-          };
-        });
-
         api.modifyClass("controller:composer", {
           pluginId: "DiscoTOC",
 
@@ -42,6 +30,15 @@ export default {
               );
             },
           },
+        });
+
+        api.addToolbarPopupMenuOptionsCallback((controller) => {
+          return {
+            action: "insertDtoc",
+            icon: "align-left",
+            label: themePrefix("insert_table_of_contents"),
+            condition: controller.get("model.creatingTopic"),
+          };
         });
       }
     });

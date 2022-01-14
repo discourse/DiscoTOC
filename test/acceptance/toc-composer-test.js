@@ -6,7 +6,7 @@ import { test } from "qunit";
 acceptance("DiscoTOC - Composer", function (needs) {
   needs.user();
 
-  test("Inserting TOC", async function (assert) {
+  test("Can use TOC when creating a topic", async function (assert) {
     await visit("/");
     await click("#create-topic");
     const toolbarPopupMenu = selectKit(".toolbar-popup-menu-options");
@@ -16,5 +16,14 @@ acceptance("DiscoTOC - Composer", function (needs) {
     assert.ok(
       query(".d-editor-input").value.indexOf('data-theme-toc="true"') >= 0
     );
+  });
+
+  test("no TOC option when replying", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+    await click(".create.reply");
+    const toolbarPopupMenu = selectKit(".toolbar-popup-menu-options");
+    await toolbarPopupMenu.expand();
+
+    assert.notOk(toolbarPopupMenu.rowByValue("insertDtoc").exists());
   });
 });
