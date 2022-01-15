@@ -14,7 +14,7 @@ acceptance("DiscoTOC - Composer", function (needs) {
     await toolbarPopupMenu.selectRowByValue("insertDtoc");
 
     assert.ok(
-      query(".d-editor-input").value.indexOf('data-theme-toc="true"') >= 0
+      query(".d-editor-input").value.includes('data-theme-toc="true"')
     );
   });
 
