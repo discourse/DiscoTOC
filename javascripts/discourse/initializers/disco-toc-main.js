@@ -97,7 +97,7 @@ export default {
         let closestHeadingDistance = null;
         let closestHeading = null;
 
-        headings.forEach(function (heading) {
+        headings.forEach((heading) => {
           const distance = Math.abs(
             domUtils.offset(heading).top - headerOffset() - window.scrollY
           );
@@ -113,22 +113,19 @@ export default {
         });
 
         if (closestHeading) {
-          const listItems = document.querySelectorAll(`#d-toc li`);
-          for (let i = 0; i < listItems.length; i++) {
-            listItems[i].classList.remove("active");
-            listItems[i].classList.remove("direct-active");
-          }
+          document.querySelectorAll("#d-toc li").forEach((listItem) => {
+            listItem.classList.remove("active");
+            listItem.classList.remove("direct-active");
+          });
 
           const anchor = document.querySelector(
             `#d-toc a[data-d-toc="${closestHeading.getAttribute("id")}"]`
           );
 
           anchor.parentElement.classList.add("direct-active");
-          const liParents = parentsUntil(anchor, "#d-toc", ".d-toc-item");
-
-          for (let i = 0; i < liParents.length; i++) {
-            liParents[i].classList.add("active");
-          }
+          parentsUntil(anchor, "#d-toc", ".d-toc-item").forEach((liParent) => {
+            liParent.classList.add("active");
+          });
         }
       });
 

@@ -31,13 +31,12 @@ $padding-basis: 0.75em;
         max-height: 0;
         overflow: hidden;
         opacity: 0.5;
-        transition: opacity 0.3s ease-in-out, max-height 0.3s ease-in-out,
-          overflow 0.1s 0.3s;
+        transition: opacity 0.3s ease-in-out, max-height 0.3s ease-in-out;
       }
       &.active,
       .d-toc-wrapper.overlay & {
         ul {
-          max-height: 30em;
+          max-height: 50em;
           overflow: visible;
           opacity: 1;
         }
