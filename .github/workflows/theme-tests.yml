@@ -9,7 +9,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    container: discourse/discourse_test:slim
+    container: discourse/discourse_test:slim-browsers
     timeout-minutes: 30
 
     env:
