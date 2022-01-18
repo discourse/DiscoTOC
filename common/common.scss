@@ -1,339 +1,207 @@
-@import "common/foundation/variables";
-@import "sidebar";
-@import "chat";
+$padding-basis: 0.75em;
 
-.d-toc-regular {
-  [data-theme-toc] {
-    display: none;
+.d-toc-main {
+  display: none;
+  width: 225px;
+  border-left: 1px solid var(--primary-low);
+  padding-bottom: 0.5em;
+  box-sizing: border-box;
+  a {
+    display: block;
+    padding: 0.15em 0;
+    color: var(--primary-medium);
+    &.scroll-to-bottom {
+      padding-left: $padding-basis;
+    }
   }
-  .d-toc-ignore {
-    font-size: $font-up-1;
-    margin: 0 0 10px 0;
-    font-weight: bold;
-  }
-  .highlighted {
-    animation: fadein 1s;
-  }
-  .d-toc {
-    transform: translate3d(0, 0, 0);
-    transition: opacity 0.25s;
-    ul,
-    li {
-      list-style: none;
+  #d-toc {
+    max-height: calc(100vh - 3em - var(--header-offset));
+    overflow: auto;
+    ul {
+      list-style-type: none;
       margin: 0;
       padding: 0;
-      border: none;
     }
-    .d-toc-item {
-      padding: 6px 0;
-      a {
-        color: var(--primary-high);
+    li.d-toc-item {
+      margin: 0;
+      padding: 0;
+      padding-left: $padding-basis;
+      line-height: 1.6em;
+      > ul {
+        max-height: 0;
+        overflow: hidden;
+        opacity: 0.5;
+        transition: opacity 0.3s ease-in-out, max-height 0.3s ease-in-out;
       }
-      &.d-toc-active {
+      &.active,
+      .d-toc-wrapper.overlay & {
+        ul {
+          max-height: 50em;
+          overflow: visible;
+          opacity: 1;
+        }
+      }
+      &.direct-active > a {
         position: relative;
+        color: var(--primary);
         &:before {
-          :not(.rtl) & {
-            border-left: 1px solid var(--tertiary);
-          }
-          .rtl & {
-            border-right: 1px solid var(--tertiary);
-          }
-          height: 100%;
           content: "";
           width: 1px;
+          margin-top: -1px;
+          background-color: var(--tertiary);
           position: absolute;
-          top: 0;
-        }
-        a {
-          color: var(--primary);
-          text-shadow: 0.1px 0.1px var(--primary),
-            -0.1px -0.1px var(--primary);
+          height: 100%;
         }
       }
     }
-    .d-toc-heading {
-      :not(.rtl) & {
-        padding-left: 10px;
-      }
-      .rtl & {
-        padding-right: 10px;
-      }
-      .d-toc-active:before {
-        :not(.rtl) & {
-          left: -10px;
-        }
-        .rtl & {
-          right: -10px;
-        }
-      }
-    }
-    .d-toc-subheading {
-      :not(.rtl) & {
-        padding-left: 20px;
-      }
-      .rtl & {
-        padding-right: 20px;
-      }
-      .d-toc-active:before {
-        :not(.rtl) & {
-          left: -30px;
-        }
-        .rtl & {
-          right: -30px;
-        }
-      }
-      .d-toc-subheading {
-        :not(.rtl) & {
-          padding-left: 30px;
-        }
-        .rtl & {
-          padding-right: 30px;
-        }
-        .d-toc-active:before {
-          :not(.rtl) & {
-            left: -60px;
-          }
-          .rtl & {
-            right: -60px;
-          }
-        }
-        .d-toc-subheading {
-          :not(.rtl) & {
-            padding-left: 40px;
-          }
-          .rtl & {
-            padding-right: 40px;
-          }
-          .d-toc-active:before {
-            :not(.rtl) & {
-              left: -70px;
-            }
-            .rtl & {
-              right: -70px;
-            }
-          }
-          .d-toc-subheading {
-            :not(.rtl) & {
-              padding-left: 50px;
-            }
-            .rtl & {
-              padding-right: 50px;
-            }
-            .d-toc-active:before {
-              :not(.rtl) & {
-                left: -80px;
-              }
-              .rtl & {
-                right: -80px;
-              }
-            }
-          }
-        }
-      }
-    }
-    .d-toc-subheading li {
-      font-size: 0.8em;
-    }
-  }
-  #bottom-anchor {
-    opacity: 0;
-    height: 0;
-    margin: 0;
-  }
 
-  .post-bottom-wrapper {
-    a {
-      color: var(--primary-med-or-secondary-med);
+    > ul > li > ul {
+      font-size: var(--font-down-1);
+      li.direct-active > a:before {
+        // it's odd that we need this
+        margin-left: -1px;
+      }
+      ul {
+        margin-bottom: 0.5em;
+      }
     }
   }
 }
 
-// large screens
-@media screen and (min-width: $large-width) {
-  .d-toc {
-    margin-top: 1em;
+// active line marker
+$selector: "> ul > li.direct-active > a:before";
+$sub: "> ul > li";
+$map: (
+  "left": "html:not(.rtl)",
+  "right": "html.rtl",
+);
+
+/*
+// loop below generates styling for non-RTL and RTL
+// Example:
+html:not(.rtl) SELECTOR {
+    left: -.75em
+}
+html.rtl SELECTOR {
+    right: -.75em
+}
+*/
+@each $prop, $parent in $map {
+  #{$parent} #d-toc {
+    #{$selector} {
+      #{$prop}: (-$padding-basis);
+    }
+    #{$sub} #{$selector} {
+      #{$prop}: (-$padding-basis) * 2;
+    }
+    #{$sub} #{$sub} #{$selector} {
+      #{$prop}: (-$padding-basis) * 3;
+    }
+    #{$sub} #{$sub} #{$sub} #{$selector} {
+      #{$prop}: (-$padding-basis) * 4;
+    }
+    #{$sub} #{$sub} #{$sub} #{$sub} #{$selector} {
+      #{$prop}: (-$padding-basis) * 5;
+    }
+    #{$sub} #{$sub} #{$sub} #{$sub} #{$sub} #{$selector} {
+      #{$prop}: (-$padding-basis) * 6;
+    }
   }
-  .post-bottom-wrapper {
-    padding: 1em 0.5em 0 0.5em;
-    &.mobile {
-      display: none;
+}
+// END active line marker
+
+.d-toc-mini,
+a.d-toc-close {
+  display: none;
+}
+
+.d-toc-timeline-visible {
+  .d-toc-main,
+  .d-toc-mini {
+    display: block;
+  }
+  // overlayed timeline (on mobile and narrow screens)
+  .topic-navigation.with-topic-progress {
+    .d-toc-wrapper {
+      position: fixed;
+      margin-top: 0.25em;
+      height: calc(100vh - 50px - var(--header-offset));
+      opacity: 0.5;
+      right: -100vw;
+      top: var(--header-offset);
+      width: 75vw;
+      max-width: 350px;
+      background-color: var(--secondary);
+      box-shadow: shadow("dropdown");
+      z-index: z("modal", "overlay");
+      transition: all 0.2s ease-in-out;
+      .d-toc-main {
+        width: 100%;
+        padding: 0.5em;
+        height: 100%;
+        #d-toc {
+          max-height: calc(100% - 3em);
+        }
+      }
+      &.overlay {
+        right: 0;
+        width: 75vw;
+        opacity: 1;
+        .d-toc-main #d-toc li.d-toc-item ul {
+          transition: none;
+        }
+      }
+
+      a.scroll-to-bottom,
+      a.d-toc-close {
+        display: inline-block;
+        padding: 0.5em;
+      }
+
+      .d-toc-icons {
+        text-align: right;
+      }
     }
   }
 
-  .d-toc-toggle {
-    display: none !important;
-  }
-  .d-toc-close-wrapper,
-  .d-toc-subheading {
+  // core overrides when timeline is active
+  .timeline-container,
+  #topic-progress {
     display: none;
   }
-  .d-toc-post {
-    .topic-body,
-    .topic-avatar {
-      border-top: none;
-    }
-    .d-toc {
-      max-height: 85vh;
+  .container.posts .topic-navigation.with-topic-progress {
+    align-self: start;
+  }
+}
+
+// RTL Support
+.rtl {
+  .d-toc-main {
+    border-left: none;
+    border-right: 1px solid var(--primary-low);
+
+    #d-toc li.d-toc-item,
+    a.scroll-to-bottom {
       padding-left: 0;
-      position: -webkit-sticky;
-      position: sticky;
-      top: 75px;
-      margin-bottom: 135px;
-      max-width: 235px;
-      overflow-y: auto;
-      overflow-x: hidden;
-      align-self: flex-start;
-      flex: 1 1 auto;
-      :not(.rtl) & {
-        margin-left: -1px;
-      }
-      .rtl & {
-        margin-right: -1px;
-      }
+      padding-right: $padding-basis;
     }
-    .d-toc-article {
-      display: flex;
-      .post-notice {
-        display: none;
-      }
-      .topic-map {
-        margin-bottom: 0;
-      }
-      > .row {
-        :not(.rtl) & {
-          border-right: 1px solid var(--primary-low);
-        }
-        .rtl & {
-          border-left: 1px solid var(--primary-low);
-        }
-      }
-    }
-    #topic-title {
-      margin-bottom: 0;
-      .title-wrapper {
-        border-bottom: 1px solid var(--primary-low);
-        padding-bottom: 0.5em;
-        width: auto;
-      }
+  }
+
+  .d-toc-timeline-visible .topic-navigation.with-topic-progress .d-toc-wrapper {
+    right: unset;
+    left: -100vw;
+    &.overlay {
+      right: unset;
+      left: 0;
     }
   }
 }
 
-// small screens
-@media screen and (max-width: $large-width) {
-  .d-toc-regular {
-    .post-bottom-wrapper {
-      padding: 1em 0.75em;
-      &.desktop {
-        display: none;
-      }
-    }
-    #d-toc {
-      z-index: z("header") + 1;
-      background: var(--secondary);
-      position: fixed;
-      right: 0;
-      top: 0;
-
-      height: 100vh;
-      width: 100vw;
-      max-width: 500px;
-      overflow: scroll;
-      transition: transform 0.5s, opacity 0.25s;
-      transform: translatex(100%);
-      opacity: 0;
-      :not(.rtl) & {
-        margin-left: -1px;
-      }
-      .rtl & {
-        margin-right: -1px;
-      }
-      &.d-toc-mobile {
-        transform: translatex(0);
-        opacity: 1;
-      }
-      .d-toc-active {
-        &:before {
-          :not(.rtl) & {
-            margin-left: -1px;
-          }
-          .rtl & {
-            margin-right: -1px;
-          }
-        }
-      }
-    }
-    .d-toc-close-wrapper {
-      height: 3em;
-      background: var(--secondary);
-      color: var(--primary-med-or-secondary-med);
-      margin-bottom: 1em;
-      position: -webkit-sticky;
-      position: sticky;
-      top: 0;
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
-      .d-toc-close {
-        padding: 1em 0.75em;
-      }
-    }
-    .d-toc-toggle {
-      position: fixed;
-      bottom: 5px;
-
-      padding: 0.5em 1em;
-      background: var(--tertiary);
-      color: var(--secondary);
-      z-index: 3;
-      margin-bottom: env(safe-area-inset-bottom);
-      :not(.rtl) & {
-        right: 16px;
-      }
-      .rtl & {
-        left: 16px;
-      }
-      body.footer-nav-visible & {
-        bottom: 49px;
-      }
-    }
-    #d-toc > ul {
-      :not(.rtl) & {
-        margin-left: 20px;
-        border-left: 1px solid var(--primary-low);
-      }
-      .rtl & {
-        margin-right: 20px;
-        border-right: 1px solid var(--primary-low);
-      }
-      &:last-child {
-        margin-bottom: 5em;
-      }
-    }
-  }
-}
-
-.d-toc-timeline {
-  .timeline-container,
-  #topic-progress-wrapper {
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.25s;
-  }
-  &.d-toc-timeline-visible {
-    .timeline-container,
-    #topic-progress-wrapper {
-      opacity: 1;
-      pointer-events: initial;
-    }
-  }
-}
-
+// Composer preview notice
 .edit-title .d-editor-preview [data-theme-toc] {
   background: var(--tertiary);
   color: var(--secondary);
   border-top: 2px solid var(--secondary);
-  position: -webkit-sticky;
   position: sticky;
   top: 0;
   height: 30px;
