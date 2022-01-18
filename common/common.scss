@@ -4,7 +4,6 @@ $padding-basis: 0.75em;
   display: none;
   width: 225px;
   border-left: 1px solid var(--primary-low);
-  padding-bottom: 0.5em;
   box-sizing: border-box;
   a {
     display: block;
@@ -15,7 +14,8 @@ $padding-basis: 0.75em;
     }
   }
   #d-toc {
-    max-height: calc(100vh - 3em - var(--header-offset));
+    max-height: calc(100vh - 4.5em - var(--header-offset));
+    padding-bottom: 0.5em;
     overflow: auto;
     ul {
       list-style-type: none;
