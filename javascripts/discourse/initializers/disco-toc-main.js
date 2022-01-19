@@ -250,9 +250,15 @@ function buildTOC(nodesList, elm, lv = 1) {
 
     li = elm.appendChild(document.createElement("li"));
     li.classList.add("d-toc-item");
-    li.innerHTML = `<a data-d-toc="${node.getAttribute("id")}">${
-      node.textContent
+
+    let clonedNode = node.cloneNode(true);
+    clonedNode.querySelector("span.clicks")?.remove();
+
+    li.innerHTML = `<a data-d-toc="${clonedNode.getAttribute("id")}">${
+      clonedNode.textContent
     }</a>`;
+
+    clonedNode.remove();
 
     // recurse
     buildTOC(nodes, elm, lv + cnt);
