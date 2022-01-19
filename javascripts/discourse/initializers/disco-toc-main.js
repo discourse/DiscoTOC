@@ -76,52 +76,16 @@ export default {
         }
       });
 
+      api.onAppEvent("docs-topic:current-post-scrolled", () => {
+        this.updateTOCSidebar();
+      });
+
       api.onAppEvent("topic:current-post-scrolled", (args) => {
         if (args.postIndex !== 1) {
           return;
         }
 
-        if (!document.querySelector(".d-toc-cooked")) {
-          return;
-        }
-
-        const headings = document.querySelectorAll(".d-toc-post-heading");
-        let closestHeadingDistance = null;
-        let closestHeading = null;
-
-        headings.forEach((heading) => {
-          const distance = Math.abs(
-            domUtils.offset(heading).top - headerOffset() - window.scrollY
-          );
-          if (
-            closestHeadingDistance == null ||
-            distance < closestHeadingDistance
-          ) {
-            closestHeadingDistance = distance;
-            closestHeading = heading;
-          } else {
-            return false;
-          }
-        });
-
-        if (closestHeading) {
-          document.querySelectorAll("#d-toc li").forEach((listItem) => {
-            listItem.classList.remove("active");
-            listItem.classList.remove("direct-active");
-          });
-
-          const anchor = document.querySelector(
-            `#d-toc a[data-d-toc="${closestHeading.getAttribute("id")}"]`
-          );
-
-          if (!anchor) {
-            return;
-          }
-          anchor.parentElement.classList.add("direct-active");
-          parentsUntil(anchor, "#d-toc", ".d-toc-item").forEach((liParent) => {
-            liParent.classList.add("active");
-          });
-        }
+        this.updateTOCSidebar();
       });
 
       api.cleanupStream(() => {
@@ -129,6 +93,47 @@ export default {
         document.removeEventListener("click", this.clickTOC, false);
       });
     });
+  },
+
+  updateTOCSidebar() {
+    if (!document.querySelector(".d-toc-cooked")) {
+      return;
+    }
+
+    const headings = document.querySelectorAll(".d-toc-post-heading");
+    let closestHeadingDistance = null;
+    let closestHeading = null;
+
+    headings.forEach((heading) => {
+      const distance = Math.abs(
+        domUtils.offset(heading).top - headerOffset() - window.scrollY
+      );
+      if (closestHeadingDistance == null || distance < closestHeadingDistance) {
+        closestHeadingDistance = distance;
+        closestHeading = heading;
+      } else {
+        return false;
+      }
+    });
+
+    if (closestHeading) {
+      document.querySelectorAll("#d-toc li").forEach((listItem) => {
+        listItem.classList.remove("active");
+        listItem.classList.remove("direct-active");
+      });
+
+      const anchor = document.querySelector(
+        `#d-toc a[data-d-toc="${closestHeading.getAttribute("id")}"]`
+      );
+
+      if (!anchor) {
+        return;
+      }
+      anchor.parentElement.classList.add("direct-active");
+      parentsUntil(anchor, "#d-toc", ".d-toc-item").forEach((liParent) => {
+        liParent.classList.add("active");
+      });
+    }
   },
 
   insertTOC(headings) {

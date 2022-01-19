@@ -212,3 +212,10 @@ a.d-toc-close {
     content: "#{$composer_toc_text}";
   }
 }
+
+// Docs plugin outlet
+.below-docs-topic-outlet.d-toc-wrapper {
+  position: sticky;
+  top: calc(var(--header-offset, 60px) + 1em);
+  max-height: calc(100vh - 2em - var(--header-offset, 60px));
+}
