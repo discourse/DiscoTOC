@@ -70,7 +70,6 @@ $padding-basis: 0.75em;
 
 // active line marker
 $selector: "> ul > li.direct-active > a:before";
-$sub: "> ul > li";
 $map: (
   "left": "html:not(.rtl)",
   "right": "html.rtl",
@@ -91,20 +90,8 @@ html.rtl SELECTOR {
     #{$selector} {
       #{$prop}: (-$padding-basis);
     }
-    #{$sub} #{$selector} {
+    > ul > li #{$selector} {
       #{$prop}: (-$padding-basis) * 2;
-    }
-    #{$sub} #{$sub} #{$selector} {
-      #{$prop}: (-$padding-basis) * 3;
-    }
-    #{$sub} #{$sub} #{$sub} #{$selector} {
-      #{$prop}: (-$padding-basis) * 4;
-    }
-    #{$sub} #{$sub} #{$sub} #{$sub} #{$selector} {
-      #{$prop}: (-$padding-basis) * 5;
-    }
-    #{$sub} #{$sub} #{$sub} #{$sub} #{$sub} #{$selector} {
-      #{$prop}: (-$padding-basis) * 6;
     }
   }
 }

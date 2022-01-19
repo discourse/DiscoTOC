@@ -152,10 +152,7 @@ export default {
       document.querySelector(".d-toc-wrapper").appendChild(dToc);
     }
 
-    const startingLevel = parseInt(headings[0].tagName.substring(1), 10) - 1;
-    let result = document.createElement("div");
-    result.setAttribute("id", "d-toc");
-    buildTOC(headings, result, startingLevel || 1);
+    const result = this.buildTOC(Array.from(headings));
     document.querySelector(".d-toc-main").appendChild(result);
     document.addEventListener("click", this.clickTOC, false);
     document.body.classList.add("d-toc-timeline-visible");
@@ -167,7 +164,10 @@ export default {
     }
 
     // link to each heading
-    if (e.target.hasAttribute("data-d-toc")) {
+    if (
+      e.target.closest(".d-toc-item") &&
+      e.target.hasAttribute("data-d-toc")
+    ) {
       const target = `#${e.target.getAttribute("data-d-toc")}`;
       const scrollTo = domUtils.offset(
         document.querySelector(`.d-toc-cooked ${target}`)
@@ -214,61 +214,63 @@ export default {
       document.querySelector(".d-toc-wrapper").classList.remove("overlay");
     }
   },
-};
 
-function buildTOC(nodesList, elm, lv = 1) {
-  let nodes = Array.from(nodesList);
-  node = nodes.shift();
+  buildTOC(headings) {
+    const result = document.createElement("div");
+    result.setAttribute("id", "d-toc");
 
-  let node;
-  if (node) {
-    let li, cnt;
-    let curLv = parseInt(node.tagName.substring(1), 10);
+    const primaryH = headings[0].tagName;
+    const primaryHeadings = headings.filter((n) => n.tagName === primaryH);
+    let nextIndex = headings.length;
 
-    if (curLv === lv) {
-      // same level
-      cnt = 0;
-    } else if (curLv < lv) {
-      // walk up then append
-      cnt = 0;
-      do {
-        elm = elm.parentNode.parentNode;
-        cnt--;
-      } while (cnt > curLv - lv);
-    } else if (curLv > lv) {
-      // add children
-      cnt = 0;
-      do {
-        li = elm.lastChild;
-        if (li == null) {
-          elm = elm.appendChild(document.createElement("ul"));
-        } else {
-          elm = li.appendChild(document.createElement("ul"));
+    primaryHeadings.forEach((primaryHeading, index) => {
+      const ul = document.createElement("ul");
+      ul.classList.add("d-toc-heading");
+
+      let li = this.buildItem(primaryHeading);
+      ul.appendChild(li);
+
+      const currentIndex = headings.indexOf(primaryHeading);
+      if (primaryHeadings[index + 1]) {
+        nextIndex = headings.indexOf(primaryHeadings[index + 1]);
+      } else {
+        nextIndex = headings.length;
+      }
+
+      headings.forEach((heading, subIndex) => {
+        if (subIndex > currentIndex && subIndex < nextIndex) {
+          let subUl = li.lastChild;
+          if (subUl.tagName !== "ul") {
+            subUl = subUl.appendChild(document.createElement("ul"));
+            subUl.classList.add("d-toc-sublevel");
+            li.appendChild(subUl);
+          }
+
+          let subLi = this.buildItem(heading);
+          subUl.appendChild(subLi);
         }
-        cnt++;
-      } while (cnt < curLv - lv);
-    }
-    if (curLv === 1 && elm.lastChild === null) {
-      elm = elm.appendChild(document.createElement("ul"));
-    }
-    // append list item
+      });
 
-    li = elm.appendChild(document.createElement("li"));
-    li.classList.add("d-toc-item");
+      result.appendChild(ul);
+    });
 
+    return result;
+  },
+
+  buildItem(node) {
     let clonedNode = node.cloneNode(true);
     clonedNode.querySelector("span.clicks")?.remove();
+    const li = document.createElement("li");
+    li.classList.add("d-toc-item");
 
     li.innerHTML = `<a data-d-toc="${clonedNode.getAttribute("id")}">${
       clonedNode.textContent
     }</a>`;
 
     clonedNode.remove();
-
-    // recurse
-    buildTOC(nodes, elm, lv + cnt);
-  }
-}
+    return li;
+  },
+};
 
 function parentsUntil(el, selector, filter) {
   const result = [];
