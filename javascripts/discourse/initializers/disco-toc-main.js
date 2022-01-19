@@ -1,6 +1,7 @@
 import domUtils from "discourse-common/utils/dom-utils";
 import { headerOffset } from "discourse/lib/offset-calculator";
 import { iconHTML } from "discourse-common/lib/icon-library";
+import { later } from "@ember/runloop";
 import { slugify } from "discourse/lib/utilities";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import I18n from "I18n";
@@ -19,6 +20,7 @@ export default {
             }
 
             if (!el.querySelector(`[data-theme-toc="true"]`)) {
+              document.body.classList.remove("d-toc-timeline-visible");
               return;
             }
 
@@ -42,32 +44,18 @@ export default {
 
             el.classList.add("d-toc-cooked");
 
-            const dToc = document.createElement("div");
-            dToc.classList.add("d-toc-main");
-            dToc.innerHTML = `<div class="d-toc-icons">
-              <a href="" class="scroll-to-bottom" title="${I18n.t(
-                themePrefix("post_bottom_tooltip")
-              )}">${iconHTML("downward")}</a>
-              <a href="" class="d-toc-close">${iconHTML("times")}</a></div>`;
-
-            const existing = document.querySelector(
-              ".d-toc-wrapper .d-toc-main"
-            );
-            if (existing) {
-              document
-                .querySelector(".d-toc-wrapper")
-                .replaceChild(dToc, existing);
+            if (document.querySelector(".d-toc-wrapper")) {
+              this.insertTOC(headings);
             } else {
-              document.querySelector(".d-toc-wrapper").appendChild(dToc);
+              // try again if decoration happens while outlet is not rendered
+              // this is due to core resetting `canRender` for topic-navigation
+              // when transitioning between topics
+              later(() => {
+                if (document.querySelector(".d-toc-wrapper")) {
+                  this.insertTOC(headings);
+                }
+              }, 300);
             }
-
-            const startingLevel =
-              parseInt(headings[0].tagName.substring(1), 10) - 1;
-            let result = document.createElement("div");
-            result.setAttribute("id", "d-toc");
-            buildTOC(headings, result, startingLevel || 1);
-            document.querySelector(".d-toc-main").appendChild(result);
-            document.addEventListener("click", this.clickTOC, false);
           }
         },
         {
@@ -90,6 +78,10 @@ export default {
 
       api.onAppEvent("topic:current-post-scrolled", (args) => {
         if (args.postIndex !== 1) {
+          return;
+        }
+
+        if (!document.querySelector(".d-toc-cooked")) {
           return;
         }
 
@@ -122,6 +114,9 @@ export default {
             `#d-toc a[data-d-toc="${closestHeading.getAttribute("id")}"]`
           );
 
+          if (!anchor) {
+            return;
+          }
           anchor.parentElement.classList.add("direct-active");
           parentsUntil(anchor, "#d-toc", ".d-toc-item").forEach((liParent) => {
             liParent.classList.add("active");
@@ -134,6 +129,31 @@ export default {
         document.removeEventListener("click", this.clickTOC, false);
       });
     });
+  },
+
+  insertTOC(headings) {
+    const dToc = document.createElement("div");
+    dToc.classList.add("d-toc-main");
+    dToc.innerHTML = `<div class="d-toc-icons">
+              <a href="" class="scroll-to-bottom" title="${I18n.t(
+                themePrefix("post_bottom_tooltip")
+              )}">${iconHTML("downward")}</a>
+              <a href="" class="d-toc-close">${iconHTML("times")}</a></div>`;
+
+    const existing = document.querySelector(".d-toc-wrapper .d-toc-main");
+    if (existing) {
+      document.querySelector(".d-toc-wrapper").replaceChild(dToc, existing);
+    } else {
+      document.querySelector(".d-toc-wrapper").appendChild(dToc);
+    }
+
+    const startingLevel = parseInt(headings[0].tagName.substring(1), 10) - 1;
+    let result = document.createElement("div");
+    result.setAttribute("id", "d-toc");
+    buildTOC(headings, result, startingLevel || 1);
+    document.querySelector(".d-toc-main").appendChild(result);
+    document.addEventListener("click", this.clickTOC, false);
+    document.body.classList.add("d-toc-timeline-visible");
   },
 
   clickTOC(e) {
