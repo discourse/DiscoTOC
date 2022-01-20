@@ -240,7 +240,7 @@ export default {
       headings.forEach((heading, subIndex) => {
         if (subIndex > currentIndex && subIndex < nextIndex) {
           let subUl = li.lastChild;
-          if (subUl.tagName.toLowerCase() !== "ul") {
+          if (subUl.tagName !== "UL") {
             subUl = subUl.appendChild(document.createElement("ul"));
             subUl.classList.add("d-toc-sublevel");
             li.appendChild(subUl);
@@ -259,6 +259,7 @@ export default {
 
   buildItem(node) {
     let clonedNode = node.cloneNode(true);
+
     clonedNode.querySelector("span.clicks")?.remove();
     const li = document.createElement("li");
     li.classList.add("d-toc-item");
