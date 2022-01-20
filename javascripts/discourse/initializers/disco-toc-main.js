@@ -25,7 +25,7 @@ export default {
             }
 
             let dTocHeadingSelectors =
-              ":scope > h1, :scope > h2, :scope > h3, :scope > h4, :scope > h5, :scope > h6";
+              ":scope > h1, :scope > h2, :scope > h3, :scope > h4, :scope > h5";
             const headings = el.querySelectorAll(dTocHeadingSelectors);
 
             if (headings.length < 1) {
@@ -193,16 +193,18 @@ export default {
             top: rect.bottom + window.scrollY - headerOffset() - 10,
             behavior: "smooth",
           });
+
+          e.preventDefault();
+          return false;
         }
       }
 
       // close overlay
       if (e.target.closest("a").classList.contains("d-toc-close")) {
         document.querySelector(".d-toc-wrapper").classList.remove("overlay");
+        e.preventDefault();
+        return false;
       }
-
-      e.preventDefault();
-      return false;
     }
 
     if (!document.querySelector(".d-toc-wrapper.overlay")) {
@@ -263,6 +265,7 @@ export default {
     clonedNode.querySelector("span.clicks")?.remove();
     const li = document.createElement("li");
     li.classList.add("d-toc-item");
+    li.classList.add(`d-toc-${clonedNode.tagName.toLowerCase()}`);
 
     li.innerHTML = `<a data-d-toc="${clonedNode.getAttribute("id")}">${
       clonedNode.textContent
