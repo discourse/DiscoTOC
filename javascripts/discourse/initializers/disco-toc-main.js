@@ -240,7 +240,7 @@ export default {
       headings.forEach((heading, subIndex) => {
         if (subIndex > currentIndex && subIndex < nextIndex) {
           let subUl = li.lastChild;
-          if (subUl.tagName !== "ul") {
+          if (subUl.tagName.toLowerCase() !== "ul") {
             subUl = subUl.appendChild(document.createElement("ul"));
             subUl.classList.add("d-toc-sublevel");
             li.appendChild(subUl);
