@@ -36,10 +36,13 @@ $padding-basis: 0.75em;
       &.active,
       .d-toc-wrapper.overlay & {
         ul {
-          max-height: 50em;
+          max-height: 150em;
           overflow: visible;
           opacity: 1;
         }
+      }
+      > a:hover {
+        color: var(--primary-high);
       }
       &.direct-active > a {
         position: relative;
@@ -61,8 +64,16 @@ $padding-basis: 0.75em;
         // it's odd that we need this
         margin-left: -1px;
       }
-      ul {
-        margin-bottom: 0.5em;
+
+      li.d-toc-h2 ~ li.d-toc-h3,
+      li.d-toc-h2 ~ li.d-toc-h4,
+      li.d-toc-h2 ~ li.d-toc-h5,
+      li.d-toc-h3 ~ li.d-toc-h4,
+      li.d-toc-h3 ~ li.d-toc-h5,
+      li.d-toc-h4 ~ li.d-toc-h5 {
+        > a {
+          padding-left: $padding-basis;
+        }
       }
     }
   }
