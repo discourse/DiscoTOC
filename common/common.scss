@@ -26,7 +26,7 @@ $padding-basis: 0.75em;
       margin: 0;
       padding: 0;
       padding-left: $padding-basis;
-      line-height: 1.6em;
+      line-height: var(--line-height-large);
       > ul {
         max-height: 0;
         overflow: hidden;
@@ -36,7 +36,7 @@ $padding-basis: 0.75em;
       &.active,
       .d-toc-wrapper.overlay & {
         ul {
-          max-height: 150em;
+          max-height: 500em;
           overflow: visible;
           opacity: 1;
         }
@@ -60,6 +60,12 @@ $padding-basis: 0.75em;
 
     > ul > li > ul {
       font-size: var(--font-down-1);
+      > li:first-child {
+        padding-top: 0.25em;
+      }
+      > li {
+        padding-bottom: 0.15em;
+      }
       li.direct-active > a:before {
         // it's odd that we need this
         margin-left: -1px;
