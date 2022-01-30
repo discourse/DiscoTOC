@@ -178,6 +178,12 @@ a.d-toc-close {
   }
 }
 
+// core sets first child's top margin to 0
+// ensure it's also 0 when TOC markup is first
+.cooked > div[data-theme-toc]:first-child + * {
+  margin-top: 0px;
+}
+
 // RTL Support
 .rtl {
   .d-toc-main {
