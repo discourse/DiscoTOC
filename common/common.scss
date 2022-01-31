@@ -3,6 +3,11 @@ $padding-basis: 0.75em;
 .d-toc-main {
   display: none;
   width: 225px;
+  @media screen and (max-width: 1045px) {
+    .desktop-view & {
+      width: 150px;
+    }
+  }
   border-left: 1px solid var(--primary-low);
   box-sizing: border-box;
   a {
