@@ -237,4 +237,7 @@ a.d-toc-close {
   position: sticky;
   top: calc(var(--header-offset, 60px) + 1em);
   max-height: calc(100vh - 2em - var(--header-offset, 60px));
+  .mobile-view & {
+    display: none;
+  }
 }
