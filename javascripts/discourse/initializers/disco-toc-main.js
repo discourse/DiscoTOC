@@ -155,7 +155,6 @@ export default {
     const result = this.buildTOC(Array.from(headings));
     document.querySelector(".d-toc-main").appendChild(result);
     document.addEventListener("click", this.clickTOC, false);
-    document.body.classList.add("d-toc-timeline-visible");
   },
 
   clickTOC(e) {
