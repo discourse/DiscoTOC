@@ -33,8 +33,9 @@ export default {
             }
 
             headings.forEach((h) => {
+              const anchor = h.querySelector("a");
               const id =
-                h.getAttribute("id") ||
+                (anchor ? anchor.getAttribute("name") : h.getAttribute("id")) ||
                 slugify(`toc-${h.nodeName}-${h.textContent}`);
 
               h.setAttribute("id", id);
