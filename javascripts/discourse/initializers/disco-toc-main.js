@@ -32,10 +32,11 @@ export default {
               return;
             }
 
-            headings.forEach((h) => {
+            headings.forEach((h, index) => {
+              // suffix uses index for non-Latin languages
+              const suffix = slugify(h.textContent) || index;
               const id =
-                h.getAttribute("id") ||
-                slugify(`toc-${h.nodeName}-${h.textContent}`);
+                h.getAttribute("id") || slugify(`toc-${h.nodeName}-${suffix}`);
 
               h.setAttribute("id", id);
               h.setAttribute("data-d-toc", id);
