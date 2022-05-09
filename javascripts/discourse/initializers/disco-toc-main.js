@@ -159,7 +159,13 @@ export default {
   },
 
   clickTOC(e) {
-    if (!document.body.classList.contains("d-toc-timeline-visible")) {
+    const classNames = ["d-toc-timeline-visible", "archetype-docs-topic"];
+
+    if (
+      !classNames.some((className) =>
+        document.body.classList.contains(className)
+      )
+    ) {
       return;
     }
 
