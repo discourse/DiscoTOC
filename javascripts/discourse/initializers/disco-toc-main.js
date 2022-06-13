@@ -15,7 +15,7 @@ export default {
         (el, helper) => {
           if (helper) {
             const post = helper.getModel();
-            if (post.post_number !== 1) {
+            if (post?.post_number !== 1) {
               return;
             }
 
