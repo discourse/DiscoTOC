@@ -25,6 +25,7 @@ jobs:
         shell: bash
         run: |
           if [ 0 -lt $(find tmp/component/test -type f \( -name "*.js" -or -name "*.es6" \) 2> /dev/null | wc -l) ]; then
+            echo "here?"
             echo "::set-output name=tests_exist::true"
           fi
 
