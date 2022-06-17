@@ -31,7 +31,7 @@ jobs:
 
   test:
     needs: check
-    if: ${{ needs.check.outputs.tests_exist }}
+    # if: ${{ needs.check.outputs.tests_exist }}
     runs-on: ubuntu-latest
     container: discourse/discourse_test:slim-browsers
     timeout-minutes: 15
@@ -44,6 +44,10 @@ jobs:
       PGPASSWORD: discourse
 
     steps:
+      - name: debug
+        run: |
+          echo "exist '${{ needs.check.outputs.tests_exist }}'"
+
       - uses: actions/checkout@v3
         with:
           repository: discourse/discourse
