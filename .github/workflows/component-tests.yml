@@ -51,6 +51,12 @@ jobs:
           repository: discourse/discourse
           fetch-depth: 1
 
+      - name: Install component
+        uses: actions/checkout@v3
+        with:
+          path: tmp/component
+          fetch-depth: 1
+
       - name: Setup Git
         run: |
           git config --global user.email "ci@ci.invalid"
