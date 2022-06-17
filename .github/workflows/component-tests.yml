@@ -13,6 +13,8 @@ concurrency:
 jobs:
   check:
     runs-on: ubuntu-latest
+    outputs:
+      tests_exist: ${{ steps.check_tests.outputs.tests_exist }}
 
     steps:
       - name: Install component
@@ -22,16 +24,16 @@ jobs:
           fetch-depth: 1
 
       - name: Check QUnit existence
+        id: check_tests
         shell: bash
         run: |
           if [ 0 -lt $(find tmp/component/test -type f \( -name "*.js" -or -name "*.es6" \) 2> /dev/null | wc -l) ]; then
-            echo "here?"
             echo "::set-output name=tests_exist::true"
           fi
 
   test:
     needs: check
-    # if: ${{ needs.check.outputs.tests_exist }}
+    if: ${{ needs.check.outputs.tests_exist }}
     runs-on: ubuntu-latest
     container: discourse/discourse_test:slim-browsers
     timeout-minutes: 15
@@ -44,10 +46,6 @@ jobs:
       PGPASSWORD: discourse
 
     steps:
-      - name: debug
-        run: |
-          echo "exist '${{ needs.check.outputs.tests_exist }}'"
-
       - uses: actions/checkout@v3
         with:
           repository: discourse/discourse
