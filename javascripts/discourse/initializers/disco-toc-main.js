@@ -11,6 +11,12 @@ export default {
 
   initialize() {
     withPluginApi("1.0.0", (api) => {
+      const autoTocCategoryIds = settings.auto_TOC_categories
+        .split("|")
+        .map((id) => parseInt(id, 10));
+
+      const autoTocTags = settings.auto_TOC_tags.split("|");
+
       api.decorateCookedElement(
         (el, helper) => {
           if (helper) {
@@ -19,7 +25,14 @@ export default {
               return;
             }
 
-            if (!el.querySelector(`[data-theme-toc="true"]`)) {
+            const topicCategory = helper.getModel().topic.category_id;
+            const topicTags = helper.getModel().topic.tags;
+
+            const hasTOCmarkup = el?.querySelector(`[data-theme-toc="true"]`);
+            const tocCategory = autoTocCategoryIds?.includes(topicCategory);
+            const tocTag = topicTags?.some((tag) => autoTocTags?.includes(tag));
+
+            if (!hasTOCmarkup && !tocCategory && !tocTag) {
               document.body.classList.remove("d-toc-timeline-visible");
               return;
             }
