@@ -286,7 +286,7 @@ export default {
     li.classList.add("d-toc-item");
     li.classList.add(`d-toc-${clonedNode.tagName.toLowerCase()}`);
 
-    li.innerHTML = `<a data-d-toc="${clonedNode.getAttribute("id")}">${
+    li.innerHTML = `<a href="#" data-d-toc="${clonedNode.getAttribute("id")}">${
       clonedNode.textContent
     }</a>`;
 
