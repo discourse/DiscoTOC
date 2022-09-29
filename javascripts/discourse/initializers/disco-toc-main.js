@@ -154,10 +154,10 @@ export default {
     const dToc = document.createElement("div");
     dToc.classList.add("d-toc-main");
     dToc.innerHTML = `<div class="d-toc-icons">
-              <a href="" class="scroll-to-bottom" title="${I18n.t(
+              <a href="#" class="scroll-to-bottom" title="${I18n.t(
                 themePrefix("post_bottom_tooltip")
               )}">${iconHTML("downward")}</a>
-              <a href="" class="d-toc-close">${iconHTML("times")}</a></div>`;
+              <a href="#" class="d-toc-close">${iconHTML("times")}</a></div>`;
 
     const existing = document.querySelector(".d-toc-wrapper .d-toc-main");
     if (existing) {
