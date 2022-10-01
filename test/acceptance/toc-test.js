@@ -122,3 +122,31 @@ acceptance("DiscoTOC - with categories", function (needs) {
     assert.ok(exists(".d-toc-wrapper #d-toc"));
   });
 });
+
+acceptance("DiscoTOC - non-text headings", function (needs) {
+  needs.pretender((server, helper) => {
+    const topicResponse = cloneJSON(topicFixtures["/t/280/1.json"]);
+    topicResponse.post_stream.posts[0].cooked = `
+      <h3 id="toc-h3-span" data-d-toc="toc-h3-span" class="d-toc-post-heading">
+        <a name="span-4" class="anchor" href="#span-4"></a>&lt;span style="color: red"&gt;what about this&lt;/span&gt;</h3>
+      </h3>
+      <p>test</p>
+      ${TOC_MARKUP}
+    `;
+
+    server.get("/t/280.json", () => helper.response(topicResponse));
+    server.get("/t/280/:post_number.json", () =>
+      helper.response(topicResponse)
+    );
+  });
+
+  test("renders the TOC items as plain text", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+
+    const item = query(`#d-toc [data-d-toc="toc-h3-span"]`);
+    assert.strictEqual(
+      item.innerHTML.trim(),
+      `&lt;span style="color: red"&gt;what about this&lt;/span&gt;`
+    );
+  });
+});
