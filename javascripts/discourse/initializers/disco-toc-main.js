@@ -192,23 +192,6 @@ export default {
       return false;
     }
 
-    if (e.target.closest("a")) {
-      // link to first post bottom
-      if (e.target.closest("a").classList.contains("scroll-to-bottom")) {
-        const rect = document
-          .querySelector(".d-toc-cooked")
-          .getBoundingClientRect();
-
-        window.scrollTo({
-          top: rect.bottom + window.scrollY - headerOffset() - 10,
-          behavior: "smooth",
-        });
-
-        e.preventDefault();
-        return false;
-      }
-    }
-
     if (!document.querySelector(".d-toc-wrapper.overlay")) {
       return;
     }

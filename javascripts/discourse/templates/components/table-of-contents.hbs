@@ -1,9 +1,10 @@
 <div class="d-toc-main">
   <div class="d-toc-icons">
     <a
-      href="#"
+      href
       class="scroll-to-bottom"
       title={{i18n (theme-prefix "post_bottom_tooltip")}}
+      {{on "click" this.scrollToBottom}}
     >
       {{d-icon "downward"}}
     </a>
