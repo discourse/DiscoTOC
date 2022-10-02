@@ -60,7 +60,7 @@ export default {
 
     const topicCategory = post.topic.category_id;
     const topicTags = post.topic.tags;
-    const hasTOCmarkup = el?.querySelector(`[data-theme-toc="true"]`);
+    const hasTOCmarkup = el.querySelector(`[data-theme-toc="true"]`);
     const tocCategory = autoTocCategoryIds?.includes(topicCategory);
     const tocTag = topicTags?.some((tag) => autoTocTags?.includes(tag));
 
@@ -90,14 +90,16 @@ export default {
     el.classList.add("d-toc-cooked");
 
     if (document.querySelector(".d-toc-wrapper")) {
-      this.insertTOC(headings);
+      this.buildTOC(Array.from(headings));
+      document.addEventListener("click", this.clickTOC, false);
     } else {
       // try again if decoration happens while outlet is not rendered
       // this is due to core resetting `canRender` for topic-navigation
       // when transitioning between topics
       later(() => {
         if (document.querySelector(".d-toc-wrapper")) {
-          this.insertTOC(headings);
+          this.buildTOC(Array.from(headings));
+          document.addEventListener("click", this.clickTOC, false);
         }
       }, 300);
     }
@@ -145,20 +147,6 @@ export default {
         liParent.classList.add("active");
       });
     }
-  },
-
-  insertTOC(headings) {
-    const dToc = document.querySelector(".d-toc-main");
-
-    const existing = document.querySelector(".d-toc-wrapper .d-toc-main");
-    if (existing) {
-      document.querySelector(".d-toc-wrapper").replaceChild(dToc, existing);
-    } else {
-      document.querySelector(".d-toc-wrapper").appendChild(dToc);
-    }
-
-    this.buildTOC(Array.from(headings));
-    document.addEventListener("click", this.clickTOC, false);
   },
 
   clickTOC(e) {
