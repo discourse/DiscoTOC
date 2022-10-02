@@ -1,10 +1,8 @@
 import domUtils from "discourse-common/utils/dom-utils";
 import { headerOffset } from "discourse/lib/offset-calculator";
-import { iconHTML } from "discourse-common/lib/icon-library";
 import { later } from "@ember/runloop";
 import { slugify } from "discourse/lib/utilities";
 import { withPluginApi } from "discourse/lib/plugin-api";
-import I18n from "I18n";
 
 export default {
   name: "disco-toc-main",
@@ -150,16 +148,7 @@ export default {
   },
 
   insertTOC(headings) {
-    const dToc = document.createElement("div");
-    dToc.classList.add("d-toc-main");
-    dToc.innerHTML = `
-      <div class="d-toc-icons">
-        <a href="#" class="scroll-to-bottom" title="${I18n.t(
-          themePrefix("post_bottom_tooltip")
-        )}">${iconHTML("downward")}</a>
-        <a href="#" class="d-toc-close">${iconHTML("times")}</a>
-      </div>
-    `;
+    const dToc = document.querySelector(".d-toc-main");
 
     const existing = document.querySelector(".d-toc-wrapper .d-toc-main");
     if (existing) {
@@ -168,8 +157,7 @@ export default {
       document.querySelector(".d-toc-wrapper").appendChild(dToc);
     }
 
-    const result = this.buildTOC(Array.from(headings));
-    document.querySelector(".d-toc-main").appendChild(result);
+    this.buildTOC(Array.from(headings));
     document.addEventListener("click", this.clickTOC, false);
   },
 
@@ -239,9 +227,7 @@ export default {
   },
 
   buildTOC(headings) {
-    const result = document.createElement("div");
-    result.setAttribute("id", "d-toc");
-
+    const toc = document.querySelector("#d-toc");
     const primaryH = headings[0].tagName;
     const primaryHeadings = headings.filter((n) => n.tagName === primaryH);
     let nextIndex = headings.length;
@@ -274,10 +260,10 @@ export default {
         }
       });
 
-      result.appendChild(ul);
+      toc.appendChild(ul);
     });
 
-    return result;
+    return toc;
   },
 
   buildItem(node) {
