@@ -11,65 +11,61 @@ export default {
 
   initialize() {
     withPluginApi("1.0.0", (api) => {
+      const autoTocTags = settings.auto_TOC_tags.split("|");
       const autoTocCategoryIds = settings.auto_TOC_categories
         .split("|")
         .map((id) => parseInt(id, 10));
 
-      const autoTocTags = settings.auto_TOC_tags.split("|");
-
       api.decorateCookedElement(
         (el, helper) => {
-          if (helper) {
-            const post = helper.getModel();
-            if (post?.post_number !== 1) {
-              return;
-            }
+          const post = helper.getModel();
+          if (post?.post_number !== 1) {
+            return;
+          }
 
-            const topicCategory = helper.getModel().topic.category_id;
-            const topicTags = helper.getModel().topic.tags;
+          const topicCategory = post.topic.category_id;
+          const topicTags = post.topic.tags;
+          const hasTOCmarkup = el?.querySelector(`[data-theme-toc="true"]`);
+          const tocCategory = autoTocCategoryIds?.includes(topicCategory);
+          const tocTag = topicTags?.some((tag) => autoTocTags?.includes(tag));
 
-            const hasTOCmarkup = el?.querySelector(`[data-theme-toc="true"]`);
-            const tocCategory = autoTocCategoryIds?.includes(topicCategory);
-            const tocTag = topicTags?.some((tag) => autoTocTags?.includes(tag));
+          if (!hasTOCmarkup && !tocCategory && !tocTag) {
+            document.body.classList.remove("d-toc-timeline-visible");
+            return;
+          }
 
-            if (!hasTOCmarkup && !tocCategory && !tocTag) {
-              document.body.classList.remove("d-toc-timeline-visible");
-              return;
-            }
+          let dTocHeadingSelectors =
+            ":scope > h1, :scope > h2, :scope > h3, :scope > h4, :scope > h5";
+          const headings = el.querySelectorAll(dTocHeadingSelectors);
 
-            let dTocHeadingSelectors =
-              ":scope > h1, :scope > h2, :scope > h3, :scope > h4, :scope > h5";
-            const headings = el.querySelectorAll(dTocHeadingSelectors);
+          if (headings.length < 1) {
+            return;
+          }
 
-            if (headings.length < 1) {
-              return;
-            }
+          headings.forEach((h, index) => {
+            // suffix uses index for non-Latin languages
+            const suffix = slugify(h.textContent) || index;
+            const id =
+              h.getAttribute("id") || slugify(`toc-${h.nodeName}-${suffix}`);
 
-            headings.forEach((h, index) => {
-              // suffix uses index for non-Latin languages
-              const suffix = slugify(h.textContent) || index;
-              const id =
-                h.getAttribute("id") || slugify(`toc-${h.nodeName}-${suffix}`);
+            h.setAttribute("id", id);
+            h.setAttribute("data-d-toc", id);
+            h.classList.add("d-toc-post-heading");
+          });
 
-              h.setAttribute("id", id);
-              h.setAttribute("data-d-toc", id);
-              h.classList.add("d-toc-post-heading");
-            });
+          el.classList.add("d-toc-cooked");
 
-            el.classList.add("d-toc-cooked");
-
-            if (document.querySelector(".d-toc-wrapper")) {
-              this.insertTOC(headings);
-            } else {
-              // try again if decoration happens while outlet is not rendered
-              // this is due to core resetting `canRender` for topic-navigation
-              // when transitioning between topics
-              later(() => {
-                if (document.querySelector(".d-toc-wrapper")) {
-                  this.insertTOC(headings);
-                }
-              }, 300);
-            }
+          if (document.querySelector(".d-toc-wrapper")) {
+            this.insertTOC(headings);
+          } else {
+            // try again if decoration happens while outlet is not rendered
+            // this is due to core resetting `canRender` for topic-navigation
+            // when transitioning between topics
+            later(() => {
+              if (document.querySelector(".d-toc-wrapper")) {
+                this.insertTOC(headings);
+              }
+            }, 300);
           }
         },
         {
@@ -83,11 +79,11 @@ export default {
         if (!document.querySelector(".d-toc-cooked")) {
           return;
         }
-        if (args.post.post_number === 1) {
-          document.body.classList.add("d-toc-timeline-visible");
-        } else {
-          document.body.classList.remove("d-toc-timeline-visible");
-        }
+
+        document.body.classList.toggle(
+          "d-toc-timeline-visible",
+          args.post.post_number === 1
+        );
       });
 
       api.onAppEvent("docs-topic:current-post-scrolled", () => {
@@ -122,6 +118,7 @@ export default {
       const distance = Math.abs(
         domUtils.offset(heading).top - headerOffset() - window.scrollY
       );
+
       if (closestHeadingDistance == null || distance < closestHeadingDistance) {
         closestHeadingDistance = distance;
         closestHeading = heading;
@@ -143,7 +140,9 @@ export default {
       if (!anchor) {
         return;
       }
+
       anchor.parentElement.classList.add("direct-active");
+
       parentsUntil(anchor, "#d-toc", ".d-toc-item").forEach((liParent) => {
         liParent.classList.add("active");
       });
@@ -153,11 +152,14 @@ export default {
   insertTOC(headings) {
     const dToc = document.createElement("div");
     dToc.classList.add("d-toc-main");
-    dToc.innerHTML = `<div class="d-toc-icons">
-              <a href="#" class="scroll-to-bottom" title="${I18n.t(
-                themePrefix("post_bottom_tooltip")
-              )}">${iconHTML("downward")}</a>
-              <a href="#" class="d-toc-close">${iconHTML("times")}</a></div>`;
+    dToc.innerHTML = `
+      <div class="d-toc-icons">
+        <a href="#" class="scroll-to-bottom" title="${I18n.t(
+          themePrefix("post_bottom_tooltip")
+        )}">${iconHTML("downward")}</a>
+        <a href="#" class="d-toc-close">${iconHTML("times")}</a>
+      </div>
+    `;
 
     const existing = document.querySelector(".d-toc-wrapper .d-toc-main");
     if (existing) {
@@ -187,15 +189,17 @@ export default {
       e.target.closest(".d-toc-item") &&
       e.target.hasAttribute("data-d-toc")
     ) {
-      const target = `#${e.target.getAttribute("data-d-toc")}`;
+      const target = e.target.getAttribute("data-d-toc");
       const scrollTo = domUtils.offset(
-        document.querySelector(`.d-toc-cooked ${target}`)
+        document.querySelector(`.d-toc-cooked #${target}`)
       ).top;
+
       window.scrollTo({
         top: scrollTo - headerOffset() - 10,
         behavior: "smooth",
       });
       document.querySelector(".d-toc-wrapper").classList.remove("overlay");
+
       e.preventDefault();
       return false;
     }
@@ -207,15 +211,13 @@ export default {
           .querySelector(".d-toc-cooked")
           .getBoundingClientRect();
 
-        if (rect) {
-          window.scrollTo({
-            top: rect.bottom + window.scrollY - headerOffset() - 10,
-            behavior: "smooth",
-          });
+        window.scrollTo({
+          top: rect.bottom + window.scrollY - headerOffset() - 10,
+          behavior: "smooth",
+        });
 
-          e.preventDefault();
-          return false;
-        }
+        e.preventDefault();
+        return false;
       }
 
       // close overlay
@@ -297,23 +299,17 @@ export default {
 
 function parentsUntil(el, selector, filter) {
   const result = [];
-  const matchesSelector =
-    el.matches ||
-    el.webkitMatchesSelector ||
-    el.mozMatchesSelector ||
-    el.msMatchesSelector;
 
   // match start from parent
   el = el.parentElement;
-  while (el && !matchesSelector.call(el, selector)) {
-    if (!filter) {
+
+  while (el && !el.matches(selector)) {
+    if (!filter || el.matches(filter)) {
       result.push(el);
-    } else {
-      if (matchesSelector.call(el, filter)) {
-        result.push(el);
-      }
     }
+
     el = el.parentElement;
   }
+
   return result;
 }
