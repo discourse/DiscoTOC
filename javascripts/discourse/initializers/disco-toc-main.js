@@ -207,13 +207,6 @@ export default {
         e.preventDefault();
         return false;
       }
-
-      // close overlay
-      if (e.target.closest("a").classList.contains("d-toc-close")) {
-        document.querySelector(".d-toc-wrapper").classList.remove("overlay");
-        e.preventDefault();
-        return false;
-      }
     }
 
     if (!document.querySelector(".d-toc-wrapper.overlay")) {

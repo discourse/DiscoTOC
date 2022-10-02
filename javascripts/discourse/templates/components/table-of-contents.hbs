@@ -7,8 +7,11 @@
     >
       {{d-icon "downward"}}
     </a>
-    <a href="#" class="d-toc-close">{{d-icon "times"}}</a>
+    <a href class="d-toc-close" {{on "click" this.closeOverlay}}>
+      {{d-icon "times"}}
+    </a>
   </div>
+
   <div id="d-toc">
   </div>
 </div>
