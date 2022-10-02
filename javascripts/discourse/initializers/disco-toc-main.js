@@ -3,75 +3,18 @@ import { headerOffset } from "discourse/lib/offset-calculator";
 import { later } from "@ember/runloop";
 import { slugify } from "discourse/lib/utilities";
 import { withPluginApi } from "discourse/lib/plugin-api";
+import { bind } from "discourse-common/utils/decorators";
 
 export default {
   name: "disco-toc-main",
 
   initialize() {
     withPluginApi("1.0.0", (api) => {
-      const autoTocTags = settings.auto_TOC_tags.split("|");
-      const autoTocCategoryIds = settings.auto_TOC_categories
-        .split("|")
-        .map((id) => parseInt(id, 10));
-
-      api.decorateCookedElement(
-        (el, helper) => {
-          const post = helper.getModel();
-          if (post?.post_number !== 1) {
-            return;
-          }
-
-          const topicCategory = post.topic.category_id;
-          const topicTags = post.topic.tags;
-          const hasTOCmarkup = el?.querySelector(`[data-theme-toc="true"]`);
-          const tocCategory = autoTocCategoryIds?.includes(topicCategory);
-          const tocTag = topicTags?.some((tag) => autoTocTags?.includes(tag));
-
-          if (!hasTOCmarkup && !tocCategory && !tocTag) {
-            document.body.classList.remove("d-toc-timeline-visible");
-            return;
-          }
-
-          let dTocHeadingSelectors =
-            ":scope > h1, :scope > h2, :scope > h3, :scope > h4, :scope > h5";
-          const headings = el.querySelectorAll(dTocHeadingSelectors);
-
-          if (headings.length < 1) {
-            return;
-          }
-
-          headings.forEach((h, index) => {
-            // suffix uses index for non-Latin languages
-            const suffix = slugify(h.textContent) || index;
-            const id =
-              h.getAttribute("id") || slugify(`toc-${h.nodeName}-${suffix}`);
-
-            h.setAttribute("id", id);
-            h.setAttribute("data-d-toc", id);
-            h.classList.add("d-toc-post-heading");
-          });
-
-          el.classList.add("d-toc-cooked");
-
-          if (document.querySelector(".d-toc-wrapper")) {
-            this.insertTOC(headings);
-          } else {
-            // try again if decoration happens while outlet is not rendered
-            // this is due to core resetting `canRender` for topic-navigation
-            // when transitioning between topics
-            later(() => {
-              if (document.querySelector(".d-toc-wrapper")) {
-                this.insertTOC(headings);
-              }
-            }, 300);
-          }
-        },
-        {
-          id: "disco-toc",
-          onlyStream: true,
-          afterAdopt: true,
-        }
-      );
+      api.decorateCookedElement(this.decorate, {
+        id: "disco-toc",
+        onlyStream: true,
+        afterAdopt: true,
+      });
 
       api.onAppEvent("topic:current-post-changed", (args) => {
         if (!document.querySelector(".d-toc-cooked")) {
@@ -101,6 +44,63 @@ export default {
         document.removeEventListener("click", this.clickTOC, false);
       });
     });
+  },
+
+  @bind
+  decorate(el, helper) {
+    const autoTocTags = settings.auto_TOC_tags.split("|");
+    const autoTocCategoryIds = settings.auto_TOC_categories
+      .split("|")
+      .map((id) => parseInt(id, 10));
+
+    const post = helper.getModel();
+    if (post?.post_number !== 1) {
+      return;
+    }
+
+    const topicCategory = post.topic.category_id;
+    const topicTags = post.topic.tags;
+    const hasTOCmarkup = el?.querySelector(`[data-theme-toc="true"]`);
+    const tocCategory = autoTocCategoryIds?.includes(topicCategory);
+    const tocTag = topicTags?.some((tag) => autoTocTags?.includes(tag));
+
+    if (!hasTOCmarkup && !tocCategory && !tocTag) {
+      document.body.classList.remove("d-toc-timeline-visible");
+      return;
+    }
+
+    let dTocHeadingSelectors =
+      ":scope > h1, :scope > h2, :scope > h3, :scope > h4, :scope > h5";
+    const headings = el.querySelectorAll(dTocHeadingSelectors);
+
+    if (headings.length < 1) {
+      return;
+    }
+
+    headings.forEach((h, index) => {
+      // suffix uses index for non-Latin languages
+      const suffix = slugify(h.textContent) || index;
+      const id = h.getAttribute("id") || slugify(`toc-${h.nodeName}-${suffix}`);
+
+      h.setAttribute("id", id);
+      h.setAttribute("data-d-toc", id);
+      h.classList.add("d-toc-post-heading");
+    });
+
+    el.classList.add("d-toc-cooked");
+
+    if (document.querySelector(".d-toc-wrapper")) {
+      this.insertTOC(headings);
+    } else {
+      // try again if decoration happens while outlet is not rendered
+      // this is due to core resetting `canRender` for topic-navigation
+      // when transitioning between topics
+      later(() => {
+        if (document.querySelector(".d-toc-wrapper")) {
+          this.insertTOC(headings);
+        }
+      }, 300);
+    }
   },
 
   updateTOCSidebar() {
