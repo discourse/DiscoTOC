@@ -1,6 +1,5 @@
 import domUtils from "discourse-common/utils/dom-utils";
 import { headerOffset } from "discourse/lib/offset-calculator";
-import { later } from "@ember/runloop";
 import { slugify } from "discourse/lib/utilities";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { bind } from "discourse-common/utils/decorators";
@@ -10,6 +9,8 @@ export default {
 
   initialize() {
     withPluginApi("1.0.0", (api) => {
+      this.tocService = api.container.lookup("service:table-of-contents-data");
+
       api.decorateCookedElement(this.decorate, {
         id: "disco-toc",
         onlyStream: true,
@@ -89,20 +90,8 @@ export default {
 
     el.classList.add("d-toc-cooked");
 
-    if (document.querySelector(".d-toc-wrapper")) {
-      this.buildTOC(Array.from(headings));
-      document.addEventListener("click", this.clickTOC, false);
-    } else {
-      // try again if decoration happens while outlet is not rendered
-      // this is due to core resetting `canRender` for topic-navigation
-      // when transitioning between topics
-      later(() => {
-        if (document.querySelector(".d-toc-wrapper")) {
-          this.buildTOC(Array.from(headings));
-          document.addEventListener("click", this.clickTOC, false);
-        }
-      }, 300);
-    }
+    this.buildTOC(Array.from(headings));
+    document.addEventListener("click", this.clickTOC, false);
   },
 
   updateTOCSidebar() {
@@ -191,10 +180,10 @@ export default {
   },
 
   buildTOC(headings) {
-    const toc = document.querySelector("#d-toc");
     const primaryH = headings[0].tagName;
     const primaryHeadings = headings.filter((n) => n.tagName === primaryH);
     let nextIndex = headings.length;
+    let result = "";
 
     primaryHeadings.forEach((primaryHeading, index) => {
       const ul = document.createElement("ul");
@@ -224,10 +213,10 @@ export default {
         }
       });
 
-      toc.appendChild(ul);
+      result += ul.outerHTML;
     });
 
-    return toc;
+    this.tocService.html = result;
   },
 
   buildItem(node) {
