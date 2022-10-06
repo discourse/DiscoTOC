@@ -1,0 +1,7 @@
+zh_CN:
+  table_of_contents: 目录
+  insert_table_of_contents: 插入目录
+  post_bottom_tooltip: 帖子控制
+  theme_metadata:
+    settings:
+      minimum_trust_level_to_create_TOC: 能够在编辑器中显示 TOC 按钮的最低信任等级

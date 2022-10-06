@@ -11,15 +11,28 @@ export default {
 
   initialize() {
     withPluginApi("1.0.0", (api) => {
+      const autoTocCategoryIds = settings.auto_TOC_categories
+        .split("|")
+        .map((id) => parseInt(id, 10));
+
+      const autoTocTags = settings.auto_TOC_tags.split("|");
+
       api.decorateCookedElement(
         (el, helper) => {
           if (helper) {
             const post = helper.getModel();
-            if (post.post_number !== 1) {
+            if (post?.post_number !== 1) {
               return;
             }
 
-            if (!el.querySelector(`[data-theme-toc="true"]`)) {
+            const topicCategory = helper.getModel().topic.category_id;
+            const topicTags = helper.getModel().topic.tags;
+
+            const hasTOCmarkup = el?.querySelector(`[data-theme-toc="true"]`);
+            const tocCategory = autoTocCategoryIds?.includes(topicCategory);
+            const tocTag = topicTags?.some((tag) => autoTocTags?.includes(tag));
+
+            if (!hasTOCmarkup && !tocCategory && !tocTag) {
               document.body.classList.remove("d-toc-timeline-visible");
               return;
             }
@@ -32,10 +45,11 @@ export default {
               return;
             }
 
-            headings.forEach((h) => {
+            headings.forEach((h, index) => {
+              // suffix uses index for non-Latin languages
+              const suffix = slugify(h.textContent) || index;
               const id =
-                h.getAttribute("id") ||
-                slugify(`toc-${h.nodeName}-${h.textContent}`);
+                h.getAttribute("id") || slugify(`toc-${h.nodeName}-${suffix}`);
 
               h.setAttribute("id", id);
               h.setAttribute("data-d-toc", id);
@@ -140,10 +154,10 @@ export default {
     const dToc = document.createElement("div");
     dToc.classList.add("d-toc-main");
     dToc.innerHTML = `<div class="d-toc-icons">
-              <a href="" class="scroll-to-bottom" title="${I18n.t(
+              <a href="#" class="scroll-to-bottom" title="${I18n.t(
                 themePrefix("post_bottom_tooltip")
               )}">${iconHTML("downward")}</a>
-              <a href="" class="d-toc-close">${iconHTML("times")}</a></div>`;
+              <a href="#" class="d-toc-close">${iconHTML("times")}</a></div>`;
 
     const existing = document.querySelector(".d-toc-wrapper .d-toc-main");
     if (existing) {
@@ -155,11 +169,16 @@ export default {
     const result = this.buildTOC(Array.from(headings));
     document.querySelector(".d-toc-main").appendChild(result);
     document.addEventListener("click", this.clickTOC, false);
-    document.body.classList.add("d-toc-timeline-visible");
   },
 
   clickTOC(e) {
-    if (!document.body.classList.contains("d-toc-timeline-visible")) {
+    const classNames = ["d-toc-timeline-visible", "archetype-docs-topic"];
+
+    if (
+      !classNames.some((className) =>
+        document.body.classList.contains(className)
+      )
+    ) {
       return;
     }
 
@@ -267,9 +286,9 @@ export default {
     li.classList.add("d-toc-item");
     li.classList.add(`d-toc-${clonedNode.tagName.toLowerCase()}`);
 
-    li.innerHTML = `<a data-d-toc="${clonedNode.getAttribute("id")}">${
-      clonedNode.textContent
-    }</a>`;
+    const id = clonedNode.getAttribute("id");
+    li.innerHTML = `<a href="#" data-d-toc="${id}"></a>`;
+    li.querySelector("a").innerText = clonedNode.textContent.trim();
 
     clonedNode.remove();
     return li;

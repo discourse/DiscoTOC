@@ -6,11 +6,17 @@ minimum_trust_level_to_create_TOC:
     - 2
     - 3
     - 4
-  description:
-    en: "The minimum trust level a user must have in order to see the TOC button in the composer"
 composer_toc_text:
   default: "This topic will contain a table of contents"
 table_of_contents_icon:
   default: "align-left"
 anchor_icon:
   default: "hashtag"
+auto_TOC_categories:
+  type: list
+  list_type: category
+  default: ""
+auto_TOC_tags:
+  type: list
+  list_type: tag
+  default: ""
