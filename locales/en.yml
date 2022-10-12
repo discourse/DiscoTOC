@@ -5,5 +5,5 @@ en:
   theme_metadata:
     settings:
       minimum_trust_level_to_create_TOC: The minimum trust level a user must have in order to see the TOC button in the composer
-      auto_TOC_categories: automaticlly enable TOC on topics in these categories
-      auto_TOC_tags: automaticlly enable TOC on topics with these tags
+      auto_TOC_categories: automatically enable TOC on topics in these categories
+      auto_TOC_tags: automatically enable TOC on topics with these tags
