@@ -150,3 +150,23 @@ acceptance("DiscoTOC - non-text headings", function (needs) {
     );
   });
 });
+
+acceptance("DiscoTOC - setting TOC_min_heading", function (needs) {
+  needs.pretender((server, helper) => {
+    settings.TOC_min_heading = 3;
+    const topicResponse = cloneJSON(topicFixtures["/t/280/1.json"]);
+    topicResponse.post_stream.posts[0].cooked =
+      COOKED_WITH_HEADINGS + TOC_MARKUP;
+
+    server.get("/t/280.json", () => helper.response(topicResponse));
+    server.get("/t/280/:post_number.json", () =>
+      helper.response(topicResponse)
+    );
+  });
+
+  test("not adding TOC element", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+
+    assert.not(exists(".d-toc-wrapper #d-toc"), "TOC element not exists");
+  });
+});

@@ -20,3 +20,7 @@ auto_TOC_tags:
   type: list
   list_type: tag
   default: ""
+TOC_min_heading:
+  default: 3
+  min: 1
+  max: 10000
