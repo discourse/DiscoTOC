@@ -41,7 +41,7 @@ export default {
               ":scope > h1, :scope > h2, :scope > h3, :scope > h4, :scope > h5";
             const headings = el.querySelectorAll(dTocHeadingSelectors);
 
-            if (headings.length < 1) {
+            if (headings.length < settings.TOC_min_heading) {
               return;
             }
 
