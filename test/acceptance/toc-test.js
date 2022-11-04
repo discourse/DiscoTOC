@@ -125,6 +125,7 @@ acceptance("DiscoTOC - with categories", function (needs) {
 
 acceptance("DiscoTOC - non-text headings", function (needs) {
   needs.pretender((server, helper) => {
+    settings.TOC_min_heading = 1;
     const topicResponse = cloneJSON(topicFixtures["/t/280/1.json"]);
     topicResponse.post_stream.posts[0].cooked = `
       <h3 id="toc-h3-span" data-d-toc="toc-h3-span" class="d-toc-post-heading">
