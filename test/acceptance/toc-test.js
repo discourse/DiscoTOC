@@ -167,6 +167,6 @@ acceptance("DiscoTOC - setting TOC_min_heading", function (needs) {
   test("not adding TOC element", async function (assert) {
     await visit("/t/internationalization-localization/280");
 
-    assert.not(exists(".d-toc-wrapper #d-toc"), "TOC element not exists");
+    assert.notOk(exists(".d-toc-wrapper #d-toc"), "TOC element not exists");
   });
 });
