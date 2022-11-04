@@ -157,7 +157,8 @@ acceptance("DiscoTOC - setting TOC_min_heading", function (needs) {
     settings.TOC_min_heading = 3;
     const topicResponse = cloneJSON(topicFixtures["/t/280/1.json"]);
     topicResponse.post_stream.posts[0].cooked =
-    '<h1>\n<a name="h1-first-test-edited-1" class="anchor" href="#h1-first-test-edited-1"></a>帖子控制</h1>\nWelcome' + TOC_MARKUP;
+      '<h1>\n<a name="h1-first-test-edited-1" class="anchor" href="#h1-first-test-edited-1"></a>帖子控制</h1>\nWelcome' +
+      TOC_MARKUP;
 
     server.get("/t/280.json", () => helper.response(topicResponse));
     server.get("/t/280/:post_number.json", () =>
@@ -168,6 +169,9 @@ acceptance("DiscoTOC - setting TOC_min_heading", function (needs) {
   test("hiding TOC element", async function (assert) {
     await visit("/t/internationalization-localization/280");
 
-    assert.notOk(exists(".d-toc-timeline-visible .d-toc-main"), "TOC element not visible");
+    assert.notOk(
+      exists(".d-toc-timeline-visible .d-toc-main"),
+      "TOC element not visible"
+    );
   });
 });
