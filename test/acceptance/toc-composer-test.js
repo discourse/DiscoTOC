@@ -9,6 +9,10 @@ import { test } from "qunit";
 
 acceptance("DiscoTOC - Composer", function (needs) {
   needs.user();
+  needs.settings({
+    general_category_id: 1,
+    default_composer_category: 1,
+  });
 
   test("Can use TOC when creating a topic", async function (assert) {
     await visit("/");
