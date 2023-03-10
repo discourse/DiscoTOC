@@ -216,8 +216,8 @@ a.d-toc-close {
 .edit-title .d-editor-preview [data-theme-toc] {
   background: var(--tertiary);
   color: var(--secondary);
-  border-top: 2px solid var(--secondary);
   position: sticky;
+  z-index: 1;
   top: 0;
   height: 30px;
   display: flex;
