@@ -141,7 +141,7 @@ a.d-toc-close {
       width: 75vw;
       max-width: 350px;
       background-color: var(--secondary);
-      box-shadow: shadow("dropdown");
+      box-shadow: var(--shadow-dropdown);
       z-index: z("modal", "overlay");
       transition: all 0.2s ease-in-out;
       .d-toc-main {
