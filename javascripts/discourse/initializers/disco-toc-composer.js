@@ -5,7 +5,7 @@ export default {
   name: "disco-toc-composer",
 
   initialize() {
-    withPluginApi("1.14.0", (api) => {
+    withPluginApi("1.0.0", (api) => {
       const currentUser = api.getCurrentUser();
       if (!currentUser) {
         return;
@@ -19,19 +19,27 @@ export default {
         }
         I18n.translations[I18n.currentLocale()].js.composer.contains_dtoc = " ";
 
-        api.addComposerToolbarPopupMenuOption({
-          action: (toolbarEvent) => {
-            toolbarEvent.applySurround(
-              `<div data-theme-toc="true">`,
-              `</div>`,
-              "contains_dtoc"
-            );
+        api.modifyClass("controller:composer", {
+          pluginId: "DiscoTOC",
+
+          actions: {
+            insertDtoc() {
+              this.get("toolbarEvent").applySurround(
+                `<div data-theme-toc="true">`,
+                `</div>`,
+                "contains_dtoc"
+              );
+            },
           },
-          icon: "align-left",
-          label: themePrefix("insert_table_of_contents"),
-          condition: (composer) => {
-            return composer.model.topicFirstPost;
-          },
+        });
+
+        api.addToolbarPopupMenuOptionsCallback((controller) => {
+          return {
+            action: "insertDtoc",
+            icon: "align-left",
+            label: themePrefix("insert_table_of_contents"),
+            condition: controller.get("model.topicFirstPost"),
+          };
         });
       }
     });
