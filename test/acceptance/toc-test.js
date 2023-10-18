@@ -3,7 +3,7 @@ import {
   exists,
   query,
 } from "discourse/tests/helpers/qunit-helpers";
-import { visit } from "@ember/test-helpers";
+import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import topicFixtures from "discourse/tests/fixtures/topic";
 import { cloneJSON } from "discourse-common/lib/object";
@@ -26,7 +26,7 @@ acceptance("DiscoTOC - main", function (needs) {
 
     server.get("/t/280.json", () => helper.response(topicResponse));
     server.get("/t/280/:post_number.json", () =>
-      helper.response(topicResponse)
+      helper.response(topicResponse),
     );
   });
 
@@ -41,7 +41,7 @@ acceptance("DiscoTOC - main", function (needs) {
     assert.equal(
       firstH2.textContent.trim(),
       query(matchingTocItem).textContent.trim(),
-      "TOC above timeline has matching items"
+      "TOC above timeline has matching items",
     );
 
     const bquoteH2 = query(".topic-body blockquote h2");
@@ -49,13 +49,13 @@ acceptance("DiscoTOC - main", function (needs) {
     assert.equal(
       bquoteH2.hasAttribute("data-d-toc"),
       false,
-      "does not apply TOC to headings in blockquote"
+      "does not apply TOC to headings in blockquote",
     );
 
     assert.equal(
       firstH2.hasAttribute("data-d-toc"),
       true,
-      "does apply TOC to regular headings"
+      "does apply TOC to regular headings",
     );
 
     const firstH1 = query(".topic-body h1");
@@ -63,8 +63,16 @@ acceptance("DiscoTOC - main", function (needs) {
     assert.equal(
       firstH1.getAttribute("id"),
       "toc-h1-0",
-      "heading gets an ID even when it has no Latin characters"
+      "heading gets an ID even when it has no Latin characters",
     );
+  });
+
+  test("TOC can be toggled to reveal timeline", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+    assert.ok(exists(".d-toc-timeline-toggle"), "TOC toggle exists");
+
+    await click(".d-toc-timeline-toggle");
+    assert.ok(exists(".topic-timeline"), "The timeline is shown on toggle");
   });
 });
 
@@ -75,7 +83,7 @@ acceptance("DiscoTOC - off", function (needs) {
 
     server.get("/t/280.json", () => helper.response(topicResponse));
     server.get("/t/280/:post_number.json", () =>
-      helper.response(topicResponse)
+      helper.response(topicResponse),
     );
   });
 
@@ -94,7 +102,7 @@ acceptance("DiscoTOC - with tags", function (needs) {
 
     server.get("/t/280.json", () => helper.response(topicResponse));
     server.get("/t/280/:post_number.json", () =>
-      helper.response(topicResponse)
+      helper.response(topicResponse),
     );
   });
 
@@ -113,7 +121,7 @@ acceptance("DiscoTOC - with categories", function (needs) {
 
     server.get("/t/280.json", () => helper.response(topicResponse));
     server.get("/t/280/:post_number.json", () =>
-      helper.response(topicResponse)
+      helper.response(topicResponse),
     );
   });
 
@@ -137,7 +145,7 @@ acceptance("DiscoTOC - non-text headings", function (needs) {
 
     server.get("/t/280.json", () => helper.response(topicResponse));
     server.get("/t/280/:post_number.json", () =>
-      helper.response(topicResponse)
+      helper.response(topicResponse),
     );
   });
 
@@ -147,7 +155,7 @@ acceptance("DiscoTOC - non-text headings", function (needs) {
     const item = query(`#d-toc [data-d-toc="toc-h3-span"]`);
     assert.strictEqual(
       item.innerHTML.trim(),
-      `&lt;span style="color: red"&gt;what about this&lt;/span&gt;`
+      `&lt;span style="color: red"&gt;what about this&lt;/span&gt;`,
     );
   });
 });
@@ -162,7 +170,7 @@ acceptance("DiscoTOC - setting TOC_min_heading", function (needs) {
 
     server.get("/t/280.json", () => helper.response(topicResponse));
     server.get("/t/280/:post_number.json", () =>
-      helper.response(topicResponse)
+      helper.response(topicResponse),
     );
   });
 
@@ -171,7 +179,7 @@ acceptance("DiscoTOC - setting TOC_min_heading", function (needs) {
 
     assert.notOk(
       exists(".d-toc-timeline-visible .d-toc-main"),
-      "TOC element not visible"
+      "TOC element not visible",
     );
   });
 });
