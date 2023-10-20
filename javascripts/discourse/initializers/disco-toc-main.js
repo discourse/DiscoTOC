@@ -98,6 +98,11 @@ export default {
         } else {
           handleButtonAndBody("hide");
         }
+
+        // don't show the toggle if there's only 1 post
+        if (args.post.topic.posts_count === 1) {
+          document.body.classList.remove("d-toc-timeline-toggleable");
+        }
       });
 
       api.onAppEvent("docs-topic:current-post-scrolled", () => {

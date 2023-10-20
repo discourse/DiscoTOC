@@ -137,8 +137,27 @@ a.d-toc-close {
   display: none;
   position: fixed;
   bottom: 0;
+  @include ellipsis;
   .d-icon-timeline {
     margin-right: 0.25em;
+  }
+
+  @media screen and (min-height: 1200px) {
+    // on tall screens we don't want this button
+    // to be incredibly distant
+    position: absolute;
+    .d-toc-timeline-visible & {
+      bottom: -4em;
+    }
+    bottom: -6.5em;
+  }
+}
+
+.topic-navigation.with-timeline:has(.timeline-docked) {
+  // hide toggle when timeline is docked
+  // (firefox doesn't support :has yet)
+  .d-toc-timeline-toggle {
+    display: none;
   }
 }
 
