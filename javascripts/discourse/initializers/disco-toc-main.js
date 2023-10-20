@@ -96,7 +96,7 @@ export default {
           }
 
           // don't show the toggle if there's only 1 post
-          if (!args.post.topic.posts_count === 1) {
+          if (args.post.topic.posts_count !== 1) {
             document.body.classList.add("d-toc-timeline-toggleable");
           }
         } else {
