@@ -1,3 +1,4 @@
+import I18n from "discourse-i18n";
 import {
   acceptance,
   exists,
@@ -19,7 +20,9 @@ acceptance("DiscoTOC - Composer", function (needs) {
     await click("#create-topic");
     const toolbarPopupMenu = selectKit(".toolbar-popup-menu-options");
     await toolbarPopupMenu.expand();
-    await toolbarPopupMenu.selectRowByValue("insertDtoc");
+    await toolbarPopupMenu.selectRowByName(
+      I18n.t(themePrefix("insert_table_of_contents"))
+    );
 
     assert.ok(query(".d-editor-input").value.includes('data-theme-toc="true"'));
   });
@@ -33,7 +36,9 @@ acceptance("DiscoTOC - Composer", function (needs) {
 
     const toolbarPopupMenu = selectKit(".toolbar-popup-menu-options");
     await toolbarPopupMenu.expand();
-    await toolbarPopupMenu.selectRowByValue("insertDtoc");
+    await toolbarPopupMenu.selectRowByName(
+      I18n.t(themePrefix("insert_table_of_contents"))
+    );
 
     assert.ok(query(".d-editor-input").value.includes('data-theme-toc="true"'));
   });
