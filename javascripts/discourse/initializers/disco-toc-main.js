@@ -78,7 +78,7 @@ export default {
           id: "disco-toc",
           onlyStream: true,
           afterAdopt: true,
-        }
+        },
       );
 
       api.onAppEvent("topic:current-post-changed", (args) => {
@@ -94,12 +94,15 @@ export default {
           if (!TOChidden) {
             handleButtonAndBody("show");
           }
-          document.body.classList.add("d-toc-timeline-toggleable");
+
+          // don't show the toggle if there's only 1 post
+          if (!args.post.topic.posts_count === 1) {
+            document.body.classList.add("d-toc-timeline-toggleable");
+          }
         } else {
           handleButtonAndBody("hide");
         }
 
-        // don't show the toggle if there's only 1 post
         if (args.post.topic.posts_count === 1) {
           document.body.classList.remove("d-toc-timeline-toggleable");
         }
@@ -136,7 +139,7 @@ export default {
 
     headings.forEach((heading) => {
       const distance = Math.abs(
-        domUtils.offset(heading).top - headerOffset() - window.scrollY
+        domUtils.offset(heading).top - headerOffset() - window.scrollY,
       );
       if (closestHeadingDistance == null || distance < closestHeadingDistance) {
         closestHeadingDistance = distance;
@@ -153,7 +156,7 @@ export default {
       });
 
       const anchor = document.querySelector(
-        `#d-toc a[data-d-toc="${closestHeading.getAttribute("id")}"]`
+        `#d-toc a[data-d-toc="${closestHeading.getAttribute("id")}"]`,
       );
 
       if (!anchor) {
@@ -170,7 +173,7 @@ export default {
     const dToc = document.createElement("div");
     dToc.classList.add("d-toc-main");
     dToc.innerHTML = `<div class="d-toc-icons"><a href="#" class="d-toc-close">${iconHTML(
-      "times"
+      "times",
     )}</a></div>`;
     return dToc;
   },
@@ -181,7 +184,7 @@ export default {
     scrollLink.className = "scroll-to-bottom";
     scrollLink.title = I18n.t(themePrefix("post_bottom_tooltip"));
     scrollLink.innerHTML = `${iconHTML("downward")} ${I18n.t(
-      themePrefix("jump_bottom")
+      themePrefix("jump_bottom"),
     )}`;
     return scrollLink;
   },
@@ -229,7 +232,7 @@ export default {
 
     if (
       !classNames.some((className) =>
-        document.body.classList.contains(className)
+        document.body.classList.contains(className),
       )
     ) {
       return;
@@ -242,7 +245,7 @@ export default {
     ) {
       const target = `#${e.target.getAttribute("data-d-toc")}`;
       const scrollTo = domUtils.offset(
-        document.querySelector(`.d-toc-cooked ${target}`)
+        document.querySelector(`.d-toc-cooked ${target}`),
       ).top;
       window.scrollTo({
         top: scrollTo - headerOffset() - 10,
@@ -384,7 +387,7 @@ function handleButtonAndBody(action) {
     case "hide":
       body.classList.remove(
         "d-toc-timeline-visible",
-        "d-toc-timeline-toggleable"
+        "d-toc-timeline-toggleable",
       );
       break;
 
@@ -403,7 +406,7 @@ function handleButtonAndBody(action) {
       : "stream";
 
     button.innerHTML = `${iconHTML(icon)}${I18n.t(
-      themePrefix(translationKey)
+      themePrefix(translationKey),
     )} `;
   }
 }
