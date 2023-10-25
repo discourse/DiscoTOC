@@ -1,26 +1,35 @@
 $padding-basis: 0.75em;
 
-.d-toc-main {
-  display: none;
+.d-toc-available .d-toc-wrapper {
+  // the toc increases the timeline container's width
+  // so as long as the toc is available in a topic
+  // we want this width to remain for the timeline
+  // so if the toc is toggled off, the position doesn't shift
   width: 225px;
   @media screen and (max-width: 1045px) {
     .desktop-view & {
       width: 150px;
     }
   }
+}
+
+.d-toc-main {
+  display: none;
   border-left: 1px solid var(--primary-low);
   box-sizing: border-box;
   a {
     display: block;
     padding: 0.15em 0;
-    color: var(--primary-medium);
+    color: var(--primary-700);
     &.scroll-to-bottom {
+      color: var(--tertiary);
       padding-left: $padding-basis;
+      margin-top: 0.5em;
+      font-size: var(--font-down-1);
     }
   }
   #d-toc {
-    max-height: calc(100vh - 4.5em - var(--header-offset));
-    padding-bottom: 0.5em;
+    max-height: calc(100dvh - 7em - var(--header-offset));
     overflow: auto;
     ul {
       list-style-type: none;
@@ -47,7 +56,7 @@ $padding-basis: 0.75em;
         }
       }
       > a:hover {
-        color: var(--primary-high);
+        color: var(--primary);
       }
       &.direct-active > a {
         position: relative;
@@ -124,6 +133,53 @@ a.d-toc-close {
   display: none;
 }
 
+.d-toc-timeline-toggle {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  @include ellipsis;
+  .d-icon-timeline {
+    margin-right: 0.25em;
+  }
+
+  @media screen and (min-height: 1200px) {
+    // on tall screens we don't want this button
+    // to be incredibly distant
+    position: absolute;
+    .d-toc-timeline-visible & {
+      bottom: -4em;
+    }
+    bottom: -6.5em;
+  }
+}
+
+.topic-navigation.with-timeline:has(.timeline-docked) {
+  // hide toggle when timeline is docked
+  // (firefox doesn't support :has yet)
+  .d-toc-timeline-toggle {
+    display: none;
+  }
+}
+
+.d-toc-timeline-toggleable {
+  .d-toc-timeline-toggle {
+    display: block;
+    z-index: z("timeline");
+    @media screen and (max-height: 480px) {
+      // avoid overlapping timeline
+      display: none;
+    }
+  }
+  .with-topic-progress {
+    .d-toc-main {
+      display: block;
+    }
+    .d-toc-timeline-toggle {
+      display: none;
+    }
+  }
+}
+
 .d-toc-timeline-visible {
   .d-toc-main,
   .d-toc-mini {
@@ -134,7 +190,7 @@ a.d-toc-close {
     .d-toc-wrapper {
       position: fixed;
       margin-top: 0.25em;
-      height: calc(100vh - 50px - var(--header-offset));
+      height: calc(100dvh - 50px - var(--header-offset));
       opacity: 0.5;
       right: -100vw;
       top: var(--header-offset);
@@ -149,16 +205,23 @@ a.d-toc-close {
         padding: 0.5em;
         height: 100%;
         #d-toc {
-          max-height: calc(100% - 3em);
+          max-height: calc(100% - 2.25em);
         }
       }
       &.overlay {
         right: 0;
         width: 75vw;
         opacity: 1;
-        .d-toc-main #d-toc li.d-toc-item ul {
-          transition: none;
+        .d-toc-main {
+          display: block;
+          #d-toc li.d-toc-item ul {
+            transition: none;
+          }
         }
+      }
+
+      a.scroll-to-bottom {
+        margin-top: 0.33em;
       }
 
       a.scroll-to-bottom,
@@ -168,18 +231,41 @@ a.d-toc-close {
       }
 
       .d-toc-icons {
-        text-align: right;
+        position: absolute;
+        background: var(--secondary);
+        right: 1.5em;
+        top: 0.25em;
+        z-index: z("timeline");
       }
     }
   }
 
   // core overrides when timeline is active
-  .timeline-container,
-  #topic-progress {
+  .timeline-container {
     display: none;
   }
   .container.posts .topic-navigation.with-topic-progress {
     align-self: start;
+  }
+}
+
+#topic-progress-wrapper {
+  align-items: stretch;
+  .d-toc-mini {
+    display: none;
+    .d-toc-timeline-visible & {
+      display: block;
+    }
+    height: 100%;
+    .btn {
+      height: 100%;
+    }
+  }
+
+  .staff & {
+    .topic-admin-menu-button-container {
+      margin-left: 0.5em;
+    }
   }
 }
 
@@ -232,11 +318,5 @@ a.d-toc-close {
 .below-docs-topic-outlet.d-toc-wrapper {
   position: sticky;
   top: calc(var(--header-offset, 60px) + 1em);
-  max-height: calc(100vh - 2em - var(--header-offset, 60px));
-  .mobile-view & {
-    display: none;
-  }
-  .d-toc-main {
-    display: block;
-  }
+  max-height: calc(100dvh - 2em - var(--header-offset, 60px));
 }

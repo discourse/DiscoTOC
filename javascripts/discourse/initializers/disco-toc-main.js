@@ -6,6 +6,8 @@ import { slugify } from "discourse/lib/utilities";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import I18n from "I18n";
 
+let TOChidden = false;
+
 export default {
   name: "disco-toc-main",
 
@@ -80,13 +82,29 @@ export default {
       );
 
       api.onAppEvent("topic:current-post-changed", (args) => {
+        // manages the timeline area width via CSS
         if (!document.querySelector(".d-toc-cooked")) {
-          return;
-        }
-        if (args.post.post_number === 1) {
-          document.body.classList.add("d-toc-timeline-visible");
+          return document.body.classList.remove("d-toc-available");
         } else {
-          document.body.classList.remove("d-toc-timeline-visible");
+          document.body.classList.add("d-toc-available");
+        }
+
+        // manages timeline visibility
+        if (args.post.post_number === 1) {
+          if (!TOChidden) {
+            handleButtonAndBody("show");
+          }
+
+          // don't show the toggle if there's only 1 post
+          if (args.post.topic.posts_count !== 1) {
+            document.body.classList.add("d-toc-timeline-toggleable");
+          }
+        } else {
+          handleButtonAndBody("hide");
+        }
+
+        if (args.post.topic.posts_count === 1) {
+          document.body.classList.remove("d-toc-timeline-toggleable");
         }
       });
 
@@ -103,7 +121,8 @@ export default {
       });
 
       api.cleanupStream(() => {
-        document.body.classList.remove("d-toc-timeline-visible");
+        handleButtonAndBody("hide");
+        TOChidden = false;
         document.removeEventListener("click", this.clickTOC, false);
       });
     });
@@ -150,29 +169,66 @@ export default {
     }
   },
 
-  insertTOC(headings) {
+  createMainDiv() {
     const dToc = document.createElement("div");
     dToc.classList.add("d-toc-main");
-    dToc.innerHTML = `<div class="d-toc-icons">
-              <a href="#" class="scroll-to-bottom" title="${I18n.t(
-                themePrefix("post_bottom_tooltip")
-              )}">${iconHTML("downward")}</a>
-              <a href="#" class="d-toc-close">${iconHTML("times")}</a></div>`;
+    dToc.innerHTML = `<div class="d-toc-icons"><a href="#" class="d-toc-close">${iconHTML(
+      "times"
+    )}</a></div>`;
+    return dToc;
+  },
+
+  createScrollLink() {
+    const scrollLink = document.createElement("a");
+    scrollLink.href = "#";
+    scrollLink.className = "scroll-to-bottom";
+    scrollLink.title = I18n.t(themePrefix("post_bottom_tooltip"));
+    scrollLink.innerHTML = `${iconHTML("downward")} ${I18n.t(
+      themePrefix("jump_bottom")
+    )}`;
+    return scrollLink;
+  },
+
+  createToggleButton() {
+    const toggleButton = document.createElement("button");
+    toggleButton.className =
+      "d-toc-timeline-toggle btn btn-default btn-icon-text";
+    toggleButton.innerHTML =
+      iconHTML("timeline") + I18n.t(themePrefix("topic_timeline"));
+
+    return toggleButton;
+  },
+
+  insertTOC(headings) {
+    const dToc = this.createMainDiv();
+    const scrollLink = this.createScrollLink();
+    this.toggleButton = this.createToggleButton();
 
     const existing = document.querySelector(".d-toc-wrapper .d-toc-main");
+    const wrapper = document.querySelector(".d-toc-wrapper");
+
     if (existing) {
-      document.querySelector(".d-toc-wrapper").replaceChild(dToc, existing);
+      wrapper.replaceChild(dToc, existing);
     } else {
-      document.querySelector(".d-toc-wrapper").appendChild(dToc);
+      wrapper.appendChild(dToc);
     }
 
     const result = this.buildTOC(Array.from(headings));
-    document.querySelector(".d-toc-main").appendChild(result);
+    dToc.appendChild(result);
+    dToc.appendChild(scrollLink);
+    wrapper.appendChild(this.toggleButton);
     document.addEventListener("click", this.clickTOC, false);
   },
 
   clickTOC(e) {
     const classNames = ["d-toc-timeline-visible", "archetype-docs-topic"];
+
+    // toggle timeline visibility
+    if (e.target.closest(".d-toc-timeline-toggle")) {
+      handleButtonAndBody("toggle");
+      e.preventDefault();
+      return false;
+    }
 
     if (
       !classNames.some((className) =>
@@ -212,7 +268,7 @@ export default {
             top: rect.bottom + window.scrollY - headerOffset() - 10,
             behavior: "smooth",
           });
-
+          document.querySelector(".d-toc-wrapper").classList.remove("overlay");
           e.preventDefault();
           return false;
         }
@@ -316,4 +372,41 @@ function parentsUntil(el, selector, filter) {
     el = el.parentElement;
   }
   return result;
+}
+
+function handleButtonAndBody(action) {
+  const body = document.body;
+  const button = document.querySelector("button.d-toc-timeline-toggle");
+
+  switch (action) {
+    case "toggle":
+      body.classList.toggle("d-toc-timeline-visible");
+      TOChidden = !TOChidden;
+      break;
+
+    case "hide":
+      body.classList.remove(
+        "d-toc-timeline-visible",
+        "d-toc-timeline-toggleable"
+      );
+      break;
+
+    case "show":
+      body.classList.add("d-toc-timeline-visible", "d-toc-timeline-toggleable");
+      break;
+  }
+
+  if (button) {
+    const translationKey = body.classList.contains("d-toc-timeline-visible")
+      ? "topic_timeline"
+      : "table_of_contents";
+
+    const icon = body.classList.contains("d-toc-timeline-visible")
+      ? "timeline"
+      : "stream";
+
+    button.innerHTML = `${iconHTML(icon)}${I18n.t(
+      themePrefix(translationKey)
+    )} `;
+  }
 }
