@@ -3,7 +3,7 @@ import {
   exists,
   query,
 } from "discourse/tests/helpers/qunit-helpers";
-import { click, visit } from "@ember/test-helpers";
+import { visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import topicFixtures from "discourse/tests/fixtures/topic";
 import { cloneJSON } from "discourse-common/lib/object";
@@ -65,14 +65,6 @@ acceptance("DiscoTOC - main", function (needs) {
       "toc-h1-0",
       "heading gets an ID even when it has no Latin characters"
     );
-  });
-
-  test("TOC can be toggled to reveal timeline", async function (assert) {
-    await visit("/t/internationalization-localization/280");
-    assert.ok(exists(".d-toc-timeline-toggle"), "TOC toggle exists");
-
-    await click(".d-toc-timeline-toggle");
-    assert.ok(exists(".topic-timeline"), "The timeline is shown on toggle");
   });
 });
 
