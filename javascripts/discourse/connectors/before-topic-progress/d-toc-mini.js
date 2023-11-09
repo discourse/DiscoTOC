@@ -6,4 +6,9 @@ export default class DTocMini extends Component {
   showTOCOverlay() {
     document.querySelector(".d-toc-wrapper").classList.toggle("overlay");
   }
+
+  @action
+  resetBodyClass() {
+    document.body.classList.add("d-toc-timeline-visible");
+  }
 }
