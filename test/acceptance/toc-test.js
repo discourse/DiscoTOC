@@ -1,11 +1,11 @@
+import { visit } from "@ember/test-helpers";
+import { test } from "qunit";
+import topicFixtures from "discourse/tests/fixtures/topic";
 import {
   acceptance,
   exists,
   query,
 } from "discourse/tests/helpers/qunit-helpers";
-import { visit } from "@ember/test-helpers";
-import { test } from "qunit";
-import topicFixtures from "discourse/tests/fixtures/topic";
 import { cloneJSON } from "discourse-common/lib/object";
 
 const COOKED_WITH_HEADINGS =

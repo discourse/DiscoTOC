@@ -1,12 +1,12 @@
-import I18n from "discourse-i18n";
+import { click, visit } from "@ember/test-helpers";
+import { test } from "qunit";
 import {
   acceptance,
   exists,
   query,
 } from "discourse/tests/helpers/qunit-helpers";
-import { click, visit } from "@ember/test-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import { test } from "qunit";
+import I18n from "discourse-i18n";
 
 acceptance("DiscoTOC - Composer", function (needs) {
   needs.user();

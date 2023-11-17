@@ -1,9 +1,9 @@
-import domUtils from "discourse-common/utils/dom-utils";
-import { headerOffset } from "discourse/lib/offset-calculator";
-import { iconHTML } from "discourse-common/lib/icon-library";
 import { later } from "@ember/runloop";
-import { slugify } from "discourse/lib/utilities";
+import { headerOffset } from "discourse/lib/offset-calculator";
 import { withPluginApi } from "discourse/lib/plugin-api";
+import { slugify } from "discourse/lib/utilities";
+import { iconHTML } from "discourse-common/lib/icon-library";
+import domUtils from "discourse-common/utils/dom-utils";
 import I18n from "I18n";
 
 export default {
