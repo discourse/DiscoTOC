@@ -37,9 +37,7 @@ export default {
               return;
             }
 
-            let dTocHeadingSelectors =
-              ":scope > h1, :scope > h2, :scope > h3, :scope > h4, :scope > h5";
-            const headings = el.querySelectorAll(dTocHeadingSelectors);
+            const headings = el.querySelectorAll(generateSelectors(settings.TOC_custom_selector));
 
             if (headings.length < settings.TOC_min_heading) {
               return;
@@ -294,6 +292,22 @@ export default {
     return li;
   },
 };
+
+function generateSelectors(customSelector) {
+  let rootSelector = ":scope";
+  let headings = ["h1", "h2", "h3", "h4", "h5"];
+  let rootSelectors;
+  let customSelectors;
+
+  rootSelectors = 
+    headings.map(heading => `${rootSelector} > ${heading}`).join(", ");
+  if(customSelector) {
+    customSelectors = 
+      headings.map(heading => `${rootSelector} > ${customSelector} > ${heading}`).join(", ");
+  }
+
+  return `${rootSelectors}, ${customSelectors}`;
+}
 
 function parentsUntil(el, selector, filter) {
   const result = [];

@@ -7,3 +7,4 @@ en:
       minimum_trust_level_to_create_TOC: The minimum trust level a user must have in order to see the TOC button in the composer
       auto_TOC_categories: automatically enable TOC on topics in these categories
       auto_TOC_tags: automatically enable TOC on topics with these tags
+      TOC_custom_selector: By default DiscoTOC only indexes headings in the post's root element. Here you can specify an intermediate CSS selector.<br>Ie. `.my-div` will be interpreted as `:root > .my-div > [h1, h2, ...]`.
