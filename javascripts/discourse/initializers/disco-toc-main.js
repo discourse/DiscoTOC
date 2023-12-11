@@ -82,13 +82,15 @@ export default {
       );
 
       api.onAppEvent("topic:current-post-changed", (args) => {
+        const hasCookedTOC = document.querySelector(".d-toc-cooked");
+
         // manages the timeline area width via CSS
-        if (document.querySelector(".d-toc-cooked")) {
+        if (hasCookedTOC) {
           document.body.classList.add("d-toc-available");
         }
 
         // manages timeline visibility
-        if (args.post.post_number === 1) {
+        if (hasCookedTOC && args.post.post_number === 1) {
           if (!TOChidden) {
             handleButtonAndBody("show");
           } else {
@@ -96,7 +98,7 @@ export default {
           }
 
           // don't show the toggle if there's only 1 post
-          if (args.post.topic.posts_count !== 1) {
+          if (hasCookedTOC && args.post.topic.posts_count !== 1) {
             document.body.classList.add("d-toc-timeline-toggleable");
           }
         } else {
