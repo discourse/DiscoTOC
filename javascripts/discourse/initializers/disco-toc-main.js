@@ -231,14 +231,6 @@ export default {
       return false;
     }
 
-    if (
-      !classNames.some((className) =>
-        document.body.classList.contains(className)
-      )
-    ) {
-      return;
-    }
-
     // link to each heading
     if (
       e.target.closest(".d-toc-item") &&
@@ -290,6 +282,14 @@ export default {
     // clicking outside overlay
     if (!e.target.closest(".d-toc-wrapper.overlay")) {
       document.querySelector(".d-toc-wrapper").classList.remove("overlay");
+    }
+
+    if (
+      !classNames.some((className) =>
+        document.body.classList.contains(className)
+      )
+    ) {
+      return;
     }
   },
 

@@ -191,60 +191,6 @@ a.d-toc-close {
   .d-toc-mini {
     display: block;
   }
-  // overlayed timeline (on mobile and narrow screens)
-  .topic-navigation.with-topic-progress {
-    .d-toc-wrapper {
-      position: fixed;
-      margin-top: 0.25em;
-      height: calc(100dvh - 50px - var(--header-offset));
-      opacity: 0.5;
-      right: -100vw;
-      top: var(--header-offset);
-      width: 75vw;
-      max-width: 350px;
-      background-color: var(--secondary);
-      box-shadow: var(--shadow-dropdown);
-      z-index: z("modal", "overlay");
-      transition: all 0.2s ease-in-out;
-      .d-toc-main {
-        width: 100%;
-        padding: 0.5em;
-        height: 100%;
-        #d-toc {
-          max-height: calc(100% - 2.25em);
-        }
-      }
-      &.overlay {
-        right: 0;
-        width: 75vw;
-        opacity: 1;
-        .d-toc-main {
-          display: block;
-          #d-toc li.d-toc-item ul {
-            transition: none;
-          }
-        }
-      }
-
-      a.scroll-to-bottom {
-        margin-top: 0.33em;
-      }
-
-      a.scroll-to-bottom,
-      a.d-toc-close {
-        display: inline-block;
-        padding: 0.5em;
-      }
-
-      .d-toc-icons {
-        position: absolute;
-        background: var(--secondary);
-        right: 1.5em;
-        top: 0.25em;
-        z-index: z("timeline");
-      }
-    }
-  }
 
   // core overrides when timeline is active
   .timeline-container {
@@ -255,13 +201,69 @@ a.d-toc-close {
   }
 }
 
+// overlayed timeline (on mobile and narrow screens)
+.topic-navigation.with-topic-progress {
+  .d-toc-timeline-toggle {
+    display: none;
+  }
+  .d-toc-wrapper {
+    position: fixed;
+    margin-top: 0.25em;
+    height: calc(100dvh - 50px - var(--header-offset));
+    opacity: 0.5;
+    right: -100vw;
+    top: var(--header-offset);
+    width: 75vw;
+    max-width: 350px;
+    background-color: var(--secondary);
+    box-shadow: var(--shadow-dropdown);
+    z-index: z("modal", "overlay");
+    transition: all 0.2s ease-in-out;
+    .d-toc-main {
+      width: 100%;
+      padding: 0.5em;
+      height: 100%;
+      #d-toc {
+        max-height: calc(100% - 2.25em);
+      }
+    }
+    &.overlay {
+      right: 0;
+      width: 75vw;
+      opacity: 1;
+      .d-toc-main {
+        display: block;
+        #d-toc li.d-toc-item ul {
+          transition: none;
+        }
+      }
+    }
+
+    a.scroll-to-bottom {
+      margin-top: 0.33em;
+    }
+
+    a.scroll-to-bottom,
+    a.d-toc-close {
+      display: inline-block;
+      padding: 0.5em;
+    }
+
+    .d-toc-icons {
+      position: absolute;
+      background: var(--secondary);
+      right: 1.5em;
+      top: 0.25em;
+      z-index: z("timeline");
+    }
+  }
+}
+
 #topic-progress-wrapper {
   align-items: stretch;
   .d-toc-mini {
     display: none;
-    .d-toc-timeline-visible & {
-      display: block;
-    }
+
     height: 100%;
     .btn {
       height: 100%;
@@ -272,6 +274,12 @@ a.d-toc-close {
     .topic-admin-menu-button-container {
       margin-left: 0.5em;
     }
+  }
+}
+
+.d-toc-timeline-toggleable {
+  #topic-progress-wrapper .d-toc-mini {
+    display: block;
   }
 }
 
