@@ -6,8 +6,6 @@ import { iconHTML } from "discourse-common/lib/icon-library";
 import domUtils from "discourse-common/utils/dom-utils";
 import I18n from "I18n";
 
-let TOChidden = localStorage.getItem("discourse_toc-hidden") === "true";
-
 export default {
   name: "disco-toc-main",
 
@@ -82,31 +80,13 @@ export default {
       );
 
       api.onAppEvent("topic:current-post-changed", (args) => {
-        const hasCookedTOC = document.querySelector(".d-toc-cooked");
-
-        // manages the timeline area width via CSS
-        if (hasCookedTOC) {
-          document.body.classList.add("d-toc-available");
+        if (!document.querySelector(".d-toc-cooked")) {
+          return;
         }
-
-        // manages timeline visibility
-        if (hasCookedTOC && args.post.post_number === 1) {
-          if (!TOChidden) {
-            handleButtonAndBody("show");
-          } else {
-            handleButtonAndBody("hide");
-          }
-
-          // don't show the toggle if there's only 1 post
-          if (hasCookedTOC && args.post.topic.posts_count !== 1) {
-            document.body.classList.add("d-toc-timeline-toggleable");
-          }
+        if (args.post.post_number === 1) {
+          document.body.classList.add("d-toc-timeline-visible");
         } else {
-          handleButtonAndBody("hide");
-        }
-
-        if (args.post.topic.posts_count === 1) {
-          document.body.classList.remove("d-toc-timeline-toggleable");
+          document.body.classList.remove("d-toc-timeline-visible");
         }
       });
 
@@ -123,7 +103,7 @@ export default {
       });
 
       api.cleanupStream(() => {
-        document.body.classList.remove("d-toc-available");
+        document.body.classList.remove("d-toc-timeline-visible");
         document.removeEventListener("click", this.clickTOC, false);
       });
     });
@@ -170,65 +150,36 @@ export default {
     }
   },
 
-  createMainDiv() {
+  insertTOC(headings) {
     const dToc = document.createElement("div");
     dToc.classList.add("d-toc-main");
-    dToc.innerHTML = `<div class="d-toc-icons"><a href="#" class="d-toc-close">${iconHTML(
-      "times"
-    )}</a></div>`;
-    return dToc;
-  },
-
-  createScrollLink() {
-    const scrollLink = document.createElement("a");
-    scrollLink.href = "#";
-    scrollLink.className = "scroll-to-bottom";
-    scrollLink.title = I18n.t(themePrefix("post_bottom_tooltip"));
-    scrollLink.innerHTML = `${iconHTML("downward")} ${I18n.t(
-      themePrefix("jump_bottom")
-    )}`;
-    return scrollLink;
-  },
-
-  createToggleButton() {
-    const toggleButton = document.createElement("button");
-    toggleButton.className =
-      "d-toc-timeline-toggle btn btn-default btn-icon-text";
-    toggleButton.innerHTML =
-      iconHTML("timeline") + I18n.t(themePrefix("topic_timeline"));
-
-    return toggleButton;
-  },
-
-  insertTOC(headings) {
-    const dToc = this.createMainDiv();
-    const scrollLink = this.createScrollLink();
-    this.toggleButton = this.createToggleButton();
+    dToc.innerHTML = `<div class="d-toc-icons">
+              <a href="#" class="scroll-to-bottom" title="${I18n.t(
+                themePrefix("post_bottom_tooltip")
+              )}">${iconHTML("downward")}</a>
+              <a href="#" class="d-toc-close">${iconHTML("times")}</a></div>`;
 
     const existing = document.querySelector(".d-toc-wrapper .d-toc-main");
-    const wrapper = document.querySelector(".d-toc-wrapper");
-
     if (existing) {
-      wrapper.replaceChild(dToc, existing);
+      document.querySelector(".d-toc-wrapper").replaceChild(dToc, existing);
     } else {
-      wrapper.appendChild(dToc);
-      wrapper.appendChild(this.toggleButton);
+      document.querySelector(".d-toc-wrapper").appendChild(dToc);
     }
 
     const result = this.buildTOC(Array.from(headings));
-    dToc.appendChild(result);
-    dToc.appendChild(scrollLink);
+    document.querySelector(".d-toc-main").appendChild(result);
     document.addEventListener("click", this.clickTOC, false);
   },
 
   clickTOC(e) {
     const classNames = ["d-toc-timeline-visible", "archetype-docs-topic"];
 
-    // toggle timeline visibility
-    if (e.target.closest(".d-toc-timeline-toggle")) {
-      handleButtonAndBody("toggle");
-      e.preventDefault();
-      return false;
+    if (
+      !classNames.some((className) =>
+        document.body.classList.contains(className)
+      )
+    ) {
+      return;
     }
 
     // link to each heading
@@ -261,7 +212,7 @@ export default {
             top: rect.bottom + window.scrollY - headerOffset() - 10,
             behavior: "smooth",
           });
-          document.querySelector(".d-toc-wrapper").classList.remove("overlay");
+
           e.preventDefault();
           return false;
         }
@@ -282,14 +233,6 @@ export default {
     // clicking outside overlay
     if (!e.target.closest(".d-toc-wrapper.overlay")) {
       document.querySelector(".d-toc-wrapper").classList.remove("overlay");
-    }
-
-    if (
-      !classNames.some((className) =>
-        document.body.classList.contains(className)
-      )
-    ) {
-      return;
     }
   },
 
@@ -373,43 +316,4 @@ function parentsUntil(el, selector, filter) {
     el = el.parentElement;
   }
   return result;
-}
-
-function handleButtonAndBody(action) {
-  const body = document.body;
-  const button = document.querySelector("button.d-toc-timeline-toggle");
-
-  switch (action) {
-    case "toggle":
-      body.classList.toggle("d-toc-timeline-visible");
-      TOChidden = !TOChidden;
-      localStorage.setItem("discourse_toc-hidden", TOChidden.toString());
-
-      break;
-
-    case "hide":
-      body.classList.remove(
-        "d-toc-timeline-visible",
-        "d-toc-timeline-toggleable"
-      );
-      break;
-
-    case "show":
-      body.classList.add("d-toc-timeline-visible", "d-toc-timeline-toggleable");
-      break;
-  }
-
-  if (button) {
-    const translationKey = body.classList.contains("d-toc-timeline-visible")
-      ? "topic_timeline"
-      : "table_of_contents";
-
-    const icon = body.classList.contains("d-toc-timeline-visible")
-      ? "timeline"
-      : "stream";
-
-    button.innerHTML = `${iconHTML(icon)}${I18n.t(
-      themePrefix(translationKey)
-    )} `;
-  }
 }

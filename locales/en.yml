@@ -1,7 +1,5 @@
 en:
-  table_of_contents: Table of contents
-  topic_timeline: Topic timeline
-  jump_bottom: Jump to replies
+  table_of_contents: table of contents
   insert_table_of_contents: Insert table of contents
   post_bottom_tooltip: Navigate to post controls
   theme_metadata:
