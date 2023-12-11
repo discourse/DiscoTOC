@@ -82,8 +82,8 @@ export default {
       );
 
       api.onAppEvent("topic:current-post-changed", (args) => {
-        const hasCookedTOC =  document.querySelector(".d-toc-cooked");
-        
+        const hasCookedTOC = document.querySelector(".d-toc-cooked");
+
         // manages the timeline area width via CSS
         if (hasCookedTOC) {
           document.body.classList.add("d-toc-available");
