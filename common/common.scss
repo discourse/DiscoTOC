@@ -1,13 +1,26 @@
 $padding-basis: 0.75em;
 
-.d-toc-main {
-  display: none;
-  width: 225px;
-  @media screen and (max-width: 1045px) {
-    .desktop-view & {
-      width: 150px;
+@media screen and (min-width: 925px) {
+  .container.posts {
+    // needs to be static, otherwise we get content shifts when the TOC shows/hides
+    grid-template-columns: 75% 25%;
+    .topic-navigation {
+      // maybe? watch out for content shifts on scroll if the dates change the width?
+      // helps keep timeline/toc shift consistent
+      justify-content: center;
     }
   }
+}
+
+.overlay .d-toc-main {
+  max-width: 100%;
+}
+
+.d-toc-main {
+  min-width: 6em;
+  max-width: 13em;
+
+  word-wrap: break-word;
   border-left: 1px solid var(--primary-low);
   box-sizing: border-box;
   a {
@@ -124,62 +137,58 @@ a.d-toc-close {
   display: none;
 }
 
-.d-toc-timeline-visible {
-  .d-toc-main,
-  .d-toc-mini {
-    display: block;
+.d-toc-mini {
+  height: 100%;
+  button {
+    height: 100%;
   }
-  // overlayed timeline (on mobile and narrow screens)
-  .topic-navigation.with-topic-progress {
-    .d-toc-wrapper {
-      position: fixed;
-      margin-top: 0.25em;
-      height: calc(100vh - 50px - var(--header-offset));
-      opacity: 0.5;
-      right: -100vw;
-      top: var(--header-offset);
-      width: 75vw;
-      max-width: 350px;
-      background-color: var(--secondary);
-      box-shadow: var(--shadow-dropdown);
-      z-index: z("modal", "overlay");
-      transition: all 0.2s ease-in-out;
-      .d-toc-main {
-        width: 100%;
-        padding: 0.5em;
-        height: 100%;
-        #d-toc {
-          max-height: calc(100% - 3em);
-        }
-      }
-      &.overlay {
-        right: 0;
-        width: 75vw;
-        opacity: 1;
-        .d-toc-main #d-toc li.d-toc-item ul {
-          transition: none;
-        }
-      }
+}
 
-      a.scroll-to-bottom,
-      a.d-toc-close {
-        display: inline-block;
-        padding: 0.5em;
-      }
-
-      .d-toc-icons {
-        text-align: right;
+.d-toc-main,
+.d-toc-mini {
+  display: block;
+}
+// overlayed timeline (on mobile and narrow screens)
+.topic-navigation.with-topic-progress {
+  .d-toc-wrapper {
+    position: fixed;
+    margin-top: 0.25em;
+    height: calc(100vh - 50px - var(--header-offset));
+    opacity: 0.5;
+    right: -100vw;
+    top: var(--header-offset);
+    width: 75vw;
+    max-width: 350px;
+    background-color: var(--secondary);
+    box-shadow: var(--shadow-dropdown);
+    z-index: z("modal", "overlay");
+    transition: all 0.2s ease-in-out;
+    .d-toc-main {
+      width: 100%;
+      padding: 0.5em;
+      height: 100%;
+      #d-toc {
+        max-height: calc(100% - 3em);
       }
     }
-  }
+    &.overlay {
+      right: 0;
+      width: 75vw;
+      opacity: 1;
+      .d-toc-main #d-toc li.d-toc-item ul {
+        transition: none;
+      }
+    }
 
-  // core overrides when timeline is active
-  .timeline-container,
-  #topic-progress {
-    display: none;
-  }
-  .container.posts .topic-navigation.with-topic-progress {
-    align-self: start;
+    a.scroll-to-bottom,
+    a.d-toc-close {
+      display: inline-block;
+      padding: 0.5em;
+    }
+
+    .d-toc-icons {
+      text-align: right;
+    }
   }
 }
 
@@ -202,7 +211,7 @@ a.d-toc-close {
     }
   }
 
-  .d-toc-timeline-visible .topic-navigation.with-topic-progress .d-toc-wrapper {
+  .topic-navigation.with-topic-progress .d-toc-wrapper {
     right: unset;
     left: -100vw;
     &.overlay {
@@ -238,5 +247,13 @@ a.d-toc-close {
   }
   .d-toc-main {
     display: block;
+  }
+}
+
+// temp
+
+.d-toc-active {
+  .timeline-container {
+    display: none;
   }
 }
