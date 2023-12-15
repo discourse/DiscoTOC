@@ -160,7 +160,7 @@ export default class TocContents extends Component {
 
     <div id="d-toc" {{didInsert this.setup}} {{willDestroy this.teardown}}>
 
-      {{#each this.args.tocStructure as |heading|}}
+      {{#each @tocStructure as |heading|}}
         <ul class="d-toc-heading">
           <TocHeading
             @item={{heading}}
