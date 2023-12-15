@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
 import DButton from "discourse/components/d-button";
-import TocToggle from "../components/toc-toggle";
+import i18n from "discourse-common/helpers/i18n";
 
 export default class TocLargeButtons extends Component {
   @service tocProcessor;
@@ -13,10 +13,9 @@ export default class TocLargeButtons extends Component {
         <DButton
           @action={{this.callJumpToEnd}}
           @icon="downward"
-          @label="jump to end"
+          @translatedLabel={{i18n (themePrefix "jump_bottom")}}
           @class="btn btn-transparent scroll-to-bottom"
         />
-        <TocToggle />
       </div>
     {{/if}}
   </template>

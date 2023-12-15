@@ -23,13 +23,32 @@ export default class TocContents extends Component {
   @tracked activeAncestorIds = [];
   @tracked flattenedToc = [];
 
+  getIdFromHeading(heading) {
+    // reuse content from autolinked headings
+    const tagName = heading.tagName.toLowerCase();
+    const text = heading.textContent.trim();
+    const anchor = heading.querySelector("a.anchor");
+    return anchor ? anchor.name : `toc-${tagName}-${slugify(text)}`;
+  }
+
+  flattenTocStructure(tocStructure) {
+    // the post content is flat, but we want to keep the relationships added in tocStructure
+    return tocStructure.reduce((flatArray, item) => {
+      return [
+        ...flatArray,
+        item,
+        ...(item.subItems ? this.flattenTocStructure(item.subItems) : []),
+      ];
+    }, []);
+  }
+
   @action
   setup() {
     this.listenForScroll();
     this.listenForResize();
-    this.calculateHeadingPositions();
-    this.updateActiveHeadingOnScroll(); // manually setup
     this.flattenedToc = this.flattenTocStructure(this.args.tocStructure);
+    this.calculateHeadingPositions();
+    this.updateActiveHeadingOnScroll(); // manual on setup so active class is added
   }
 
   @action
@@ -66,25 +85,6 @@ export default class TocContents extends Component {
           POSITION_BUFFER,
       };
     });
-  }
-
-  getIdFromHeading(heading) {
-    // reuse content from autolinked headings
-    const tagName = heading.tagName.toLowerCase();
-    const text = heading.textContent.trim();
-    const anchor = heading.querySelector("a.anchor");
-    return anchor ? anchor.name : `toc-${tagName}-${slugify(text)}`;
-  }
-
-  flattenTocStructure(tocStructure) {
-    // the post content is flat, but we want to keep the TOC relationships from tocStructure
-    return tocStructure.reduce((flatArray, item) => {
-      return [
-        ...flatArray,
-        item,
-        ...(item.subItems ? this.flattenTocStructure(item.subItems) : []),
-      ];
-    }, []);
   }
 
   @action
@@ -153,36 +153,30 @@ export default class TocContents extends Component {
     }
   }
 
-  get shouldShow() {
-    if (this.args.renderTimeline) {
-      return this.tocProcessor.isTocVisible;
-    } else {
-      // visibility is managed with CSS for the progress bar
-      return true;
-    }
-  }
-
   <template>
-    {{#if this.shouldShow}}
-      {{bodyClass "d-toc-active"}}
-      <TocMiniButtons @renderTimeline={{@renderTimeline}} @postID={{@postID}} />
-      <div id="d-toc" {{didInsert this.setup}} {{willDestroy this.teardown}}>
-        {{#each this.args.tocStructure as |heading|}}
-          <ul class="d-toc-heading">
-            <TocHeading
-              @item={{heading}}
-              @activeHeadingId={{this.activeHeadingId}}
-              @activeAncestorIds={{this.activeAncestorIds}}
-              @renderTimeline={{@renderTimeline}}
-            />
-          </ul>
-        {{/each}}
-        <TocLargeButtons
-          @toggleTocVisibility={{@toggleTocVisibility}}
-          @postID={{@postID}}
-           @renderTimeline={{@renderTimeline}} 
-        />
-      </div>
-    {{/if}}
+    {{bodyClass "d-toc-active"}}
+
+    <TocMiniButtons @renderTimeline={{@renderTimeline}} @postID={{@postID}} />
+
+    <div id="d-toc" {{didInsert this.setup}} {{willDestroy this.teardown}}>
+
+      {{#each this.args.tocStructure as |heading|}}
+        <ul class="d-toc-heading">
+          <TocHeading
+            @item={{heading}}
+            @activeHeadingId={{this.activeHeadingId}}
+            @activeAncestorIds={{this.activeAncestorIds}}
+            @renderTimeline={{@renderTimeline}}
+          />
+        </ul>
+      {{/each}}
+
+      <TocLargeButtons
+        @toggleTocVisibility={{@toggleTocVisibility}}
+        @postID={{@postID}}
+        @renderTimeline={{@renderTimeline}}
+      />
+
+    </div>
   </template>
 }

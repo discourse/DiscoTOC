@@ -1,11 +1,14 @@
 import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { inject as service } from "@ember/service";
 import { headerOffset } from "discourse/lib/offset-calculator";
 
 const SCROLL_BUFFER = 25;
 
 export default class TocHeading extends Component {
+  @service tocProcessor;
+
   get isActive() {
     return this.args.activeHeadingId === this.args.item.id;
   }
@@ -48,10 +51,8 @@ export default class TocHeading extends Component {
 
       window.scrollTo({ top: offsetPosition, behavior: "smooth" });
 
-      if (!this.args.renderTimeline) {
-        // hide TOC wrapper if clicking a link scrolls us to a different post
-        document.querySelector(".d-toc-wrapper").classList.remove("overlay");
-      }
+      // hide TOC overlay when navigating to link
+      this.tocProcessor.setOverlayVisible(false);
     }
   }
 

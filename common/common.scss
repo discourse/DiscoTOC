@@ -4,11 +4,6 @@ $padding-basis: 0.75em;
   .container.posts {
     // needs to be static, otherwise we get content shifts when the TOC shows/hides
     grid-template-columns: 75% 25%;
-    .topic-navigation {
-      // maybe? watch out for content shifts on scroll if the dates change the width?
-      // helps keep timeline/toc shift consistent
-      justify-content: center;
-    }
   }
 }
 
@@ -21,7 +16,6 @@ $padding-basis: 0.75em;
   max-width: 13em;
 
   word-wrap: break-word;
-  border-left: 1px solid var(--primary-low);
   box-sizing: border-box;
   a {
     display: block;
@@ -32,8 +26,8 @@ $padding-basis: 0.75em;
     }
   }
   #d-toc {
+    border-left: 1px solid var(--primary-low);
     max-height: calc(100vh - 4.5em - var(--header-offset));
-    padding-bottom: 0.5em;
     overflow: auto;
     ul {
       list-style-type: none;
@@ -132,11 +126,6 @@ html.rtl SELECTOR {
 }
 // END active line marker
 
-.d-toc-mini,
-a.d-toc-close {
-  display: none;
-}
-
 .d-toc-mini {
   height: 100%;
   button {
@@ -144,10 +133,6 @@ a.d-toc-close {
   }
 }
 
-.d-toc-main,
-.d-toc-mini {
-  display: block;
-}
 // overlayed timeline (on mobile and narrow screens)
 .topic-navigation.with-topic-progress {
   .d-toc-wrapper {
@@ -250,8 +235,47 @@ a.d-toc-close {
   }
 }
 
-// temp
+// toggle in timeline
+.timeline-container
+  .topic-timeline
+  .timeline-footer-controls
+  button:last-child {
+  // annoying core style
+  &.timeline-toggle {
+    margin-right: 100%;
+    white-space: nowrap;
+  }
+}
 
+// toggle in timeline dtoc
+.d-toc-main {
+  .timeline-toggle {
+    margin-top: 1em;
+  }
+}
+
+// jump to bottom in timeline
+.d-toc-footer-icons {
+  font-size: var(--font-down-1);
+  margin-top: 0.5em;
+  button {
+    color: var(--tertiary);
+    .d-icon {
+      color: currentColor;
+    }
+  }
+}
+
+// on shorter screens, we can keep this consistently in the same location
+// this is kind of far away for tall screens, so the more variable position below might be better
+@media screen and (max-height: 950px) {
+  .timeline-toggle {
+    position: fixed;
+    bottom: 0;
+  }
+}
+
+// hides the timeline when d-toc is shown
 .d-toc-active {
   .timeline-container {
     display: none;

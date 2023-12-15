@@ -8,32 +8,38 @@ export default class TocProcessor extends Service {
   @tracked postID = null;
   @tracked tocStructure = null;
   @tracked isTocVisible = localStorage.getItem("tocVisibility") !== "false";
+  @tracked isOverlayVisible = false;
 
   toggleTocVisibility = () => {
     this.isTocVisible = !this.isTocVisible;
     localStorage.setItem("tocVisibility", this.isTocVisible);
   };
 
+  setOverlayVisible(visible) {
+    this.isOverlayVisible = visible;
+    const tocWrapper = document.querySelector(".d-toc-wrapper");
+    if (tocWrapper) {
+      tocWrapper.classList.toggle("overlay", visible);
+    }
+  }
+
+  toggleOverlay() {
+    this.setOverlayVisible(!this.isOverlayVisible);
+  }
+
   checkPostforTOC(topic) {
     this.hasTOC = false;
 
-    if (!this.isValidTopic(topic)) {
-      this.closeOverlay();
-      return;
+    if (
+      this.isValidTopic(topic) &&
+      this.shouldDisplayToc(this.getCurrentPost(topic))
+    ) {
+      const content = this.getCurrentPost(topic).cooked;
+      if (this.containsTocMarkup(content)) {
+        this.processPostContent(content, this.getCurrentPost(topic).id);
+      }
     }
-
-    const currentPost = this.getCurrentPost(topic);
-    if (!this.shouldDisplayToc(currentPost)) {
-      this.closeOverlay();
-      return;
-    }
-
-    const currentPostContent = currentPost.cooked;
-    if (this.containsTocMarkup(currentPostContent)) {
-      this.processPostContent(currentPostContent, currentPost.id);
-    } else {
-      this.closeOverlay();
-    }
+    this.setOverlayVisible(false);
   }
 
   isValidTopic(topic) {
@@ -55,20 +61,16 @@ export default class TocProcessor extends Service {
   }
 
   processPostContent(content, postId) {
+    // no headings, no parsing
     if (this.containsHeadings(content)) {
       const parsedPost = new DOMParser().parseFromString(content, "text/html");
       const headings = parsedPost.querySelectorAll("h1, h2, h3, h4, h5");
 
-      if (
-        this.areHeadingsSequential(headings) &&
-        headings.length >= settings.TOC_min_heading
-      ) {
+      if (this.areHeadingsSequential(headings)) {
         this.populateTocData(postId, content, headings);
-      } else {
-        this.closeOverlay();
       }
     } else {
-      this.closeOverlay();
+      this.setOverlayVisible(false);
     }
   }
 
@@ -141,19 +143,12 @@ export default class TocProcessor extends Service {
     return root.subItems;
   }
 
-  closeOverlay() {
-    const tocWrapper = document.querySelector(".d-toc-wrapper");
-    if (tocWrapper) {
-      tocWrapper.classList.remove("overlay");
-    }
-  }
-
   jumpToEnd(renderTimeline, postID) {
     const buffer = 150;
     const postContainer = document.querySelector(`[data-post-id="${postID}"]`);
 
     if (!renderTimeline) {
-      this.closeOverlay();
+      this.setOverlayVisible(false);
     }
 
     if (postContainer) {

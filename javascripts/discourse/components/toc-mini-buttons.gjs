@@ -15,13 +15,18 @@ export default class TocMiniButtons extends Component {
           @class="btn btn-transparent scroll-to-bottom"
         />
         <DButton
-          @action={{this.tocProcessor.closeOverlay}}
+          @action={{this.closeOverlay}}
           @icon="times"
           @class="btn btn-transparent d-toc-close"
         />
       </div>
     {{/unless}}
   </template>
+
+  @action
+  callCloseOverlay() {
+    this.tocProcessor.setOverlayVisible(false);
+  }
 
   @action
   callJumpToEnd() {

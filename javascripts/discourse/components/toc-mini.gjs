@@ -7,29 +7,23 @@ export default class TocMini extends Component {
   @service tocProcessor;
   clickOutside = null;
 
-  get hasTOC() {
-    return this.tocProcessor.hasTOC;
+  @action
+  addClickOutsideListener() {
+    this.clickOutside = () => {
+      this.tocProcessor.setOverlayVisible(false);
+      this.removeClickOutsideListener();
+    };
+    document.addEventListener("click", this.clickOutside);
   }
 
   @action
   toggleTOCOverlay() {
-    const tocWrapper = document.querySelector(".d-toc-wrapper");
-    tocWrapper.classList.toggle("overlay");
-    tocWrapper.classList.contains("overlay")
-      ? this.addClickOutsideListener()
-      : this.removeClickOutsideListener();
-  }
-
-  @action
-  addClickOutsideListener() {
-    this.clickOutside = (event) => {
-      const tocWrapper = document.querySelector(".d-toc-wrapper");
-      if (!tocWrapper.contains(event.target)) {
-        tocWrapper.classList.remove("overlay");
-        this.removeClickOutsideListener();
-      }
-    };
-    document.addEventListener("click", this.clickOutside);
+    this.tocProcessor.toggleOverlay();
+    if (this.tocProcessor.isOverlayVisible) {
+      this.addClickOutsideListener();
+    } else {
+      this.removeClickOutsideListener();
+    }
   }
 
   removeClickOutsideListener() {
@@ -42,7 +36,7 @@ export default class TocMini extends Component {
   }
 
   <template>
-    {{#if this.hasTOC}}
+    {{#if this.tocProcessor.hasTOC}}
       <div class="d-toc-mini">
         <DButton
           class="btn-primary"
