@@ -4,10 +4,8 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { inject as service } from "@ember/service";
-import and from "truth-helpers/helpers/and";
 import TocContents from "../components/toc-contents";
 import TocToggle from "../components/toc-toggle";
-import not from "truth-helpers/helpers/not";
 
 export default class TocTimeline extends Component {
   @service tocProcessor;
