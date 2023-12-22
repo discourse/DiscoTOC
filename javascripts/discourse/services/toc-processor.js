@@ -1,14 +1,16 @@
 import { tracked } from "@glimmer/tracking";
-import Service from "@ember/service";
+import Service, { inject as service } from "@ember/service";
 import { slugify } from "discourse/lib/utilities";
 
 export default class TocProcessor extends Service {
+  @service router;
   @tracked hasTOC = false;
   @tracked postContent = null;
   @tracked postID = null;
   @tracked tocStructure = null;
   @tracked isTocVisible = localStorage.getItem("tocVisibility") !== "false";
   @tracked isOverlayVisible = false;
+  @tracked isDocs = false;
 
   toggleTocVisibility = () => {
     this.isTocVisible = !this.isTocVisible;
@@ -47,6 +49,14 @@ export default class TocProcessor extends Service {
   }
 
   getCurrentPost(topic) {
+    const docs = this.router?.currentRouteName?.includes("docs");
+
+    if (docs) {
+      this.isDocs = true;
+      return topic.post_stream.posts[0];
+    }
+
+    this.isDocs = false;
     return topic.postStream?.posts?.find(
       (post) => post.post_number === topic.currentPost
     );

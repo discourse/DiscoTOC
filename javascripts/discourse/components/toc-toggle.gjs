@@ -7,14 +7,16 @@ export default class TocToggle extends Component {
   @service tocProcessor;
 
   <template>
-    {{#if this.tocProcessor.hasTOC}}
-      <DButton
-        @action={{this.tocProcessor.toggleTocVisibility}}
-        @icon={{this.toggleIcon}}
-        @translatedLabel={{i18n (themePrefix this.toggleLabel)}}
-        @class="btn btn-default timeline-toggle"
-      />
-    {{/if}}
+    {{#unless this.tocProcessor.isDocs}}
+      {{#if this.tocProcessor.hasTOC}}
+        <DButton
+          @action={{this.tocProcessor.toggleTocVisibility}}
+          @icon={{this.toggleIcon}}
+          @translatedLabel={{i18n (themePrefix this.toggleLabel)}}
+          @class="btn btn-default timeline-toggle"
+        />
+      {{/if}}
+    {{/unless}}
   </template>
 
   get toggleLabel() {

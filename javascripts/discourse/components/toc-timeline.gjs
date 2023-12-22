@@ -45,6 +45,11 @@ export default class TocTimeline extends Component {
       return false;
     }
 
+    if (this.tocProcessor.isDocs) {
+      // should always show on docs routes
+      return true;
+    }
+
     if (this.args.renderTimeline) {
       // timeline state controlled by localStorage
       return this.tocProcessor.isTocVisible;
