@@ -31,13 +31,12 @@ export default class TocProcessor extends Service {
 
   checkPostforTOC(topic) {
     this.hasTOC = false;
-
     if (
       this.isValidTopic(topic) &&
       this.shouldDisplayToc(this.getCurrentPost(topic))
     ) {
       const content = this.getCurrentPost(topic).cooked;
-      if (this.containsTocMarkup(content)) {
+      if (this.containsTocMarkup(content) || this.autoTOC(topic)) {
         this.processPostContent(content, this.getCurrentPost(topic).id);
       }
     }
@@ -67,14 +66,18 @@ export default class TocProcessor extends Service {
   }
 
   containsTocMarkup(content) {
-    return this.autoTOC || content.includes(`<div data-theme-toc="true">`);
+    return content.includes(`<div data-theme-toc="true">`);
   }
 
   processPostContent(content, postId) {
     // no headings, no parsing
     if (this.containsHeadings(content)) {
       const parsedPost = new DOMParser().parseFromString(content, "text/html");
-      const headings = parsedPost.querySelectorAll("h1, h2, h3, h4, h5");
+
+      // direct descendants to avoid picking up headings in quotes
+      const headings = parsedPost.querySelectorAll(
+        "body > h1,body > h2,body > h3,body > h4,body > h5"
+      );
 
       if (this.areHeadingsSequential(headings)) {
         this.populateTocData(postId, content, headings);
@@ -113,6 +116,30 @@ export default class TocProcessor extends Service {
     }
 
     return true;
+  }
+
+  autoTOC(topic) {
+    // check topic for categories or tags from settings
+    const autoCategories = settings.auto_TOC_categories
+      ? settings.auto_TOC_categories.split("|").map((id) => parseInt(id, 10))
+      : [];
+
+    const autoTags = settings.auto_TOC_tags
+      ? settings.auto_TOC_tags.split("|")
+      : [];
+
+    if ((!autoCategories.length && !autoTags.length) || !topic) {
+      return false;
+    }
+
+    const topicCategory = topic.category_id;
+    const topicTags = topic.tags || [];
+
+    const hasMatchingTags = autoTags.some((tag) => topicTags.includes(tag));
+    const hasMatchingCategory = autoCategories.includes(topicCategory);
+
+    // only apply autoTOC on first post
+    return (hasMatchingTags || hasMatchingCategory) && topic.currentPost === 1;
   }
 
   generateTocStructure(headings) {

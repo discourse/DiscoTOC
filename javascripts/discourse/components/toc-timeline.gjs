@@ -12,29 +12,6 @@ export default class TocTimeline extends Component {
   @tracked
   isTocVisible = localStorage.getItem("tocVisibility") === "true" || true;
 
-  get autoTOC() {
-    // check topic for categories or tags from settings
-    const autoCategories = settings.auto_TOC_categories
-      ? settings.auto_TOC_categories.split("|").map((id) => parseInt(id, 10))
-      : [];
-
-    const autoTags = settings.auto_TOC_tags
-      ? settings.auto_TOC_tags.split("|")
-      : [];
-
-    if ((!autoCategories.length && !autoTags.length) || !this.args.topic) {
-      return false;
-    }
-
-    const topicCategory = this.args.topic.category_id;
-    const topicTags = this.args.topic.tags || [];
-
-    const hasMatchingTags = autoTags.some((tag) => topicTags.includes(tag));
-    const hasMatchingCategory = autoCategories.includes(topicCategory);
-
-    return hasMatchingTags || hasMatchingCategory;
-  }
-
   @action
   callCheckPostforTOC() {
     this.tocProcessor.checkPostforTOC(this.args.topic);

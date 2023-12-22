@@ -1,8 +1,10 @@
 import Component from "@glimmer/component";
+import { concat } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
 import { headerOffset } from "discourse/lib/offset-calculator";
+import { slugify } from "discourse/lib/utilities";
 
 const SCROLL_BUFFER = 25;
 
@@ -58,7 +60,11 @@ export default class TocHeading extends Component {
 
   <template>
     <li class={{this.classNames}}>
-      <a href="#{{@item.id}}" {{on "click" this.handleTocLinkClick}}>
+      <a
+        href="#{{@item.id}}"
+        {{on "click" this.handleTocLinkClick}}
+        data-d-toc={{concat "toc-" @item.tagName "-" (slugify @item.text)}}
+      >
         {{@item.text}}
       </a>
       {{#if @item.subItems}}

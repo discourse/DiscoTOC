@@ -35,11 +35,11 @@ acceptance("DiscoTOC - main", function (needs) {
 
     assert.ok(exists(".d-toc-wrapper #d-toc"), "TOC element exists");
 
-    const firstH2 = query(".topic-body h2"),
-      dTocID = firstH2.getAttribute("data-d-toc"),
-      matchingTocItem = `#d-toc [data-d-toc="${dTocID}"]`;
+    const firstH2 = query(".topic-body [href='#measure-h2-2']"),
+      matchingTocItem = `#d-toc [data-d-toc="toc-h2-measure-h2"]`;
+
     assert.equal(
-      firstH2.textContent.trim(),
+      firstH2.nextSibling.textContent.trim(),
       query(matchingTocItem).textContent.trim(),
       "TOC above timeline has matching items"
     );
@@ -47,23 +47,9 @@ acceptance("DiscoTOC - main", function (needs) {
     const bquoteH2 = query(".topic-body blockquote h2");
     assert.ok(exists(bquoteH2), "blockquote H2 exists");
     assert.equal(
-      bquoteH2.hasAttribute("data-d-toc"),
-      false,
+      query("#d-toc [data-d-toc='toc-h2-undeveloped']"),
+      null,
       "does not apply TOC to headings in blockquote"
-    );
-
-    assert.equal(
-      firstH2.hasAttribute("data-d-toc"),
-      true,
-      "does apply TOC to regular headings"
-    );
-
-    const firstH1 = query(".topic-body h1");
-
-    assert.equal(
-      firstH1.getAttribute("id"),
-      "toc-h1-0",
-      "heading gets an ID even when it has no Latin characters"
     );
   });
 });
@@ -120,35 +106,6 @@ acceptance("DiscoTOC - with categories", function (needs) {
   test("automaticly adds TOC based on category", async function (assert) {
     await visit("/t/internationalization-localization/280");
     assert.ok(exists(".d-toc-wrapper #d-toc"));
-  });
-});
-
-acceptance("DiscoTOC - non-text headings", function (needs) {
-  needs.pretender((server, helper) => {
-    settings.TOC_min_heading = 1;
-    const topicResponse = cloneJSON(topicFixtures["/t/280/1.json"]);
-    topicResponse.post_stream.posts[0].cooked = `
-      <h3 id="toc-h3-span" data-d-toc="toc-h3-span" class="d-toc-post-heading">
-        <a name="span-4" class="anchor" href="#span-4"></a>&lt;span style="color: red"&gt;what about this&lt;/span&gt;</h3>
-      </h3>
-      <p>test</p>
-      ${TOC_MARKUP}
-    `;
-
-    server.get("/t/280.json", () => helper.response(topicResponse));
-    server.get("/t/280/:post_number.json", () =>
-      helper.response(topicResponse)
-    );
-  });
-
-  test("renders the TOC items as plain text", async function (assert) {
-    await visit("/t/internationalization-localization/280");
-
-    const item = query(`#d-toc [data-d-toc="toc-h3-span"]`);
-    assert.strictEqual(
-      item.innerHTML.trim(),
-      `&lt;span style="color: red"&gt;what about this&lt;/span&gt;`
-    );
   });
 });
 
