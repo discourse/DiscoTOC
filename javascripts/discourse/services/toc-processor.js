@@ -79,6 +79,11 @@ export default class TocProcessor extends Service {
         "body > h1,body > h2,body > h3,body > h4,body > h5"
       );
 
+      if (headings.length < settings.TOC_min_heading) {
+        this.setOverlayVisible(false);
+        return;
+      }
+
       if (this.areHeadingsSequential(headings)) {
         this.populateTocData(postId, content, headings);
       }
