@@ -7,17 +7,24 @@ export default class TocToggle extends Component {
   @service tocProcessor;
 
   <template>
-    {{#unless this.tocProcessor.isDocs}}
-      {{#if this.tocProcessor.hasTOC}}
-        <DButton
-          @action={{this.tocProcessor.toggleTocVisibility}}
-          @icon={{this.toggleIcon}}
-          @translatedLabel={{i18n (themePrefix this.toggleLabel)}}
-          @class="btn btn-default timeline-toggle"
-        />
-      {{/if}}
-    {{/unless}}
+    {{#if this.shouldShow}}
+      <DButton
+        @action={{this.tocProcessor.toggleTocVisibility}}
+        @icon={{this.toggleIcon}}
+        @translatedLabel={{i18n (themePrefix this.toggleLabel)}}
+        @class="btn btn-default timeline-toggle"
+      />
+    {{/if}}
   </template>
+
+  get shouldShow() {
+    // docs and topics with 1 post don't need a toggle
+    if (this.tocProcessor.isDocs || this.args.topic?.posts_count === 1) {
+      return false;
+    }
+
+    return this.tocProcessor.hasTOC;
+  }
 
   get toggleLabel() {
     if (this.tocProcessor.isTocVisible) {

@@ -22,12 +22,18 @@ export default class TocTimeline extends Component {
       return false;
     }
 
+    // should always show on docs routes
     if (this.tocProcessor.isDocs) {
-      // should always show on docs routes
       return true;
     }
 
     if (this.args.renderTimeline) {
+      // single post topics might not have a timeline
+      // so we should ignore state
+      if (this.args.topic?.posts_count === 1) {
+        return true;
+      }
+
       // timeline state controlled by localStorage
       return this.tocProcessor.isTocVisible;
     } else {
@@ -58,7 +64,7 @@ export default class TocTimeline extends Component {
           @renderTimeline={{@renderTimeline}}
         />
         {{#if @renderTimeline}}
-          <TocToggle />
+          <TocToggle @topic={{@topic}} />
         {{/if}}
       {{/if}}
     </div>
