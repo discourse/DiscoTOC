@@ -11,7 +11,7 @@ import TocHeading from "../components/toc-heading";
 import TocLargeButtons from "../components/toc-large-buttons";
 import TocMiniButtons from "../components/toc-mini-buttons";
 
-const POSITION_BUFFER = 100;
+const POSITION_BUFFER = 150;
 const SCROLL_DEBOUNCE = 50;
 const RESIZE_DEBOUNCE = 200;
 

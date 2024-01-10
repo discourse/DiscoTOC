@@ -19,7 +19,7 @@ RSpec.describe "DiscoTOC", system: true do
   }
 
   fab!(:post_3) {
-    Fabricate(:post, raw: "intentionally \n long \n content \n so \n there's \n plenty \n to be \n scrolled \n past \n which \n will \n force \n the \n timeline \n to \n hide", topic: topic_1)
+    Fabricate(:post, raw: "intentionally \n long \n content \n so \n there's \n plenty \n to be \n scrolled \n past \n which \n will \n force \n the \n timeline \n to \n hide \n scroll \n scroll \n scroll \n scroll \n scroll \n scroll \n scroll \n scroll \n scroll \n scroll \n scroll \n scroll \n scroll \n scroll \n scroll ", topic: topic_1)
   }
 
 
