@@ -64,7 +64,7 @@ export default class TocProcessor extends Service {
   }
 
   shouldDisplayToc(post) {
-    return settings.allow_on_replies || post.post_number === 1;
+    return post.post_number === 1;
   }
 
   containsTocMarkup(content) {

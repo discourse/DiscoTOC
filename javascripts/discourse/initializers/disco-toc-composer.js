@@ -19,22 +19,21 @@ export default {
         }
         I18n.translations[I18n.currentLocale()].js.composer.contains_dtoc = " ";
 
-      api.addComposerToolbarPopupMenuOption({
-        action: (toolbarEvent) => {
-          toolbarEvent.applySurround(
-            `<div data-theme-toc="true">`,
-            `</div>`,
-            "contains_dtoc"
-          );
-        },
-        icon: "align-left",
-        label: themePrefix("insert_table_of_contents"),
-        condition: (composer) => {
-          return composer.model.topicFirstPost
-            ? true
-            : settings.allow_on_replies;
-        },
-      });
+        api.addComposerToolbarPopupMenuOption({
+          action: (toolbarEvent) => {
+            toolbarEvent.applySurround(
+              `<div data-theme-toc="true">`,
+              `</div>`,
+              "contains_dtoc"
+            );
+          },
+          icon: "align-left",
+          label: themePrefix("insert_table_of_contents"),
+          condition: (composer) => {
+            return composer.model.topicFirstPost;
+          },
+        });
+      }
     });
   },
 };

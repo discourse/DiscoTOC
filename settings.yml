@@ -12,8 +12,6 @@ table_of_contents_icon:
   default: "align-left"
 anchor_icon:
   default: "hashtag"
-allow_on_replies:
-  default: true
 auto_TOC_categories:
   type: list
   list_type: category
