@@ -1,4 +1,5 @@
 import { tracked } from "@glimmer/tracking";
+import { action } from "@ember/object";
 import Service, { inject as service } from "@ember/service";
 import { slugify } from "discourse/lib/utilities";
 
@@ -12,10 +13,11 @@ export default class TocProcessor extends Service {
   @tracked isOverlayVisible = false;
   @tracked isDocs = false;
 
-  toggleTocVisibility = () => {
+  @action
+  toggleTocVisibility() {
     this.isTocVisible = !this.isTocVisible;
     localStorage.setItem("tocVisibility", this.isTocVisible);
-  };
+  }
 
   setOverlayVisible(visible) {
     this.isOverlayVisible = visible;

@@ -12,11 +12,6 @@ export default class TocTimeline extends Component {
   @tracked
   isTocVisible = localStorage.getItem("tocVisibility") === "true" || true;
 
-  @action
-  callCheckPostforTOC() {
-    this.tocProcessor.checkPostforTOC(this.args.topic);
-  }
-
   get shouldRenderToc() {
     if (!this.tocProcessor.hasTOC) {
       return false;
@@ -40,6 +35,11 @@ export default class TocTimeline extends Component {
       // progress state controlled by overlay state
       return this.tocProcessor.isOverlayVisible;
     }
+  }
+
+  @action
+  callCheckPostforTOC() {
+    this.tocProcessor.checkPostforTOC(this.args.topic);
   }
 
   @action

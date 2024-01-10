@@ -5,14 +5,15 @@ import DButton from "discourse/components/d-button";
 
 export default class TocMini extends Component {
   @service tocProcessor;
-  clickOutside = null;
+
+  @action
+  clickOutside() {
+    this.tocProcessor.setOverlayVisible(false);
+    this.removeClickOutsideListener();
+  }
 
   @action
   addClickOutsideListener() {
-    this.clickOutside = () => {
-      this.tocProcessor.setOverlayVisible(false);
-      this.removeClickOutsideListener();
-    };
     document.addEventListener("click", this.clickOutside);
   }
 
@@ -26,12 +27,13 @@ export default class TocMini extends Component {
     }
   }
 
+  @action
   removeClickOutsideListener() {
     document.removeEventListener("click", this.clickOutside);
   }
 
   willDestroy() {
-    super.willDestroy();
+    super.willDestroy(...arguments);
     this.removeClickOutsideListener();
   }
 

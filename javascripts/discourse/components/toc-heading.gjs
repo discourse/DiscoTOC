@@ -24,11 +24,12 @@ export default class TocHeading extends Component {
     const typeClass = this.args.item.tagName
       ? ` d-toc-${this.args.item.tagName}`
       : "";
-    const activeClass = this.isActive
-      ? " direct-active active"
-      : this.isAncestorActive
-      ? " active"
-      : "";
+    let activeClass = "";
+    if (this.isActive) {
+      activeClass = " direct-active active";
+    } else if (this.isAncestorActive) {
+      activeClass = " active";
+    }
     return `${baseClass}${typeClass}${activeClass}`;
   }
 
@@ -36,14 +37,12 @@ export default class TocHeading extends Component {
   handleTocLinkClick(event) {
     event.preventDefault();
 
-    const targetId = event.target.getAttribute("href")?.split("#").pop();
-
+    const targetId = event.target.href?.split("#").pop();
     if (!targetId) {
       return;
     }
 
     const targetElement = document.querySelector(`a[name="${targetId}"]`);
-
     if (targetElement) {
       const headerOffsetValue = headerOffset();
       const elementPosition =

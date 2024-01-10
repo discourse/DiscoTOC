@@ -6,17 +6,6 @@ import i18n from "discourse-common/helpers/i18n";
 export default class TocToggle extends Component {
   @service tocProcessor;
 
-  <template>
-    {{#if this.shouldShow}}
-      <DButton
-        @action={{this.tocProcessor.toggleTocVisibility}}
-        @icon={{this.toggleIcon}}
-        @translatedLabel={{i18n (themePrefix this.toggleLabel)}}
-        @class="btn btn-default timeline-toggle"
-      />
-    {{/if}}
-  </template>
-
   get shouldShow() {
     // docs and topics with 1 post don't need a toggle
     if (this.tocProcessor.isDocs || this.args.topic?.posts_count === 1) {
@@ -27,18 +16,23 @@ export default class TocToggle extends Component {
   }
 
   get toggleLabel() {
-    if (this.tocProcessor.isTocVisible) {
-      return "toggle_toc.show_timeline";
-    } else {
-      return "toggle_toc.show_toc";
-    }
+    return this.tocProcessor.isTocVisible
+      ? "toggle_toc.show_timeline"
+      : "toggle_toc.show_toc";
   }
 
   get toggleIcon() {
-    if (this.tocProcessor.isTocVisible) {
-      return "timeline";
-    } else {
-      return "stream";
-    }
+    return this.tocProcessor.isTocVisible ? "timeline" : "stream";
   }
+
+  <template>
+    {{#if this.shouldShow}}
+      <DButton
+        @action={{this.tocProcessor.toggleTocVisibility}}
+        @icon={{this.toggleIcon}}
+        @translatedLabel={{i18n (themePrefix this.toggleLabel)}}
+        class="btn btn-default timeline-toggle"
+      />
+    {{/if}}
+  </template>
 }

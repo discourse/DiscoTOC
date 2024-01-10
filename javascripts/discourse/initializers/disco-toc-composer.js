@@ -19,10 +19,10 @@ export default {
         const userGroupIds = new Set(
           currentUser.groups.map((group) => group.id)
         );
+
         const isAllowed = allowedGroups.some((groupId) =>
           userGroupIds.has(groupId)
         );
-
         if (!isAllowed) {
           return;
         }
