@@ -109,7 +109,7 @@ export default class TocContents extends Component {
       (h) => h.id === this.headingPositions[activeIndex].id
     );
 
-    this.activeHeadingId = activeHeading.id;
+    this.activeHeadingId = activeHeading?.id;
     this.activeAncestorIds = [];
     let ancestor = activeHeading;
     while (ancestor && ancestor.parent) {
