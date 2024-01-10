@@ -11,27 +11,13 @@ export default {
         return;
       }
 
-      const allowedGroups = settings.allowed_groups
-        ? settings.allowed_groups.split("|").map(Number)
-        : [];
+      const minimumTL = settings.minimum_trust_level_to_create_TOC;
 
-      if (allowedGroups.length > 0) {
-        const userGroupIds = new Set(
-          currentUser.groups.map((group) => group.id)
-        );
-
-        const isAllowed = allowedGroups.some((groupId) =>
-          userGroupIds.has(groupId)
-        );
-        if (!isAllowed) {
-          return;
+      if (currentUser.trust_level >= minimumTL) {
+        if (!I18n.translations[I18n.currentLocale()].js.composer) {
+          I18n.translations[I18n.currentLocale()].js.composer = {};
         }
-      }
-
-      if (!I18n.translations[I18n.currentLocale()].js.composer) {
-        I18n.translations[I18n.currentLocale()].js.composer = {};
-      }
-      I18n.translations[I18n.currentLocale()].js.composer.contains_dtoc = " ";
+        I18n.translations[I18n.currentLocale()].js.composer.contains_dtoc = " ";
 
       api.addComposerToolbarPopupMenuOption({
         action: (toolbarEvent) => {
