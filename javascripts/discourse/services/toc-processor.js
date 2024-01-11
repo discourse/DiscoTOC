@@ -146,7 +146,11 @@ export default class TocProcessor extends Service {
     const hasMatchingCategory = autoCategories.includes(topicCategory);
 
     // only apply autoTOC on first post
-    return (hasMatchingTags || hasMatchingCategory) && topic.currentPost === 1;
+    // the docs plugin only shows the first post, and does not have topic.currentPost defined
+    return (
+      (hasMatchingTags || hasMatchingCategory) &&
+      (topic.currentPost === 1 || topic.currentPost === undefined)
+    );
   }
 
   generateTocStructure(headings) {

@@ -105,7 +105,7 @@ export default class TocContents extends Component {
     }
 
     const activeHeading = this.flattenedToc.find(
-      (h) => h.id === this.headingPositions[activeIndex].id
+      (h) => h.id === this.headingPositions[activeIndex]?.id
     );
 
     this.activeHeadingId = activeHeading?.id;

@@ -45,7 +45,7 @@ RSpec.describe "DiscoTOC", system: true do
     expect(page).to have_no_css(".topic-timeline")
   end
 
-  it "timeline is hidden when scrolled past the first post" do
+  it "table of contents is hidden when scrolled past the first post" do
     visit("/t/#{topic_1.id}")
 
     page.execute_script <<~JS
