@@ -103,6 +103,4 @@ RSpec.describe "DiscoTOC", system: true do
 
     expect(page).to have_no_css(".d-toc-item.d-toc-h1")
   end
-
-  
 end
