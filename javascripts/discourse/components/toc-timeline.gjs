@@ -4,6 +4,7 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { inject as service } from "@ember/service";
+import bodyClass from "discourse/helpers/body-class";
 import TocContents from "../components/toc-contents";
 import TocToggle from "../components/toc-toggle";
 
@@ -37,6 +38,13 @@ export default class TocTimeline extends Component {
     }
   }
 
+  get isTopicProgress() {
+    return (
+      !this.args.renderTimeline ||
+      (this.args.renderTimeline && this.args.topicProgressExpanded)
+    );
+  }
+
   @action
   callCheckPostforTOC() {
     this.tocProcessor.checkPostforTOC(this.args.topic);
@@ -57,6 +65,9 @@ export default class TocTimeline extends Component {
       class="d-toc-main"
     >
       {{#if this.shouldRenderToc}}
+        {{#unless this.isTopicProgress}}
+          {{bodyClass "d-toc-active"}}
+        {{/unless}}
         <TocContents
           @postContent={{this.tocProcessor.postContent}}
           @postID={{this.tocProcessor.postID}}

@@ -21,86 +21,86 @@ RSpec.describe "DiscoTOC", system: true do
     Fabricate(:post, raw: "intentionally \n long \n content \n so \n there's \n plenty \n to be \n scrolled \n past \n which \n will \n force \n the \n timeline \n to \n hide \n scroll \n scroll \n scroll \n scroll \n scroll \n scroll \n scroll \n scroll \n scroll \n scroll \n scroll \n scroll \n scroll \n scroll \n scroll ", topic: topic_1)
   }
 
-  it "table of contents appears when the relevant markup is added to first post in topic" do
-    visit("/t/#{topic_1.id}")
+  it "table of contents button appears in mobile view" do
+    visit("/t/#{topic_1.id}/?mobile_view=1")
+
+    expect(page).to have_css(".d-toc-mini")
   end
 
   it "clicking the toggle button toggles the timeline" do
-    visit("/t/#{topic_1.id}")
+    visit("/t/#{topic_1.id}/?mobile_view=1")
 
-    find(".timeline-toggle").click
+    find(".d-toc-mini").click
 
-    expect(page).to have_css(".timeline-scrollarea-wrapper")
-
-    find(".timeline-toggle").click
-
-    expect(page).to have_css(".d-toc-item.d-toc-h1")
+    expect(page).to have_css(".d-toc-wrapper.overlay")
   end
 
-  it "timeline does not appear when the table of contents is shown" do
-    visit("/t/#{topic_1.id}")
+  it "timeline toggle does not appear when the progress bar timeline is expanded" do
+    visit("/t/#{topic_1.id}/?mobile_view=1")
 
-    expect(page).to have_no_css(".topic-timeline")
+    find("#topic-progress").click
+
+    expect(page).to have_no_css(".timeline-toggle")
   end
 
-  it "timeline is hidden when scrolled past the first post" do
-    visit("/t/#{topic_1.id}")
+  it "d-toc-mini is hidden when scrolled past the first post" do
+    visit("/t/#{topic_1.id}/?mobile_view=1")
 
     page.execute_script <<~JS
       window.scrollTo(0, document.body.scrollHeight);
     JS
 
-    expect(page).to have_css(".topic-timeline")
+    expect(page).to have_css(".d-toc-mini")
   end
 
-  it "table of content does not appear if the first post does not contain the markup" do
-    visit("/t/#{topic_2.id}")
+  it "d-toc-mini does not appear if the first post does not contain the markup" do
+    visit("/t/#{topic_2.id}/?mobile_view=1")
 
-    expect(page).to have_no_css(".d-toc-item.d-toc-h1")
+    expect(page).to have_no_css(".d-toc-mini")
   end
 
-  it "timeline will appear without markup if auto_TOC_categories is set to the topic's category" do
+  it "d-toc-mini will appear without markup if auto_TOC_categories is set to the topic's category" do
     theme.update_setting(:auto_TOC_categories, "#{category.id}" )
     theme.save!
     
-    visit("/t/#{topic_2.id}")
+    visit("/t/#{topic_2.id}/?mobile_view=1")
 
-    expect(page).to have_css(".d-toc-item.d-toc-h1")
+    expect(page).to have_css(".d-toc-mini")
   end
 
-  it "timeline will not appear automatically if auto_TOC_categories is set to a different category" do
+  it "d-toc-mini will not appear automatically if auto_TOC_categories is set to a different category" do
     theme.update_setting(:auto_TOC_categories, "99" )
     theme.save!
     
-    visit("/t/#{topic_2.id}")
+    visit("/t/#{topic_2.id}/?mobile_view=1")
 
-    expect(page).to have_no_css(".d-toc-item.d-toc-h1")
+    expect(page).to have_no_css(".d-toc-mini")
   end
 
-  it "timeline will appear without markup if auto_TOC_tags is set to the topic's tag" do
+  it "d-toc-mini will appear without markup if auto_TOC_tags is set to the topic's tag" do
     theme.update_setting(:auto_TOC_tags, "#{tag.name}" )
     theme.save!
     
-    visit("/t/#{topic_2.id}")
+    visit("/t/#{topic_2.id}/?mobile_view=1")
 
-    expect(page).to have_css(".d-toc-item.d-toc-h1")
+    expect(page).to have_css(".d-toc-mini")
   end
 
-  it "timeline will not appear automatically if auto_TOC_tags is set to a different tag" do
+  it "d-toc-mini will not appear automatically if auto_TOC_tags is set to a different tag" do
     theme.update_setting(:auto_TOC_tags, "wrong-tag" )
     theme.save!
     
-    visit("/t/#{topic_2.id}")
+    visit("/t/#{topic_2.id}/?mobile_view=1")
 
-    expect(page).to have_no_css(".d-toc-item.d-toc-h1")
+    expect(page).to have_no_css(".d-toc-mini")
   end
 
-  it "timeline does not appear if it has fewer headings than TOC_min_heading setting" do
+  it "d-toc-mini does not appear if it has fewer headings than TOC_min_heading setting" do
     theme.update_setting(:TOC_min_heading, 5)
     theme.save!
     
-    visit("/t/#{topic_1.id}")
+    visit("/t/#{topic_1.id}/?mobile_view=1")
 
-    expect(page).to have_no_css(".d-toc-item.d-toc-h1")
+    expect(page).to have_no_css(".d-toc-mini")
   end
 end

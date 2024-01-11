@@ -3,7 +3,6 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { inject as service } from "@ember/service";
-import bodyClass from "discourse/helpers/body-class";
 import { headerOffset } from "discourse/lib/offset-calculator";
 import { slugify } from "discourse/lib/utilities";
 import { debounce } from "discourse-common/utils/decorators";
@@ -135,7 +134,6 @@ export default class TocContents extends Component {
   }
 
   <template>
-    {{bodyClass "d-toc-active"}}
     {{#unless @renderTimeline}}
       <TocMiniButtons @renderTimeline={{@renderTimeline}} @postID={{@postID}} />
     {{/unless}}

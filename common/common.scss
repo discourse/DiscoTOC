@@ -281,3 +281,10 @@ html.rtl SELECTOR {
     display: none;
   }
 }
+
+// hide the toggle in the expanded timeline on mobile
+.timeline-fullscreen {
+  .timeline-toggle {
+    display: none;
+  }
+}
