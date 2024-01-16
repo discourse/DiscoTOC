@@ -86,9 +86,7 @@ export default class TocProcessor extends Service {
         return;
       }
 
-      if (this.areHeadingsSequential(headings)) {
-        this.populateTocData(postId, content, headings);
-      }
+      this.populateTocData(postId, content, headings);
     } else {
       this.setOverlayVisible(false);
     }
@@ -105,24 +103,6 @@ export default class TocProcessor extends Service {
     this.postID = postId;
     this.postContent = content;
     this.tocStructure = this.generateTocStructure(headings);
-  }
-
-  areHeadingsSequential(headings) {
-    if (!headings.length) {
-      return true;
-    }
-
-    let prevLevel = parseInt(headings[0].tagName[1], 10);
-
-    for (let i = 1; i < headings.length; i++) {
-      const currentLevel = parseInt(headings[i].tagName[1], 10);
-      if (currentLevel > prevLevel + 1) {
-        return false;
-      }
-      prevLevel = currentLevel;
-    }
-
-    return true;
   }
 
   autoTOC(topic) {
