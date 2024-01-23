@@ -51,6 +51,14 @@ $padding-basis: 0.75em;
           max-height: 500em;
           overflow: visible;
           opacity: 1;
+          animation: hide-scroll 0.3s backwards;
+        }
+        // hides the scrollbar while subsection expands
+        @keyframes hide-scroll {
+          from,
+          to {
+            overflow: hidden;
+          }
         }
       }
       > a:hover {
