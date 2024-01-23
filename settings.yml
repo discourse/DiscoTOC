@@ -1,4 +1,4 @@
-minimum_trust_level_to_create_TOC:
+minimum_trust_level_to_create:
   default: 0
   type: enum
   choices:
@@ -6,21 +6,21 @@ minimum_trust_level_to_create_TOC:
     - 2
     - 3
     - 4
-composer_toc_text:
+composer_text:
   default: "This topic will contain a table of contents"
 table_of_contents_icon:
   default: "align-left"
 anchor_icon:
   default: "hashtag"
-auto_TOC_categories:
+auto_categories:
   type: list
   list_type: category
   default: ""
-auto_TOC_tags:
+auto_tags:
   type: list
   list_type: tag
   default: ""
-TOC_min_heading:
+min_heading:
   default: 3
   min: 1
   max: 10000

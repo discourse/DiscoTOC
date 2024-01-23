@@ -11,11 +11,11 @@ export default {
 
   initialize() {
     withPluginApi("1.0.0", (api) => {
-      const autoTocCategoryIds = settings.auto_TOC_categories
+      const autoTocCategoryIds = settings.auto_categories
         .split("|")
         .map((id) => parseInt(id, 10));
 
-      const autoTocTags = settings.auto_TOC_tags.split("|");
+      const autoTocTags = settings.auto_tags.split("|");
 
       api.decorateCookedElement(
         (el, helper) => {
@@ -41,7 +41,7 @@ export default {
               ":scope > h1, :scope > h2, :scope > h3, :scope > h4, :scope > h5";
             const headings = el.querySelectorAll(dTocHeadingSelectors);
 
-            if (headings.length < settings.TOC_min_heading) {
+            if (headings.length < settings.min_heading) {
               return;
             }
 

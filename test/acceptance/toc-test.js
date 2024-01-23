@@ -87,7 +87,7 @@ acceptance("DiscoTOC - off", function (needs) {
 
 acceptance("DiscoTOC - with tags", function (needs) {
   needs.pretender((server, helper) => {
-    settings.auto_TOC_tags = TOC_AUTO_TAGS;
+    settings.auto_tags = TOC_AUTO_TAGS;
     const topicResponse = cloneJSON(topicFixtures["/t/280/1.json"]);
     topicResponse.post_stream.posts[0].cooked = COOKED_WITH_HEADINGS;
     topicResponse.tags = TOC_TOPIC_TAGS;
@@ -106,7 +106,7 @@ acceptance("DiscoTOC - with tags", function (needs) {
 
 acceptance("DiscoTOC - with categories", function (needs) {
   needs.pretender((server, helper) => {
-    settings.auto_TOC_categories = TOC_AUTO_CATEGORIES;
+    settings.auto_categories = TOC_AUTO_CATEGORIES;
     const topicResponse = cloneJSON(topicFixtures["/t/280/1.json"]);
     topicResponse.post_stream.posts[0].cooked = COOKED_WITH_HEADINGS;
     topicResponse.category_id = TOC_TOPIC_CATEGORY;
@@ -125,7 +125,7 @@ acceptance("DiscoTOC - with categories", function (needs) {
 
 acceptance("DiscoTOC - non-text headings", function (needs) {
   needs.pretender((server, helper) => {
-    settings.TOC_min_heading = 1;
+    settings.min_heading = 1;
     const topicResponse = cloneJSON(topicFixtures["/t/280/1.json"]);
     topicResponse.post_stream.posts[0].cooked = `
       <h3 id="toc-h3-span" data-d-toc="toc-h3-span" class="d-toc-post-heading">
@@ -152,9 +152,9 @@ acceptance("DiscoTOC - non-text headings", function (needs) {
   });
 });
 
-acceptance("DiscoTOC - setting TOC_min_heading", function (needs) {
+acceptance("DiscoTOC - setting min_heading", function (needs) {
   needs.pretender((server, helper) => {
-    settings.TOC_min_heading = 3;
+    settings.min_heading = 3;
     const topicResponse = cloneJSON(topicFixtures["/t/280/1.json"]);
     topicResponse.post_stream.posts[0].cooked =
       '<h1>\n<a name="h1-first-test-edited-1" class="anchor" href="#h1-first-test-edited-1"></a>帖子控制</h1>\nWelcome' +

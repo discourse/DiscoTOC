@@ -224,7 +224,7 @@ a.d-toc-close {
   align-items: center;
   justify-content: center;
   &:before {
-    content: "#{$composer_toc_text}";
+    content: "#{$composer_text}";
   }
 }
 
