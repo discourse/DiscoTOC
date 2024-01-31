@@ -203,13 +203,24 @@ export default {
     if (e.target.closest("a")) {
       // link to first post bottom
       if (e.target.closest("a").classList.contains("scroll-to-bottom")) {
-        const rect = document
-          .querySelector(".d-toc-cooked")
-          .getBoundingClientRect();
+        let rect, topPosition;
+
+        // if there is a second post, just scroll to the top of that post so the topic timeline shows
+        const secondPost = document.querySelector("#post_2");
+        if (secondPost) {
+          rect = secondPost.getBoundingClientRect();
+          topPosition = rect.top + window.scrollY - headerOffset();
+        } else {
+          // otherwise just go to the bottom of the first post
+          rect = document
+            .querySelector(".d-toc-cooked")
+            .getBoundingClientRect();
+          topPosition = rect.bottom + window.scrollY - headerOffset() - 10;
+        }
 
         if (rect) {
           window.scrollTo({
-            top: rect.bottom + window.scrollY - headerOffset() - 10,
+            top: topPosition,
             behavior: "smooth",
           });
 
