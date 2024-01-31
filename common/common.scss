@@ -1,14 +1,21 @@
 $padding-basis: 0.75em;
 
-.d-toc-main {
-  display: none;
-  width: 225px;
-  @media screen and (max-width: 1045px) {
-    .desktop-view & {
-      width: 150px;
-    }
+@media screen and (min-width: 925px) {
+  .container.posts {
+    // needs to be static, otherwise we get content shifts when the TOC shows/hides
+    grid-template-columns: 75% 25%;
   }
-  border-left: 1px solid var(--primary-low);
+}
+
+.overlay .d-toc-main {
+  max-width: 100%;
+}
+
+.d-toc-main {
+  min-width: 6em;
+  max-width: 13em;
+
+  word-wrap: break-word;
   box-sizing: border-box;
   a {
     display: block;
@@ -19,8 +26,8 @@ $padding-basis: 0.75em;
     }
   }
   #d-toc {
+    border-left: 1px solid var(--primary-low);
     max-height: calc(100vh - 4.5em - var(--header-offset));
-    padding-bottom: 0.5em;
     overflow: auto;
     ul {
       list-style-type: none;
@@ -44,6 +51,14 @@ $padding-basis: 0.75em;
           max-height: 500em;
           overflow: visible;
           opacity: 1;
+          animation: hide-scroll 0.3s backwards;
+        }
+        // hides the scrollbar while subsection expands
+        @keyframes hide-scroll {
+          from,
+          to {
+            overflow: hidden;
+          }
         }
       }
       > a:hover {
@@ -119,67 +134,54 @@ html.rtl SELECTOR {
 }
 // END active line marker
 
-.d-toc-mini,
-a.d-toc-close {
-  display: none;
+.d-toc-mini {
+  height: 100%;
+  button {
+    height: 100%;
+  }
 }
 
-.d-toc-timeline-visible {
-  .d-toc-main,
-  .d-toc-mini {
-    display: block;
-  }
-  // overlayed timeline (on mobile and narrow screens)
-  .topic-navigation.with-topic-progress {
-    .d-toc-wrapper {
-      position: fixed;
-      margin-top: 0.25em;
-      height: calc(100vh - 50px - var(--header-offset));
-      opacity: 0.5;
-      right: -100vw;
-      top: var(--header-offset);
-      width: 75vw;
-      max-width: 350px;
-      background-color: var(--secondary);
-      box-shadow: var(--shadow-dropdown);
-      z-index: z("modal", "overlay");
-      transition: all 0.2s ease-in-out;
-      .d-toc-main {
-        width: 100%;
-        padding: 0.5em;
-        height: 100%;
-        #d-toc {
-          max-height: calc(100% - 3em);
-        }
-      }
-      &.overlay {
-        right: 0;
-        width: 75vw;
-        opacity: 1;
-        .d-toc-main #d-toc li.d-toc-item ul {
-          transition: none;
-        }
-      }
-
-      a.scroll-to-bottom,
-      a.d-toc-close {
-        display: inline-block;
-        padding: 0.5em;
-      }
-
-      .d-toc-icons {
-        text-align: right;
+// overlayed timeline (on mobile and narrow screens)
+.topic-navigation.with-topic-progress {
+  .d-toc-wrapper {
+    position: fixed;
+    margin-top: 0.25em;
+    height: calc(100vh - 50px - var(--header-offset));
+    opacity: 0.5;
+    right: -100vw;
+    top: var(--header-offset);
+    width: 75vw;
+    max-width: 350px;
+    background-color: var(--secondary);
+    box-shadow: var(--shadow-dropdown);
+    z-index: z("modal", "overlay");
+    transition: all 0.2s ease-in-out;
+    .d-toc-main {
+      width: 100%;
+      padding: 0.5em;
+      height: 100%;
+      #d-toc {
+        max-height: calc(100% - 3em);
       }
     }
-  }
+    &.overlay {
+      right: 0;
+      width: 75vw;
+      opacity: 1;
+      .d-toc-main #d-toc li.d-toc-item ul {
+        transition: none;
+      }
+    }
 
-  // core overrides when timeline is active
-  .timeline-container,
-  #topic-progress {
-    display: none;
-  }
-  .container.posts .topic-navigation.with-topic-progress {
-    align-self: start;
+    a.scroll-to-bottom,
+    a.d-toc-close {
+      display: inline-block;
+      padding: 0.5em;
+    }
+
+    .d-toc-icons {
+      text-align: right;
+    }
   }
 }
 
@@ -202,7 +204,7 @@ a.d-toc-close {
     }
   }
 
-  .d-toc-timeline-visible .topic-navigation.with-topic-progress .d-toc-wrapper {
+  .topic-navigation.with-topic-progress .d-toc-wrapper {
     right: unset;
     left: -100vw;
     &.overlay {
@@ -238,5 +240,59 @@ a.d-toc-close {
   }
   .d-toc-main {
     display: block;
+  }
+}
+
+// toggle in timeline
+.timeline-container
+  .topic-timeline
+  .timeline-footer-controls
+  button:last-child {
+  // annoying core style
+  &.timeline-toggle {
+    margin-right: 100%;
+    white-space: nowrap;
+  }
+}
+
+// toggle in timeline dtoc
+.d-toc-main {
+  .timeline-toggle {
+    margin-top: 1em;
+  }
+}
+
+// jump to bottom in timeline
+.d-toc-footer-icons {
+  font-size: var(--font-down-1);
+  margin-top: 0.5em;
+  button {
+    color: var(--tertiary);
+    .d-icon {
+      color: currentColor;
+    }
+  }
+}
+
+// on shorter screens, we can keep this consistently in the same location
+// this is kind of far away for tall screens, so the more variable position below might be better
+@media screen and (max-height: 950px) {
+  .timeline-toggle {
+    position: fixed;
+    bottom: 0;
+  }
+}
+
+// hides the timeline when d-toc is shown
+.d-toc-active {
+  .timeline-container {
+    display: none;
+  }
+}
+
+// hide the toggle in the expanded timeline on mobile
+.timeline-fullscreen {
+  .timeline-toggle {
+    display: none;
   }
 }
