@@ -40,7 +40,7 @@ RSpec.describe "DiscoTOC", system: true do
 
     find("#topic-progress").click
 
-    expect(page).to have_no_css(".timeline-toggle")
+    expect(page).to have_no_css(".timeline-fullscreen .timeline-toggle")
   end
 
   it "d-toc-mini is hidden when scrolled past the first post" do
