@@ -1,0 +1,18 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ar:
+  table_of_contents: جدول المحتويات
+  insert_table_of_contents: أدرج جدول المحتويات
+  jump_bottom: انتقل إلى النهاية
+  toggle_toc:
+    show_timeline: الخط الزمني
+    show_toc: المحتويات
+  theme_metadata:
+    settings:
+      minimum_trust_level_to_create_TOC: الحد الأدنى لمستوى الثقة الذي يجب أن يكون لدى المستخدم من أجل رؤية زر TOC في الملحن
+      auto_TOC_categories: تمكين جدول المحتويات تلقائيًا في المواضيع الموجودة في هذه الفئات
+      auto_TOC_tags: تمكين جدول المحتويات تلقائيًا في المواضيع التي تحتوي على هذه الوسوم

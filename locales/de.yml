@@ -1,0 +1,18 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+de:
+  table_of_contents: Inhaltsverzeichnis
+  insert_table_of_contents: Inhaltsverzeichnis einfügen
+  jump_bottom: Zum Ende springen
+  toggle_toc:
+    show_timeline: Zeitleiste
+    show_toc: Inhalt
+  theme_metadata:
+    settings:
+      minimum_trust_level_to_create_TOC: Die minimale Vertrauensstufe, die ein Benutzer haben muss, um die Schaltfläche „Inhaltsverzeichnis“ im Editor zu sehen
+      auto_TOC_categories: Automatisches Aktivieren des Inhaltsverzeichnisses für Themen in diesen Kategorien
+      auto_TOC_tags: Automatisches Aktivieren des Inhaltsverzeichnisses für Themen mit diesen Schlagwörtern
