@@ -1,0 +1,18 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+he:
+  table_of_contents: תוכן העניינים
+  insert_table_of_contents: הוספת תוכן עניינים
+  jump_bottom: דילוג לסוף
+  toggle_toc:
+    show_timeline: ציר זמן
+    show_toc: תוכן
+  theme_metadata:
+    settings:
+      minimum_trust_level_to_create_TOC: דרגת האמון המזערית שחייבת להיות למשתמש כדי לצפות בכפתור תוכן העניינים בחלונית הכתיבה
+      auto_TOC_categories: להפעיל תוכן עניינים אוטומטית לנושאים בקטגוריות האלו
+      auto_TOC_tags: להפעיל תוכן עניינים אוטומטית לנושאים עם התגיות האלו

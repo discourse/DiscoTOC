@@ -1,0 +1,18 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+cs:
+  table_of_contents: obsah
+  insert_table_of_contents: Vložit obsah
+  jump_bottom: Přeskočit na konec
+  toggle_toc:
+    show_timeline: Časová osa
+    show_toc: Obsah
+  theme_metadata:
+    settings:
+      minimum_trust_level_to_create_TOC: Minimální úroveň důvěry, kterou musí mít uživatel, aby se v editoru zobrazilo tlačítko Obsah
+      auto_TOC_categories: automaticky povolit obsah pro témata v těchto kategoriích
+      auto_TOC_tags: automaticky povolit TOC u témat s těmito štítky

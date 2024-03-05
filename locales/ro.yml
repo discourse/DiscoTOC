@@ -1,0 +1,18 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ro:
+  table_of_contents: cuprins
+  insert_table_of_contents: Introdu cuprins
+  jump_bottom: Sari la final
+  toggle_toc:
+    show_timeline: Cronologie
+    show_toc: Conținut
+  theme_metadata:
+    settings:
+      minimum_trust_level_to_create_TOC: Nivelul minim de încredere pe care trebuie să îl aibă un utilizator pentru a vedea butonul TOC în compozitor
+      auto_TOC_categories: activează automat TOC pentru subiectele din aceste categorii
+      auto_TOC_tags: activează automat TOC în subiectele cu aceste etichete
