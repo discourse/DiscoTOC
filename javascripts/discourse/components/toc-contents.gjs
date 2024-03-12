@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { headerOffset } from "discourse/lib/offset-calculator";
 import { slugify } from "discourse/lib/utilities";
 import { debounce } from "discourse-common/utils/decorators";
