@@ -13,7 +13,7 @@ export default {
 
       const minimumTL = settings.minimum_trust_level_to_create_TOC;
 
-      if (currentUser.trust_level >= minimumTL) {
+      if (currentUser.trust_level >= minimumTL || currentUser.staff) {
         if (!I18n.translations[I18n.currentLocale()].js.composer) {
           I18n.translations[I18n.currentLocale()].js.composer = {};
         }
