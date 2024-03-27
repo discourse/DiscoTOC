@@ -6,5 +6,8 @@
   "theme_version": "2.1.0",
   "assets": {
     "icons-sprite": "/assets/sprite.svg"
+  },
+  "modifiers": {
+    "svg_icons": ["align-left", "hashtag"]
   }
 }

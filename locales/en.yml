@@ -8,5 +8,7 @@ en:
   theme_metadata:
     settings:
       minimum_trust_level_to_create_TOC: The minimum trust level a user must have in order to see the TOC button in the composer
-      auto_TOC_categories: automatically enable TOC on topics in these categories
-      auto_TOC_tags: automatically enable TOC on topics with these tags
+      composer_toc_text: Text that appears at the top of the preview pane of the composer to indicate the topic will have a table of contents
+      auto_TOC_categories: Automatically enable TOC on topics in these categories
+      auto_TOC_tags: Automatically enable TOC on topics with these tags
+      TOC_min_heading: Minimum number of headings in a topic for the table of contents to be shown
