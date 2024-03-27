@@ -8,10 +8,6 @@ minimum_trust_level_to_create_TOC:
     - 4
 composer_toc_text:
   default: "This topic will contain a table of contents"
-table_of_contents_icon:
-  default: "align-left"
-anchor_icon:
-  default: "hashtag"
 auto_TOC_categories:
   type: list
   list_type: category
