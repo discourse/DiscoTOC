@@ -3,7 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import bodyClass from "discourse/helpers/body-class";
 import TocContents from "../components/toc-contents";
 import TocToggle from "../components/toc-toggle";

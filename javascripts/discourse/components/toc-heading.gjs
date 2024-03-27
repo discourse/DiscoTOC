@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { headerOffset } from "discourse/lib/offset-calculator";
 import { slugify } from "discourse/lib/utilities";
 
