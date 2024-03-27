@@ -8,6 +8,6 @@
     "icons-sprite": "/assets/sprite.svg"
   },
   "modifiers": {
-    "svg_icons": ["align-left", "hashtag"]
+    "svg_icons": ["hashtag"]
   }
 }
