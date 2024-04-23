@@ -64,6 +64,7 @@ export default class TocTimeline extends Component {
       {{didUpdate this.handleTimelineUpdate @renderTimeline}}
       class="d-toc-main"
     >
+      {{bodyClass "d-toc-installed"}}
       {{#if this.shouldRenderToc}}
         {{#unless this.isTopicProgress}}
           {{bodyClass "d-toc-active"}}
