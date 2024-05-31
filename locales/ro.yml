@@ -14,5 +14,5 @@ ro:
   theme_metadata:
     settings:
       minimum_trust_level_to_create_TOC: Nivelul minim de încredere pe care trebuie să îl aibă un utilizator pentru a vedea butonul TOC în compozitor
-      auto_TOC_categories: activează automat TOC pentru subiectele din aceste categorii
-      auto_TOC_tags: activează automat TOC în subiectele cu aceste etichete
+      auto_TOC_categories: Activează automat TOC pentru subiectele din aceste categorii
+      auto_TOC_tags: Activează automat TOC în subiectele cu aceste etichete
