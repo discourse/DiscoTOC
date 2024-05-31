@@ -14,5 +14,5 @@ cs:
   theme_metadata:
     settings:
       minimum_trust_level_to_create_TOC: Minimální úroveň důvěry, kterou musí mít uživatel, aby se v editoru zobrazilo tlačítko Obsah
-      auto_TOC_categories: automaticky povolit obsah pro témata v těchto kategoriích
-      auto_TOC_tags: automaticky povolit TOC u témat s těmito štítky
+      auto_TOC_categories: Automaticky povolit obsah pro témata v těchto kategoriích
+      auto_TOC_tags: Automaticky povolit TOC u témat s těmito štítky
