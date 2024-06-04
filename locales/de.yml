@@ -14,5 +14,7 @@ de:
   theme_metadata:
     settings:
       minimum_trust_level_to_create_TOC: Die minimale Vertrauensstufe, die ein Benutzer haben muss, um die Schaltfläche „Inhaltsverzeichnis“ im Editor zu sehen
+      composer_toc_text: Text, der oben im Vorschaufenster des Editors erscheint und darauf hinweist, dass das Thema ein Inhaltsverzeichnis haben wird
       auto_TOC_categories: Automatisches Aktivieren des Inhaltsverzeichnisses für Themen in diesen Kategorien
       auto_TOC_tags: Automatisches Aktivieren des Inhaltsverzeichnisses für Themen mit diesen Schlagwörtern
+      TOC_min_heading: Mindestanzahl von Überschriften in einem Thema, damit das Inhaltsverzeichnis angezeigt wird
