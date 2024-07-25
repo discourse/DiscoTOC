@@ -38,6 +38,10 @@ export default class TocContents extends Component {
     super.willDestroy(...arguments);
     window.removeEventListener("scroll", this.updateActiveHeadingOnScroll);
     window.removeEventListener("resize", this.calculateHeadingPositions);
+    this.appEvents.off(
+      "topic:current-post-changed",
+      this.calculateHeadingPositions
+    );
   }
 
   @action
