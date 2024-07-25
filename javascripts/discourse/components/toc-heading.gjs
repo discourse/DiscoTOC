@@ -42,7 +42,9 @@ export default class TocHeading extends Component {
       return;
     }
 
-    const targetElement = document.querySelector(`a[name="${targetId}"]`);
+    const targetElement =
+      document.querySelector(`a[name="${targetId}"]`) ||
+      document.getElementById(targetId);
     if (targetElement) {
       const headerOffsetValue = headerOffset();
       const elementPosition =

@@ -12,3 +12,4 @@ en:
       auto_TOC_categories: Automatically enable TOC on topics in these categories
       auto_TOC_tags: Automatically enable TOC on topics with these tags
       TOC_min_heading: Minimum number of headings in a topic for the table of contents to be shown
+      enable_TOC_for_replies: Allows TOC for replies. TOCs for replies are not affected by the <b>auto TOC tags</b> and <b>auto TOC categories</b> settings and must be inserted manually.

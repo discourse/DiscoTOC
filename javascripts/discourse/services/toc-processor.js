@@ -64,7 +64,7 @@ export default class TocProcessor extends Service {
   }
 
   shouldDisplayToc(post) {
-    return post.post_number === 1;
+    return settings.enable_TOC_for_replies || post.post_number === 1;
   }
 
   containsTocMarkup(content) {
@@ -133,22 +133,42 @@ export default class TocProcessor extends Service {
     );
   }
 
+  /**
+   * @param {number} postId
+   * @param {HTMLHeadingElement} heading
+   * @param {Map<string, number>} sameIdCount
+   */
+  getIdFromHeading(postId, heading, sameIdCount) {
+    const anchor = heading.querySelector("a.anchor");
+    if (anchor) {
+      return anchor.name;
+    }
+    const lowerTagName = heading.tagName.toLowerCase();
+    const text = heading.textContent.trim();
+    let slug = `${slugify(text)}`;
+    if (sameIdCount.has(slug)) {
+      sameIdCount.set(slug, sameIdCount.get(slug) + 1);
+      slug = `${slug}-${sameIdCount.get(slug)}`;
+    } else {
+      sameIdCount.set(slug, 1);
+    }
+    const res = `p-${postId}-toc-${lowerTagName}-${slug}`;
+    heading.id = res;
+    return res;
+  }
+
   generateTocStructure(headings) {
     let root = { subItems: [], level: 0 };
     let ancestors = [root];
 
-    headings.forEach((heading, index) => {
+    const sameIdCount = new Map();
+
+    headings.forEach((heading) => {
       const level = parseInt(heading.tagName[1], 10);
       const text = heading.textContent.trim();
       const lowerTagName = heading.tagName.toLowerCase();
-      const anchor = heading.querySelector("a.anchor");
 
-      let id;
-      if (anchor) {
-        id = anchor.name;
-      } else {
-        id = `toc-${lowerTagName}-${slugify(text) || index}`;
-      }
+      const id = this.getIdFromHeading(this.postID, heading, sameIdCount);
 
       // Remove irrelevant ancestors
       while (ancestors[ancestors.length - 1].level >= level) {
@@ -172,7 +192,7 @@ export default class TocProcessor extends Service {
   }
 
   jumpToEnd(renderTimeline, postID) {
-    const buffer = 150;
+    let buffer = 150;
     const postContainer = document.querySelector(`[data-post-id="${postID}"]`);
 
     if (!renderTimeline) {
@@ -184,6 +204,15 @@ export default class TocProcessor extends Service {
       // so the post controls are still visible
       const topicMapHeight =
         postContainer.querySelector(`.topic-map`)?.offsetHeight || 0;
+
+      if (
+        postContainer.parentElement?.nextElementSibling?.querySelector(
+          "div[data-theme-toc]"
+        )
+      ) {
+        // but if the next post also has a toc, just jump to it
+        buffer = 30 - topicMapHeight;
+      }
 
       const offsetPosition =
         postContainer.getBoundingClientRect().bottom +
