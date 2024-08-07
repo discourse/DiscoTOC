@@ -83,7 +83,7 @@ RSpec.describe "DiscoTOC", system: true do
       window.scrollTo(0, document.body.scrollHeight);
     JS
 
-    expect(page).to have_css(".d-toc-mini")
+    expect(page).to have_no_css(".d-toc-mini")
   end
 
   it "d-toc-mini does not appear if the first post does not contain the markup" do
