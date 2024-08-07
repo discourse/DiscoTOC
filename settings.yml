@@ -16,6 +16,8 @@ auto_TOC_tags:
   type: list
   list_type: tag
   default: ""
+enable_TOC_for_replies:
+  default: false
 TOC_min_heading:
   default: 3
   min: 1

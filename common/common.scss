@@ -215,7 +215,8 @@ html.rtl SELECTOR {
 }
 
 // Composer preview notice
-.edit-title .d-editor-preview [data-theme-toc] {
+.edit-title .d-editor-preview [data-theme-toc],
+body.toc-for-replies-enabled .d-editor-preview [data-theme-toc] {
   background: var(--tertiary);
   color: var(--secondary);
   position: sticky;

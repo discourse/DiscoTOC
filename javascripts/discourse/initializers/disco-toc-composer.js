@@ -30,9 +30,15 @@ export default {
           icon: "align-left",
           label: themePrefix("insert_table_of_contents"),
           condition: (composer) => {
-            return composer.model.topicFirstPost;
+            return (
+              settings.enable_TOC_for_replies || composer.model.topicFirstPost
+            );
           },
         });
+
+        if (settings.enable_TOC_for_replies) {
+          document.body.classList.add("toc-for-replies-enabled");
+        }
       }
     });
   },

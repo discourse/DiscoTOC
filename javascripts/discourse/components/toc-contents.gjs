@@ -4,7 +4,6 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import { headerOffset } from "discourse/lib/offset-calculator";
-import { slugify } from "discourse/lib/utilities";
 import { debounce } from "discourse-common/utils/decorators";
 import TocHeading from "../components/toc-heading";
 import TocLargeButtons from "../components/toc-large-buttons";
@@ -16,18 +15,20 @@ const RESIZE_DEBOUNCE = 200;
 
 export default class TocContents extends Component {
   @service tocProcessor;
+  @service appEvents;
 
   @tracked activeHeadingId = null;
   @tracked headingPositions = [];
   @tracked activeAncestorIds = [];
 
-  get flattenedToc() {
-    return this.flattenTocStructure(this.args.tocStructure);
+  get mappedToc() {
+    return this.mappedTocStructure(this.args.tocStructure);
   }
 
   @action
   setup() {
     this.listenForScroll();
+    this.listenForPostChange();
     this.listenForResize();
     this.updateHeadingPositions();
     this.updateActiveHeadingOnScroll(); // manual on setup so active class is added
@@ -37,6 +38,10 @@ export default class TocContents extends Component {
     super.willDestroy(...arguments);
     window.removeEventListener("scroll", this.updateActiveHeadingOnScroll);
     window.removeEventListener("resize", this.calculateHeadingPositions);
+    this.appEvents.off(
+      "topic:current-post-changed",
+      this.calculateHeadingPositions
+    );
   }
 
   @action
@@ -48,6 +53,14 @@ export default class TocContents extends Component {
   listenForResize() {
     //  due to text reflow positions will change after significant resize
     window.addEventListener("resize", this.calculateHeadingPositions);
+  }
+
+  @action
+  listenForPostChange() {
+    this.appEvents.on(
+      "topic:current-post-changed",
+      this.calculateHeadingPositions
+    );
   }
 
   @debounce(RESIZE_DEBOUNCE)
@@ -71,17 +84,27 @@ export default class TocContents extends Component {
       return;
     }
 
-    this.headingPositions = Array.from(headings).map((heading) => {
-      const id = this.getIdFromHeading(heading);
-      return {
-        id,
-        position:
-          heading.getBoundingClientRect().top +
-          window.scrollY -
-          headerOffset() -
-          POSITION_BUFFER,
-      };
-    });
+    const sameIdCount = new Map();
+    const mappedToc = this.mappedToc;
+    this.headingPositions = Array.from(headings)
+      .map((heading) => {
+        const id = this.tocProcessor.getIdFromHeading(
+          this.args.postID,
+          heading,
+          sameIdCount
+        );
+        return mappedToc[id]
+          ? {
+              id,
+              position:
+                heading.getBoundingClientRect().top +
+                window.scrollY -
+                headerOffset() -
+                POSITION_BUFFER,
+            }
+          : null;
+      })
+      .compact();
   }
 
   @debounce(SCROLL_DEBOUNCE)
@@ -104,9 +127,8 @@ export default class TocContents extends Component {
       }
     }
 
-    const activeHeading = this.flattenedToc.find(
-      (h) => h.id === this.headingPositions[activeIndex]?.id
-    );
+    const activeHeading =
+      this.mappedToc[this.headingPositions[activeIndex]?.id];
 
     this.activeHeadingId = activeHeading?.id;
     this.activeAncestorIds = [];
@@ -117,20 +139,15 @@ export default class TocContents extends Component {
     }
   }
 
-  getIdFromHeading(heading) {
-    // reuse content from autolinked headings
-    const tagName = heading.tagName.toLowerCase();
-    const text = heading.textContent.trim();
-    const anchor = heading.querySelector("a.anchor");
-    return anchor ? anchor.name : `toc-${tagName}-${slugify(text)}`;
-  }
-
-  flattenTocStructure(tocStructure) {
-    // the post content is flat, but we want to keep the relationships added in tocStructure
-    return tocStructure.flatMap((item) => [
-      item,
-      ...(item.subItems ? this.flattenTocStructure(item.subItems) : []),
-    ]);
+  mappedTocStructure(tocStructure, map = null) {
+    map ??= {};
+    for (const item of tocStructure) {
+      map[item.id] = item;
+      if (item.subItems) {
+        this.mappedTocStructure(item.subItems, map);
+      }
+    }
+    return map;
   }
 
   <template>

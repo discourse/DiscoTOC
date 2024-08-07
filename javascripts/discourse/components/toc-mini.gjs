@@ -39,13 +39,13 @@ export default class TocMini extends Component {
 
   <template>
     {{#if this.tocProcessor.hasTOC}}
-      <div class="d-toc-mini">
+      <span class="d-toc-mini">
         <DButton
           class="btn-primary"
           @icon="stream"
           @action={{this.toggleTOCOverlay}}
         />
-      </div>
+      </span>
     {{/if}}
   </template>
 }
