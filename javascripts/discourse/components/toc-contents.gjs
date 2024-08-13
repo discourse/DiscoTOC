@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
 import { headerOffset } from "discourse/lib/offset-calculator";
 import { debounce } from "discourse-common/utils/decorators";
@@ -154,7 +155,11 @@ export default class TocContents extends Component {
     {{#unless @renderTimeline}}
       <TocMiniButtons @renderTimeline={{@renderTimeline}} @postID={{@postID}} />
     {{/unless}}
-    <div id="d-toc" {{didInsert this.setup}}>
+    <div
+      id="d-toc"
+      {{didInsert this.setup}}
+      {{didUpdate this.updateHeadingPositions @postID}}
+    >
 
       {{#each @tocStructure as |heading|}}
         <ul class="d-toc-heading">
