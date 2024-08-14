@@ -5,3 +5,17 @@
 # https://translate.discourse.org/
 
 it:
+  table_of_contents: sommario
+  insert_table_of_contents: Inserisci il sommario
+  jump_bottom: Vai alla fine
+  toggle_toc:
+    show_timeline: Sequenza temporale
+    show_toc: Contenuti
+  theme_metadata:
+    settings:
+      minimum_trust_level_to_create_TOC: Il livello di attendibilità minimo che un utente deve avere per poter vedere il pulsante Sommario nel compositore
+      composer_toc_text: Il testo che appare nella parte superiore del riquadro di anteprima del compositore per indicare che l'argomento avrà un sommario
+      auto_TOC_categories: Abilita automaticamente il sommario sugli argomenti in queste categorie
+      auto_TOC_tags: Abilita automaticamente il sommario sugli argomenti con queste etichette
+      TOC_min_heading: Numero minimo di intestazioni in un argomento affinché il sommario venga mostrato
+      enable_TOC_for_replies: Consente il sommario per le risposte. I sommari delle risposte non sono influenzati dalle impostazioni <b>Etichette sommario automatiche</b> e <b>Categorie sommario automatico</b> e devono essere inseriti manualmente.

@@ -5,3 +5,17 @@
 # https://translate.discourse.org/
 
 fi:
+  table_of_contents: sisällysluettelo
+  insert_table_of_contents: Lisää sisällysluettelo
+  jump_bottom: Siirry loppuun
+  toggle_toc:
+    show_timeline: Aikajana
+    show_toc: Sisältö
+  theme_metadata:
+    settings:
+      minimum_trust_level_to_create_TOC: Vähimmäisluottamustaso, joka käyttäjällä täytyy olla, jotta hän näkee sisällysluettelopainikkeen tekstieditorissa
+      composer_toc_text: Teksti, joka näkyy tekstieditorin esikatseluruudun yläosassa ja ilmaisee, että ketjulla on sisällysluettelo
+      auto_TOC_categories: Ota sisällysluettelo automaattisesti käyttöön näiden alueiden ketjuissa
+      auto_TOC_tags: Ota sisällysluettelo automaattisesti käyttöön ketjuissa, joilla on näitä tunnisteita
+      TOC_min_heading: Ketjun otsikoiden vähimmäismäärä, jotta sisällysluettelo näytetään
+      enable_TOC_for_replies: Sallii sisällysluettelo vastauksissa. <b>Automaattisten sisällysluettelotunnisteiden</b> ja <b>automaattisten sisällysluetteloalueiden</b> asetukset eivät vaikuta vastausten sisällysluetteloihin, ja ne on lisättävä manuaalisesti.

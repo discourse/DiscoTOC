@@ -5,3 +5,17 @@
 # https://translate.discourse.org/
 
 tr_TR:
+  table_of_contents: içindekiler
+  insert_table_of_contents: İçindekiler tablosu ekle
+  jump_bottom: Sona atla
+  toggle_toc:
+    show_timeline: Zaman çizelgesi
+    show_toc: İçindekiler
+  theme_metadata:
+    settings:
+      minimum_trust_level_to_create_TOC: Bir kullanıcının bestecideki İçindekiler düğmesini görebilmesi için sahip olması gereken minimum güven seviyesi
+      composer_toc_text: Bestecinin ön izleme bölmesinin en üstünde görünen ve konunun bir içerik tablosuna sahip olacağını belirten metin
+      auto_TOC_categories: Bu kategorilerdeki konulardaki İçindekiler'i otomatik olarak etkinleştir
+      auto_TOC_tags: Bu etiketlere sahip konulardaki İçindekiler'i otomatik olarak etkinleştir
+      TOC_min_heading: İçindekiler tablosunun gösterilebilmesi için bir konudaki minimum başlık sayısı
+      enable_TOC_for_replies: Yanıtlar için İçindekiler tablosuna izin verir. Yanıtlar için İçindekiler, <b>otomatik İçindekiler etiketleri</b> ve <b>otomatik İçindekiler kategorileri</b> ayarlarından etkilenmez ve manuel olarak eklenmelidir.

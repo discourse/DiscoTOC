@@ -5,3 +5,17 @@
 # https://translate.discourse.org/
 
 nl:
+  table_of_contents: inhoudsopgave
+  insert_table_of_contents: Inhoudsopgave invoegen
+  jump_bottom: Naar einde
+  toggle_toc:
+    show_timeline: Tijdlijn
+    show_toc: Inhoud
+  theme_metadata:
+    settings:
+      minimum_trust_level_to_create_TOC: Het minimale vertrouwensniveau dat een gebruiker moet hebben om de inhoudsopgaveknop te zien in de editor
+      composer_toc_text: Tekst die bovenaan het voorbeeldvenster van de editor wordt weergegeven om aan te geven dat het topic een inhoudsopgave heeft
+      auto_TOC_categories: Inhoudsopgave automatisch inschakelen voor topics in deze categorieën
+      auto_TOC_tags: Inhoudsopgave automatisch inschakelen voor topics met deze tags
+      TOC_min_heading: Minimaal aantal koppen in een topic voordat de inhoudsopgave wordt weergegeven
+      enable_TOC_for_replies: Staat een inhoudsopgave toe voor antwoorden. Inhoudsopgaven voor antwoorden worden niet beïnvloed door de instellingen <b>auto TOC tags</b> en <b>auto TOC categories</b> en moeten handmatig worden ingevoegd.

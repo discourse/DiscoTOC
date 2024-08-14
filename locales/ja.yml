@@ -5,3 +5,17 @@
 # https://translate.discourse.org/
 
 ja:
+  table_of_contents: 目次
+  insert_table_of_contents: 目次を挿入
+  jump_bottom: 最後まで移動
+  toggle_toc:
+    show_timeline: タイムライン
+    show_toc: コンテンツ
+  theme_metadata:
+    settings:
+      minimum_trust_level_to_create_TOC: コンポーザーに TOC ボタンを表示するためにユーザーに必要な最低信頼レベル
+      composer_toc_text: トピックに目次が挿入されることを示す、コンポーザーのプレビューペインの上部に表示されるテキスト
+      auto_TOC_categories: これらのカテゴリのトピックで TOC を自動的に有効にする
+      auto_TOC_tags: これらのタグのあるトピックで TOC を自動的に有効にする
+      TOC_min_heading: 目次を表示するために必要なトピックの見出しの最低数
+      enable_TOC_for_replies: 返信の TOC を許可します。返信の TOC は<b>自動 TOC タグ</b>と<b>自動 TOC カテゴリ</b>の設定の影響はなく、手動で挿入する必要があります。
