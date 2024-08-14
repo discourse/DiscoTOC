@@ -18,3 +18,4 @@ de:
       auto_TOC_categories: Automatisches Aktivieren des Inhaltsverzeichnisses für Themen in diesen Kategorien
       auto_TOC_tags: Automatisches Aktivieren des Inhaltsverzeichnisses für Themen mit diesen Schlagwörtern
       TOC_min_heading: Mindestanzahl von Überschriften in einem Thema, damit das Inhaltsverzeichnis angezeigt wird
+      enable_TOC_for_replies: Erlaube Inhaltsverzeichnisse für Antworten. Inhaltsverzeichnisse für Antworten werden von den Einstellungen <b>auto TOC tags</b> und <b>auto TOC categories</b> nicht beeinflusst, sondern müssen manuell eingefügt werden.

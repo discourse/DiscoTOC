@@ -7,6 +7,15 @@
 zh_CN:
   table_of_contents: 目录
   insert_table_of_contents: 插入目录
+  jump_bottom: 跳至结尾
+  toggle_toc:
+    show_timeline: 时间线
+    show_toc: 目录
   theme_metadata:
     settings:
-      minimum_trust_level_to_create_TOC: 能够在编辑器中显示 TOC 按钮的最低信任等级
+      minimum_trust_level_to_create_TOC: 能够在编辑器中看到 TOC 按钮的最低信任级别
+      composer_toc_text: 显示在编辑器预览窗格顶部的文本，用于指示该话题将有目录
+      auto_TOC_categories: 在这些类别的话题中自动启用目录
+      auto_TOC_tags: 在带有这些标签的话题中自动启用目录
+      TOC_min_heading: 目录中显示的话题的最小标题数
+      enable_TOC_for_replies: 允许使用目录进行回复。使用目录进行回复不受<b>自动目录标签</b>和<b>自动目录类别</b>设置影响，必须手动插入。

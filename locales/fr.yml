@@ -5,3 +5,17 @@
 # https://translate.discourse.org/
 
 fr:
+  table_of_contents: table des matières
+  insert_table_of_contents: Insérer une table des matières
+  jump_bottom: Accéder à la fin
+  toggle_toc:
+    show_timeline: Chronologie
+    show_toc: Sommaire
+  theme_metadata:
+    settings:
+      minimum_trust_level_to_create_TOC: Le niveau de confiance minimum qu'un utilisateur doit avoir pour voir le bouton de la table des matières dans le compositeur
+      composer_toc_text: Le texte qui apparaît en haut du volet d'aperçu du compositeur pour indiquer que le sujet comportera une table des matières
+      auto_TOC_categories: Activer automatiquement la table des matières sur les sujets de ces catégories
+      auto_TOC_tags: Activer automatiquement la table des matières sur les sujets avec ces étiquettes
+      TOC_min_heading: Nombre minimum de titres dans un sujet pour que la table des matières soit affichée
+      enable_TOC_for_replies: Autorise la table des matières pour les réponses. Les tables des matières pour les réponses ne sont pas affectées par les paramètres <b>des étiquettes de table des matières automatiques</b> et <b>des catégories de table des matières automatiques</b> et doivent être insérées manuellement.

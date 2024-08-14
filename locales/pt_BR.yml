@@ -5,3 +5,17 @@
 # https://translate.discourse.org/
 
 pt_BR:
+  table_of_contents: tabela de conteúdo
+  insert_table_of_contents: Inserir tabela de conteúdo
+  jump_bottom: Ir para o fim
+  toggle_toc:
+    show_timeline: Linha de tempo
+    show_toc: Conteúdo
+  theme_metadata:
+    settings:
+      minimum_trust_level_to_create_TOC: O nível de confiança mínimo necessário para visualizar o botão TOC no compositor
+      composer_toc_text: Texto exibido no topo do painel de pré-visualização do compositor para indicar que o tópico terá uma tabela de conteúdo
+      auto_TOC_categories: Ativar automaticamente TOC em tópicos nestas categorias
+      auto_TOC_tags: Ativar automaticamente TOC em tópicos com estas etiquetas
+      TOC_min_heading: Quantidade mínima de cabeçalhos em um tópico para exibir a tabela de conteúdo
+      enable_TOC_for_replies: Permitir TOC para respostas. TOCs para respostas não são afetados pelas configurações de <b>etiquetas de TOC automáticas</b> e <b>categorias de TOC automáticas</b> e devem ser inseridas manualmente.
