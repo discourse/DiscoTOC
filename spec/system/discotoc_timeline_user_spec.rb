@@ -14,7 +14,7 @@ RSpec.describe "DiscoTOC", system: true do
       :post,
       raw:
         "<div data-theme-toc='true'></div>\n\n# Heading 1\nContent for the first heading\n## Heading 2\nContent for the second heading\n### Heading 3\nContent for the third heading\n# Heading 4\nContent for the fourth heading",
-      topic: topic_1
+      topic: topic_1,
     )
   end
 
@@ -23,7 +23,7 @@ RSpec.describe "DiscoTOC", system: true do
       :post,
       raw:
         "\n# Heading 1\nContent for the first heading\n## Heading 2\nContent for the second heading\n### Heading 3\nContent for the third heading\n# Heading 4\nContent for the fourth heading",
-      topic: topic_2
+      topic: topic_2,
     )
   end
 
@@ -32,7 +32,7 @@ RSpec.describe "DiscoTOC", system: true do
       :post,
       raw:
         "intentionally \n long \n content \n so \n there's \n plenty \n to be \n scrolled \n past \n which \n will \n force \n the \n timeline \n to \n hide \n scroll \n scroll \n scroll \n scroll \n scroll \n scroll \n scroll \n scroll \n scroll \n scroll \n scroll \n scroll \n scroll \n scroll \n scroll ",
-      topic: topic_1
+      topic: topic_1,
     )
   end
 
@@ -41,7 +41,7 @@ RSpec.describe "DiscoTOC", system: true do
       :post,
       raw:
         "<div data-theme-toc='true'></div>\n\n# Heading For Reply 1\nContent for the first heading\n## Heading For Reply 2\nContent for the second heading\n### Heading For Reply 3\nContent for the third heading\n# Heading For Reply 4\nContent for the fourth heading",
-      topic: topic_1
+      topic: topic_1,
     )
   end
 
@@ -50,7 +50,7 @@ RSpec.describe "DiscoTOC", system: true do
       :post,
       raw:
         "intentionally \n long \n content \n so \n there's \n plenty \n to be \n scrolled \n past \n which \n will \n force \n the \n timeline \n to \n hide \n scroll \n scroll \n scroll \n scroll \n scroll \n scroll \n scroll \n scroll \n scroll \n scroll \n scroll \n scroll \n scroll \n scroll \n scroll ",
-      topic: topic_1
+      topic: topic_1,
     )
   end
 
@@ -101,21 +101,17 @@ RSpec.describe "DiscoTOC", system: true do
       :post,
       topic: source_topic,
       raw:
-        "<div data-theme-toc='true'></div>\n\n# Heading 1 on the source topic\nContent for the first heading\n## Heading 2\nContent for the second heading\n### Heading 3\nContent for the third heading\n# Heading 4\nContent for the fourth heading\n<a href=c>Other topic</a>"
+        "<div data-theme-toc='true'></div>\n\n# Heading 1 on the source topic\nContent for the first heading\n## Heading 2\nContent for the second heading\n### Heading 3\nContent for the third heading\n# Heading 4\nContent for the fourth heading\n<a href=c>Other topic</a>",
     )
     visit("/t/#{source_topic.id}")
 
     expect(page).to have_css(
-      ".d-toc-item.d-toc-h1.active a[data-d-toc='toc-h1-heading-1-on-the-source-topic']"
+      ".d-toc-item.d-toc-h1.active a[data-d-toc='toc-h1-heading-1-on-the-source-topic']",
     )
     find("a[href='/t/#{topic_1.slug}/#{topic_1.id}'").click
 
-    expect(page).to have_css(
-      ".d-toc-item.d-toc-h1.active a[data-d-toc='toc-h1-heading-1']"
-    )
-    expect(page).to have_no_css(
-      "a[data-d-toc='toc-h1-heading-1-on-the-source-topic']"
-    )
+    expect(page).to have_css(".d-toc-item.d-toc-h1.active a[data-d-toc='toc-h1-heading-1']")
+    expect(page).to have_no_css("a[data-d-toc='toc-h1-heading-1-on-the-source-topic']")
   end
 
   it "timeline will appear without markup if auto_TOC_categories is set to the topic's category" do
