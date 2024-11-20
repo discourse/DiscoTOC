@@ -6,6 +6,11 @@ import DButton from "discourse/components/d-button";
 export default class TocMini extends Component {
   @service tocProcessor;
 
+  willDestroy() {
+    super.willDestroy(...arguments);
+    this.removeClickOutsideListener();
+  }
+
   @action
   clickOutside() {
     this.tocProcessor.setOverlayVisible(false);
@@ -30,11 +35,6 @@ export default class TocMini extends Component {
   @action
   removeClickOutsideListener() {
     document.removeEventListener("click", this.clickOutside);
-  }
-
-  willDestroy() {
-    super.willDestroy(...arguments);
-    this.removeClickOutsideListener();
   }
 
   <template>

@@ -22,6 +22,16 @@ export default class TocContents extends Component {
   @tracked headingPositions = [];
   @tracked activeAncestorIds = [];
 
+  willDestroy() {
+    super.willDestroy(...arguments);
+    window.removeEventListener("scroll", this.updateActiveHeadingOnScroll);
+    window.removeEventListener("resize", this.calculateHeadingPositions);
+    this.appEvents.off(
+      "topic:current-post-changed",
+      this.calculateHeadingPositions
+    );
+  }
+
   get mappedToc() {
     return this.mappedTocStructure(this.args.tocStructure);
   }
@@ -33,16 +43,6 @@ export default class TocContents extends Component {
     this.listenForResize();
     this.updateHeadingPositions();
     this.updateActiveHeadingOnScroll(); // manual on setup so active class is added
-  }
-
-  willDestroy() {
-    super.willDestroy(...arguments);
-    window.removeEventListener("scroll", this.updateActiveHeadingOnScroll);
-    window.removeEventListener("resize", this.calculateHeadingPositions);
-    this.appEvents.off(
-      "topic:current-post-changed",
-      this.calculateHeadingPositions
-    );
   }
 
   @action
