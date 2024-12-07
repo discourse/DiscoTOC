@@ -22,7 +22,7 @@ export default class TocToggle extends Component {
   }
 
   get toggleIcon() {
-    return this.tocProcessor.isTocVisible ? "timeline" : "stream";
+    return this.tocProcessor.isTocVisible ? "timeline" : "bars-staggered";
   }
 
   <template>

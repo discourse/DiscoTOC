@@ -42,7 +42,7 @@ export default class TocMini extends Component {
       <span class="d-toc-mini">
         <DButton
           class="btn-primary"
-          @icon="stream"
+          @icon="bars-staggered"
           @action={{this.toggleTOCOverlay}}
         />
       </span>

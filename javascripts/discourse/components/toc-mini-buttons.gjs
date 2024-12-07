@@ -25,7 +25,7 @@ export default class TocMiniButtons extends Component {
       />
       <DButton
         @action={{this.closeOverlay}}
-        @icon="times"
+        @icon="xmark"
         class="btn btn-transparent d-toc-close"
       />
     </div>
