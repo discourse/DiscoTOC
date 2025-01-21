@@ -4,6 +4,7 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
+import DButton from "discourse/components/d-button";
 import { headerOffset } from "discourse/lib/offset-calculator";
 import { debounce } from "discourse-common/utils/decorators";
 import TocHeading from "../components/toc-heading";
@@ -21,6 +22,7 @@ export default class TocContents extends Component {
   @tracked activeHeadingId = null;
   @tracked headingPositions = [];
   @tracked activeAncestorIds = [];
+  @tracked expandAll = false;
 
   willDestroy() {
     super.willDestroy(...arguments);
@@ -34,6 +36,10 @@ export default class TocContents extends Component {
 
   get mappedToc() {
     return this.mappedTocStructure(this.args.tocStructure);
+  }
+
+  get expandLabel() {
+    return this.expandAll ? "Reset expand" : "Expand all";
   }
 
   @action
@@ -62,6 +68,11 @@ export default class TocContents extends Component {
       "topic:current-post-changed",
       this.calculateHeadingPositions
     );
+  }
+
+  @action
+  toggleExpandAll() {
+    this.expandAll = !this.expandAll;
   }
 
   @debounce(RESIZE_DEBOUNCE)
@@ -160,6 +171,12 @@ export default class TocContents extends Component {
       {{didInsert this.setup}}
       {{didUpdate this.updateHeadingPositions @postID}}
     >
+      <div class="d-toc-top-buttons">
+        <DButton
+          @action={{this.toggleExpandAll}}
+          @translatedLabel={{this.expandLabel}}
+        />
+      </div>
 
       {{#each @tocStructure as |heading|}}
         <ul class="d-toc-heading">
@@ -168,6 +185,7 @@ export default class TocContents extends Component {
             @activeHeadingId={{this.activeHeadingId}}
             @activeAncestorIds={{this.activeAncestorIds}}
             @renderTimeline={{@renderTimeline}}
+            @expandAll={{this.expandAll}}
           />
         </ul>
       {{/each}}

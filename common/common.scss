@@ -46,6 +46,7 @@ $padding-basis: 0.75em;
         transition: opacity 0.3s ease-in-out, max-height 0.3s ease-in-out;
       }
       &.active,
+      &.expand-all,
       .d-toc-wrapper.overlay & {
         ul {
           max-height: 500em;
