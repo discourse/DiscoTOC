@@ -7,44 +7,54 @@ $padding-basis: 0.75em;
   }
 }
 
-.overlay .d-toc-main {
-  max-width: 100%;
-}
-
 .d-toc-main {
   min-width: 6em;
   max-width: 13em;
-
   word-wrap: break-word;
   box-sizing: border-box;
+
+  .overlay & {
+    max-width: 100%;
+  }
+
   a {
     display: block;
     padding: 0.15em 0;
     color: var(--primary-medium);
+
     &.scroll-to-bottom {
       padding-left: $padding-basis;
     }
   }
+
+  .timeline-toggle {
+    margin-top: 1em;
+  }
+
   #d-toc {
     border-left: 1px solid var(--primary-low);
     max-height: calc(100vh - 4.5em - var(--header-offset));
     overflow: auto;
+
     ul {
       list-style-type: none;
       margin: 0;
       padding: 0;
     }
+
     li.d-toc-item {
       margin: 0;
       padding: 0;
       padding-left: $padding-basis;
       line-height: var(--line-height-large);
+
       > ul {
         max-height: 0;
         overflow: hidden;
         opacity: 0.5;
         transition: opacity 0.3s ease-in-out, max-height 0.3s ease-in-out;
       }
+
       &.active,
       .d-toc-wrapper.overlay & {
         ul {
@@ -53,6 +63,7 @@ $padding-basis: 0.75em;
           opacity: 1;
           animation: hide-scroll 0.3s backwards;
         }
+
         // hides the scrollbar while subsection expands
         @keyframes hide-scroll {
           from,
@@ -61,13 +72,16 @@ $padding-basis: 0.75em;
           }
         }
       }
+
       > a:hover {
         color: var(--primary-high);
       }
+
       &.direct-active > a {
         position: relative;
         color: var(--primary);
-        &:before {
+
+        &::before {
           content: "";
           width: 1px;
           margin-top: -1px;
@@ -80,13 +94,16 @@ $padding-basis: 0.75em;
 
     > ul > li > ul {
       font-size: var(--font-down-1);
+
       > li:first-child {
         padding-top: 0.25em;
       }
+
       > li {
         padding-bottom: 0.15em;
       }
-      li.direct-active > a:before {
+
+      li.direct-active > a::before {
         // it's odd that we need this
         margin-left: -1px;
       }
@@ -132,16 +149,17 @@ html.rtl SELECTOR {
     }
   }
 }
-// END active line marker
 
+// END active line marker
 .d-toc-mini {
   height: 100%;
+
   button {
     height: 100%;
   }
 }
 
-// overlayed timeline (on mobile and narrow screens)
+// overlaid timeline (on mobile and narrow screens)
 .topic-navigation.with-topic-progress {
   .d-toc-wrapper {
     position: fixed;
@@ -156,18 +174,22 @@ html.rtl SELECTOR {
     box-shadow: var(--shadow-dropdown);
     z-index: z("modal", "overlay");
     transition: all 0.2s ease-in-out;
+
     .d-toc-main {
       width: 100%;
       padding: 0.5em;
       height: 100%;
+
       #d-toc {
         max-height: calc(100% - 3em);
       }
     }
+
     &.overlay {
       right: 0;
       width: 75vw;
       opacity: 1;
+
       .d-toc-main #d-toc li.d-toc-item ul {
         transition: none;
       }
@@ -188,7 +210,7 @@ html.rtl SELECTOR {
 // core sets first child's top margin to 0
 // ensure it's also 0 when TOC markup is first
 .cooked > div[data-theme-toc]:first-child + * {
-  margin-top: 0px;
+  margin-top: 0;
 }
 
 // RTL Support
@@ -207,6 +229,7 @@ html.rtl SELECTOR {
   .topic-navigation.with-topic-progress .d-toc-wrapper {
     right: unset;
     left: -100vw;
+
     &.overlay {
       right: unset;
       left: 0;
@@ -226,7 +249,8 @@ body.toc-for-replies-enabled .d-editor-preview [data-theme-toc] {
   display: flex;
   align-items: center;
   justify-content: center;
-  &:before {
+
+  &::before {
     content: "#{$composer_toc_text}";
   }
 }
@@ -236,9 +260,11 @@ body.toc-for-replies-enabled .d-editor-preview [data-theme-toc] {
   position: sticky;
   top: calc(var(--header-offset, 60px) + 1em);
   max-height: calc(100vh - 2em - var(--header-offset, 60px));
+
   .mobile-view & {
     display: none;
   }
+
   .d-toc-main {
     display: block;
   }
@@ -256,21 +282,16 @@ body.toc-for-replies-enabled .d-editor-preview [data-theme-toc] {
   }
 }
 
-// toggle in timeline dtoc
-.d-toc-main {
-  .timeline-toggle {
-    margin-top: 1em;
-  }
-}
-
 // jump to bottom in timeline
 .d-toc-footer-icons {
   font-size: var(--font-down-1);
   margin-top: 0.5em;
+
   button {
     color: var(--tertiary);
+
     .d-icon {
-      color: currentColor;
+      color: currentcolor;
     }
   }
 }
