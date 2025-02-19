@@ -27,14 +27,14 @@ $padding-basis: 0.75em;
     }
   }
 
+  .timeline-toggle {
+    margin-top: 1em;
+  }
+
   #d-toc {
     border-left: 1px solid var(--primary-low);
     max-height: calc(100vh - 4.5em - var(--header-offset));
     overflow: auto;
-
-    .timeline-toggle {
-      margin-top: 1em;
-    }
 
     ul {
       list-style-type: none;
