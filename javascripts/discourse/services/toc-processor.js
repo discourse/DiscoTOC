@@ -5,6 +5,7 @@ import { slugify } from "discourse/lib/utilities";
 
 export default class TocProcessor extends Service {
   @service router;
+
   @tracked hasTOC = false;
   @tracked postContent = null;
   @tracked postID = null;
