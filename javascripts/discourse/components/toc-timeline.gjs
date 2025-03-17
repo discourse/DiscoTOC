@@ -10,6 +10,7 @@ import TocToggle from "../components/toc-toggle";
 
 export default class TocTimeline extends Component {
   @service tocProcessor;
+
   @tracked
   isTocVisible = localStorage.getItem("tocVisibility") === "true" || true;
 
