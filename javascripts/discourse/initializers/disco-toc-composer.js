@@ -1,5 +1,5 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export default {
   name: "disco-toc-composer",
