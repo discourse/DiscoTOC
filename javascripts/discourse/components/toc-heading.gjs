@@ -25,12 +25,16 @@ export default class TocHeading extends Component {
       ? ` d-toc-${this.args.item.tagName}`
       : "";
     let activeClass = "";
+    let expandAllClass = "";
     if (this.isActive) {
       activeClass = " direct-active active";
     } else if (this.isAncestorActive) {
       activeClass = " active";
     }
-    return `${baseClass}${typeClass}${activeClass}`;
+    if (this.args.expandAll) {
+      expandAllClass = " expand-all";
+    }
+    return `${baseClass}${typeClass}${activeClass}${expandAllClass}`;
   }
 
   @action
