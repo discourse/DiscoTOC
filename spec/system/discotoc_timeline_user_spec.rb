@@ -108,7 +108,8 @@ RSpec.describe "DiscoTOC", system: true do
     expect(page).to have_css(
       ".d-toc-item.d-toc-h1.active a[data-d-toc='toc-h1-heading-1-on-the-source-topic']",
     )
-    find("a[href='/t/#{topic_1.slug}/#{topic_1.id}'").click
+
+    find("a[href='/t/#{topic_1.slug}/#{topic_1.id}']").click
 
     expect(page).to have_css(".d-toc-item.d-toc-h1.active a[data-d-toc='toc-h1-heading-1']")
     expect(page).to have_no_css("a[data-d-toc='toc-h1-heading-1-on-the-source-topic']")
