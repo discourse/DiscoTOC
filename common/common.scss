@@ -58,6 +58,7 @@ $padding-basis: 0.75em;
       }
 
       &.active,
+      &.expand-all,
       .d-toc-wrapper.overlay & {
         ul {
           max-height: 500em;
