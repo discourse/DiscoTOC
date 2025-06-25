@@ -22,17 +22,17 @@ RSpec.describe "DiscoTOC", system: true do
     visit("/c/#{category.id}")
 
     find("#create-topic").click
-    find(".toolbar-popup-menu-options").click
+    find(".toolbar-menu__options-trigger").click
 
-    expect(page).to have_css("[data-name='Insert table of contents']")
+    expect(page).to have_css("button[title='Insert table of contents']")
   end
 
   it "table of contents button inserts markup into composer" do
     visit("/c/#{category.id}")
 
     find("#create-topic").click
-    find(".toolbar-popup-menu-options").click
-    find("[data-name='Insert table of contents']").click
+    find(".toolbar-menu__options-trigger").click
+    find("button[title='Insert table of contents']").click
 
     expect(page).to have_css(".d-editor-preview [data-theme-toc='true']")
   end
@@ -44,18 +44,18 @@ RSpec.describe "DiscoTOC", system: true do
     visit("/c/#{category.id}")
 
     find("#create-topic").click
-    find(".toolbar-popup-menu-options").click
+    find(".toolbar-menu__options-trigger").click
 
-    expect(page).to have_no_css("[data-name='Insert table of contents']")
+    expect(page).to have_no_css("button[title='Insert table of contents']")
   end
 
   it "table of contents button does not appear on replies" do
     visit("/t/#{topic_1.id}")
 
     find(".reply").click
-    find(".toolbar-popup-menu-options").click
+    find(".toolbar-menu__options-trigger").click
 
-    expect(page).to have_no_css("[data-name='Insert table of contents']")
+    expect(page).to have_no_css("button[title='Insert table of contents']")
   end
 
   context "when enable TOC for replies" do
@@ -68,9 +68,9 @@ RSpec.describe "DiscoTOC", system: true do
       visit("/t/#{topic_1.id}")
 
       find(".reply").click
-      find(".toolbar-popup-menu-options").click
+      find(".toolbar-menu__options-trigger").click
 
-      expect(page).to have_css("[data-name='Insert table of contents']")
+      expect(page).to have_css("button[title='Insert table of contents']")
     end
   end
 end
