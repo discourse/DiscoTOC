@@ -1,6 +1,6 @@
 $padding-basis: 0.75em;
 
-@media screen and (min-width: 925px) {
+@media screen and (width >= 925px) {
   .container.posts {
     // needs to be static, otherwise we get content shifts when the TOC shows/hides
     grid-template-columns: 75% 25%;
@@ -301,7 +301,7 @@ body.toc-for-replies-enabled .d-editor-preview [data-theme-toc] {
 
 // on shorter screens, we can keep this consistently in the same location
 // this is kind of far away for tall screens, so the more variable position below might be better
-@media screen and (max-height: 950px) {
+@media screen and (height <= 950px) {
   .timeline-toggle {
     position: fixed;
     bottom: 0;
