@@ -8,6 +8,7 @@ $padding-basis: 0.75em;
 }
 
 .d-toc-main {
+  display: flex;
   min-width: 6em;
   max-width: 13em;
   word-wrap: break-word;
@@ -122,6 +123,12 @@ $padding-basis: 0.75em;
         }
       }
     }
+  }
+}
+
+.d-toc {
+  &__btn-expand {
+    align-self: flex-start;
   }
 }
 

@@ -4,12 +4,15 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
+import DButton from "discourse/components/d-button";
 import bodyClass from "discourse/helpers/body-class";
 import TocContents from "../components/toc-contents";
 import TocToggle from "../components/toc-toggle";
 
 export default class TocTimeline extends Component {
   @service tocProcessor;
+
+  @tracked expandAll = false;
 
   @tracked
   isTocVisible = localStorage.getItem("tocVisibility") === "true" || true;
@@ -46,6 +49,10 @@ export default class TocTimeline extends Component {
     );
   }
 
+  get expandLabel() {
+    return this.expandAll ? "Reset expand" : "Expand all";
+  }
+
   @action
   callCheckPostforTOC() {
     this.tocProcessor.checkPostforTOC(this.args.topic);
@@ -56,6 +63,11 @@ export default class TocTimeline extends Component {
     if (this.args.renderTimeline) {
       this.tocProcessor.setOverlayVisible(false);
     }
+  }
+
+  @action
+  toggleExpandAll() {
+    this.expandAll = !this.expandAll;
   }
 
   <template>
@@ -75,7 +87,16 @@ export default class TocTimeline extends Component {
           @postID={{this.tocProcessor.postID}}
           @tocStructure={{this.tocProcessor.tocStructure}}
           @renderTimeline={{@renderTimeline}}
+          @expandAll={{this.expandAll}}
         />
+
+        <DButton
+          @action={{this.toggleExpandAll}}
+          aria-label={{this.expandLabel}}
+          @class="d-toc__btn-expand btn-transparent btn-small"
+          @icon="angles-down"
+        />
+
         {{#if @renderTimeline}}
           <TocToggle @topic={{@topic}} />
         {{/if}}
