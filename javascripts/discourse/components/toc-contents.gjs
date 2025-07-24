@@ -162,7 +162,11 @@ export default class TocContents extends Component {
 
   <template>
     {{#unless @renderTimeline}}
-      <TocMiniButtons @renderTimeline={{@renderTimeline}} @postID={{@postID}} />
+      <TocMiniButtons
+        @renderTimeline={{@renderTimeline}}
+        @postID={{@postID}}
+        @expandAll={{this.args.expandAll}}
+      />
     {{/unless}}
     <div
       id="d-toc"
