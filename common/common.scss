@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 $padding-basis: 0.75em;
 
 @media screen and (width >= 925px) {
@@ -8,6 +10,9 @@ $padding-basis: 0.75em;
 }
 
 .d-toc-main {
+  @include viewport.from(sm) {
+    display: flex;
+  }
   min-width: 6em;
   max-width: 13em;
   word-wrap: break-word;
@@ -58,6 +63,7 @@ $padding-basis: 0.75em;
       }
 
       &.active,
+      &.expand-all,
       .d-toc-wrapper.overlay & {
         ul {
           max-height: 500em;
@@ -121,6 +127,12 @@ $padding-basis: 0.75em;
         }
       }
     }
+  }
+}
+
+.d-toc {
+  &__btn-expand {
+    align-self: flex-start;
   }
 }
 

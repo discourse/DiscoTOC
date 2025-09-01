@@ -36,6 +36,10 @@ export default class TocContents extends Component {
     return this.mappedTocStructure(this.args.tocStructure);
   }
 
+  get expandLabel() {
+    return this.args.expandAll ? "Reset expand" : "Expand all";
+  }
+
   @action
   setup() {
     this.listenForScroll();
@@ -62,6 +66,11 @@ export default class TocContents extends Component {
       "topic:current-post-changed",
       this.calculateHeadingPositions
     );
+  }
+
+  @action
+  toggleExpandAll() {
+    this.args.expandAll = !this.args.expandAll;
   }
 
   @debounce(RESIZE_DEBOUNCE)
@@ -153,7 +162,11 @@ export default class TocContents extends Component {
 
   <template>
     {{#unless @renderTimeline}}
-      <TocMiniButtons @renderTimeline={{@renderTimeline}} @postID={{@postID}} />
+      <TocMiniButtons
+        @renderTimeline={{@renderTimeline}}
+        @postID={{@postID}}
+        @expandAll={{this.args.expandAll}}
+      />
     {{/unless}}
     <div
       id="d-toc"
@@ -168,6 +181,7 @@ export default class TocContents extends Component {
             @activeHeadingId={{this.activeHeadingId}}
             @activeAncestorIds={{this.activeAncestorIds}}
             @renderTimeline={{@renderTimeline}}
+            @expandAll={{this.args.expandAll}}
           />
         </ul>
       {{/each}}
