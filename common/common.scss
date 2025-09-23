@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 $padding-basis: 0.75em;
 
 @media screen and (width >= 925px) {
@@ -162,7 +164,16 @@ html.rtl SELECTOR {
 }
 
 // overlaid timeline (on mobile and narrow screens)
-.topic-navigation.with-topic-progress {
+.topic-navigation {
+  &:has(.d-toc-mini) {
+    @include viewport.until(md) {
+      position: sticky;
+      bottom: calc(env(safe-area-inset-bottom) + var(--composer-height, 0px));
+      z-index: 100;
+      pointer-events: none;
+    }
+  }
+
   .d-toc-wrapper {
     position: fixed;
     margin-top: 0.25em;
