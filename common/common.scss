@@ -164,57 +164,59 @@ html.rtl SELECTOR {
 }
 
 // overlaid timeline (on mobile and narrow screens)
-.topic-navigation {
-  &:has(.d-toc-mini) {
-    @include viewport.until(md) {
-      position: sticky;
-      bottom: calc(env(safe-area-inset-bottom) + var(--composer-height, 0px));
-      z-index: z("timeline");
-    }
-  }
-
-  .d-toc-wrapper {
-    position: fixed;
-    margin-top: 0.25em;
-    height: calc(100vh - 50px - var(--header-offset));
-    opacity: 0.5;
-    right: -100vw;
-    top: var(--header-offset);
-    width: 75vw;
-    max-width: 350px;
-    background-color: var(--secondary);
-    box-shadow: var(--shadow-dropdown);
-    z-index: z("modal", "overlay");
-    transition: all 0.2s ease-in-out;
-
-    .d-toc-main {
-      width: 100%;
-      padding: 0.5em;
-      height: 100%;
-
-      #d-toc {
-        max-height: calc(100% - 3em);
+@include viewport.until(md) {
+  .topic-navigation {
+    &:has(.d-toc-mini) {
+      @include viewport.until(md) {
+        position: sticky;
+        bottom: calc(env(safe-area-inset-bottom) + var(--composer-height, 0px));
+        z-index: z("timeline");
       }
-    }
 
-    &.overlay {
-      right: 0;
-      width: 75vw;
-      opacity: 1;
+      .d-toc-wrapper {
+        position: fixed;
+        margin-top: 0.25em;
+        height: calc(100vh - 50px - var(--header-offset));
+        opacity: 0.5;
+        right: -100vw;
+        top: var(--header-offset);
+        width: 75vw;
+        max-width: 350px;
+        background-color: var(--secondary);
+        box-shadow: var(--shadow-dropdown);
+        z-index: z("modal", "overlay");
+        transition: all 0.2s ease-in-out;
 
-      .d-toc-main #d-toc li.d-toc-item ul {
-        transition: none;
+        .d-toc-main {
+          width: 100%;
+          padding: 0.5em;
+          height: 100%;
+
+          #d-toc {
+            max-height: calc(100% - 3em);
+          }
+        }
+
+        &.overlay {
+          right: 0;
+          width: 75vw;
+          opacity: 1;
+
+          .d-toc-main #d-toc li.d-toc-item ul {
+            transition: none;
+          }
+        }
+
+        a.scroll-to-bottom,
+        a.d-toc-close {
+          display: inline-block;
+          padding: 0.5em;
+        }
+
+        .d-toc-icons {
+          text-align: right;
+        }
       }
-    }
-
-    a.scroll-to-bottom,
-    a.d-toc-close {
-      display: inline-block;
-      padding: 0.5em;
-    }
-
-    .d-toc-icons {
-      text-align: right;
     }
   }
 }
