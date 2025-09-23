@@ -169,8 +169,7 @@ html.rtl SELECTOR {
     @include viewport.until(md) {
       position: sticky;
       bottom: calc(env(safe-area-inset-bottom) + var(--composer-height, 0px));
-      z-index: 100;
-      pointer-events: none;
+      z-index: z("timeline");
     }
   }
 
