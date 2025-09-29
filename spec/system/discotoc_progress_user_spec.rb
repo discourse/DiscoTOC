@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "DiscoTOC", system: true do
+RSpec.describe "DiscoTOC", system: true, mobile: true do
   let!(:theme) { upload_theme_component }
 
   fab!(:category)
@@ -55,13 +55,13 @@ RSpec.describe "DiscoTOC", system: true do
   end
 
   it "table of contents button appears in mobile view" do
-    visit("/t/#{topic_1.id}/?mobile_view=1")
+    visit("/t/#{topic_1.id}")
 
     expect(page).to have_css(".d-toc-mini")
   end
 
   it "clicking the toggle button toggles the timeline" do
-    visit("/t/#{topic_1.id}/?mobile_view=1")
+    visit("/t/#{topic_1.id}")
 
     find(".d-toc-mini").click
 
@@ -69,7 +69,7 @@ RSpec.describe "DiscoTOC", system: true do
   end
 
   it "timeline toggle does not appear when the progress bar timeline is expanded" do
-    visit("/t/#{topic_1.id}/?mobile_view=1")
+    visit("/t/#{topic_1.id}")
 
     find("#topic-progress").click
 
@@ -77,7 +77,7 @@ RSpec.describe "DiscoTOC", system: true do
   end
 
   it "d-toc-mini is hidden when scrolled past the first post" do
-    visit("/t/#{topic_1.id}/?mobile_view=1")
+    visit("/t/#{topic_1.id}")
 
     page.execute_script <<~JS
       window.scrollTo(0, document.body.scrollHeight);
@@ -87,7 +87,7 @@ RSpec.describe "DiscoTOC", system: true do
   end
 
   it "d-toc-mini does not appear if the first post does not contain the markup" do
-    visit("/t/#{topic_2.id}/?mobile_view=1")
+    visit("/t/#{topic_2.id}")
 
     expect(page).to have_no_css(".d-toc-mini")
   end
@@ -96,7 +96,7 @@ RSpec.describe "DiscoTOC", system: true do
     theme.update_setting(:auto_TOC_categories, "#{category.id}")
     theme.save!
 
-    visit("/t/#{topic_2.id}/?mobile_view=1")
+    visit("/t/#{topic_2.id}")
 
     expect(page).to have_css(".d-toc-mini")
   end
@@ -108,7 +108,7 @@ RSpec.describe "DiscoTOC", system: true do
     end
 
     it "table of contents button won't appears in mobile view for replies" do
-      visit("/t/-/#{topic_1.id}/3/?mobile_view=1")
+      visit("/t/-/#{topic_1.id}/3")
 
       expect(page).to have_no_css(".d-toc-mini")
     end
@@ -121,7 +121,7 @@ RSpec.describe "DiscoTOC", system: true do
     end
 
     it "table of contents button appears in mobile view for replies" do
-      visit("/t/-/#{topic_1.id}/3/?mobile_view=1")
+      visit("/t/-/#{topic_1.id}/3")
 
       expect(page).to have_css(".d-toc-mini")
     end
@@ -131,7 +131,7 @@ RSpec.describe "DiscoTOC", system: true do
       theme.update_setting(:auto_TOC_tags, "#{tag.name}")
       theme.save!
 
-      visit("/t/-/#{topic_1.id}/2/?mobile_view=1")
+      visit("/t/-/#{topic_1.id}/2")
 
       expect(page).to have_no_css(".d-toc-mini")
     end
@@ -141,7 +141,7 @@ RSpec.describe "DiscoTOC", system: true do
     theme.update_setting(:auto_TOC_categories, "99")
     theme.save!
 
-    visit("/t/#{topic_2.id}/?mobile_view=1")
+    visit("/t/#{topic_2.id}")
 
     expect(page).to have_no_css(".d-toc-mini")
   end
@@ -150,7 +150,7 @@ RSpec.describe "DiscoTOC", system: true do
     theme.update_setting(:auto_TOC_tags, "#{tag.name}")
     theme.save!
 
-    visit("/t/#{topic_2.id}/?mobile_view=1")
+    visit("/t/#{topic_2.id}")
 
     expect(page).to have_css(".d-toc-mini")
   end
@@ -159,7 +159,7 @@ RSpec.describe "DiscoTOC", system: true do
     theme.update_setting(:auto_TOC_tags, "wrong-tag")
     theme.save!
 
-    visit("/t/#{topic_2.id}/?mobile_view=1")
+    visit("/t/#{topic_2.id}")
 
     expect(page).to have_no_css(".d-toc-mini")
   end
@@ -168,7 +168,7 @@ RSpec.describe "DiscoTOC", system: true do
     theme.update_setting(:TOC_min_heading, 5)
     theme.save!
 
-    visit("/t/#{topic_1.id}/?mobile_view=1")
+    visit("/t/#{topic_1.id}")
 
     expect(page).to have_no_css(".d-toc-mini")
   end
