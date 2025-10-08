@@ -5,7 +5,7 @@ export default {
   name: "disco-toc-composer",
 
   initialize() {
-    withPluginApi("1.0.0", (api) => {
+    withPluginApi((api) => {
       const currentUser = api.getCurrentUser();
       if (!currentUser) {
         return;

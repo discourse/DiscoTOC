@@ -6,7 +6,7 @@ RSpec.describe "DiscoTOC", system: true do
   fab!(:category)
   fab!(:user) { Fabricate(:user, trust_level: TrustLevel[1], refresh_auto_groups: true) }
 
-  fab!(:topic_1) { Fabricate(:topic) }
+  fab!(:topic_1, :topic)
   fab!(:post_1) do
     Fabricate(
       :post,
