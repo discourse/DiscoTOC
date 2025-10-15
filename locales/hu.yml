@@ -5,3 +5,17 @@
 # https://translate.discourse.org/
 
 hu:
+  table_of_contents: tartalomjegyzék
+  insert_table_of_contents: Tartalomjegyzék beszúrása
+  jump_bottom: Ugrás a végére
+  toggle_toc:
+    show_timeline: Idővonal
+    show_toc: Tartalom
+  theme_metadata:
+    settings:
+      minimum_trust_level_to_create_TOC: A minimális bizalmi szint, amivel a felhasználónak rendelkeznie kell ahhoz, hogy a tartalomjegyzék gomb látható legyen a szerkesztőben.
+      composer_toc_text: A szövegszerkesztő előnézeti paneljének tetején megjelenő szöveg, amely jelzi, hogy a téma tartalomjegyzékkel fog rendelkezni.
+      auto_TOC_categories: Tartalomjegyzék automatikus engedélyezése a következő kategóriák témáinál
+      auto_TOC_tags: Tartalomjegyzék automatikus engedélyezése a következő címkékkel rendelkező témákban
+      TOC_min_heading: A tartalomjegyzék megjelenítéséhez szükséges címsorok minimális száma egy témában
+      enable_TOC_for_replies: Tartalomjegyzék engedélyezése a válaszokhoz. A válaszok tartalomjegyzékét nem befolyásolják az <b>automatikus tartalomjegyzék-címkék</b> és <b>automatikus tartalomjegyzék-kategóriák</b> beállításai, azokat manuálisan kell beilleszteni.
