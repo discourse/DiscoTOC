@@ -105,7 +105,7 @@ export default class TocContents extends Component {
             }
           : null;
       })
-      .compact();
+      .filter((item) => item !== null);
   }
 
   @debounce(SCROLL_DEBOUNCE)
