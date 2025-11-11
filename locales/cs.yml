@@ -14,5 +14,8 @@ cs:
   theme_metadata:
     settings:
       minimum_trust_level_to_create_TOC: Minimální úroveň důvěry, kterou musí mít uživatel, aby se v editoru zobrazilo tlačítko Obsah
+      composer_toc_text: Text, který se zobrazí v horní části náhledového okna editoru a označuje, že téma bude mít obsah
       auto_TOC_categories: Automaticky povolit obsah pro témata v těchto kategoriích
       auto_TOC_tags: Automaticky povolit TOC u témat s těmito štítky
+      TOC_min_heading: Minimální počet nadpisů v tématu pro zobrazení obsahu
+      enable_TOC_for_replies: Povolí obsah pro odpovědi. Obsah odpovědí není ovlivněn nastavením štítků v nastavení <b>auto toc tags</b> a <b>auto toc categories</b> a musí být vložen ručně.
