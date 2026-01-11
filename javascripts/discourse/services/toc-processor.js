@@ -121,7 +121,9 @@ export default class TocProcessor extends Service {
     }
 
     const topicCategory = topic.category_id;
-    const topicTags = topic.tags || [];
+    const topicTags = (topic.tags || []).map((t) =>
+      typeof t === "string" ? t : t.name
+    );
 
     const hasMatchingTags = autoTags.some((tag) => topicTags.includes(tag));
     const hasMatchingCategory = autoCategories.includes(topicCategory);
