@@ -89,8 +89,10 @@ export default class TocProcessor extends Service {
         "body > h1,body > h2,body > h3,body > h4,body > h5"
       );
 
+      // Find headings inside wrap blocks (both .wrap and .d-wrap classes)
       const wrapHeadings = parsedPost.querySelectorAll(
-        "body > .wrap h1,body > .wrap h2,body > .wrap h3,body > .wrap h4,body > .wrap h5"
+        "body > .wrap h1,body > .wrap h2,body > .wrap h3,body > .wrap h4,body > .wrap h5," +
+        "body > .d-wrap h1,body > .d-wrap h2,body > .d-wrap h3,body > .d-wrap h4,body > .d-wrap h5"
       );
 
       // DEBUG: Log what we found
