@@ -79,23 +79,17 @@ export default class TocProcessor extends Service {
 
       // Find headings that are either:
       // 1. Direct descendants of body (to avoid picking up headings in quotes)
-      // 2. Inside wrap blocks (which are used for email filtering)
-      // This allows headings inside [wrap=no-email] to be included in TOC
-      const directHeadings = parsedPost.querySelectorAll(
-        "body > h1,body > h2,body > h3,body > h4,body > h5"
-      );
+      // 2. Inside wrap blocks (which are used for email filtering with [wrap=no-email])
+      const selector = [
+        "body > h1", "body > h2", "body > h3", "body > h4", "body > h5",
+        "body > .wrap h1", "body > .wrap h2", "body > .wrap h3", "body > .wrap h4", "body > .wrap h5",
+        "body > .d-wrap h1", "body > .d-wrap h2", "body > .d-wrap h3", "body > .d-wrap h4", "body > .d-wrap h5"
+      ].join(",");
 
-      // Find headings inside wrap blocks (both .wrap and .d-wrap classes)
-      const wrapHeadings = parsedPost.querySelectorAll(
-        "body > .wrap h1,body > .wrap h2,body > .wrap h3,body > .wrap h4,body > .wrap h5," +
-        "body > .d-wrap h1,body > .d-wrap h2,body > .d-wrap h3,body > .d-wrap h4,body > .d-wrap h5"
-      );
+      const allHeadings = parsedPost.querySelectorAll(selector);
 
-      // Combine both sets of headings
-      const allHeadings = [...directHeadings, ...wrapHeadings];
-
-      // Sort by document order
-      const headings = allHeadings.sort((a, b) => {
+      // Convert NodeList to Array and sort by document order
+      const headings = Array.from(allHeadings).sort((a, b) => {
         return a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1;
       });
 
