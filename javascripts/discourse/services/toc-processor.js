@@ -77,6 +77,10 @@ export default class TocProcessor extends Service {
     if (this.containsHeadings(content)) {
       const parsedPost = new DOMParser().parseFromString(content, "text/html");
 
+      // DEBUG: Log the HTML structure
+      console.log("[DiscoTOC DEBUG] Post HTML:", content.substring(0, 500));
+      console.log("[DiscoTOC DEBUG] Parsed body children:", parsedPost.body.children);
+
       // Find headings that are either:
       // 1. Direct descendants of body (to avoid picking up headings in quotes)
       // 2. Inside wrap blocks (which are used for email filtering)
@@ -89,6 +93,19 @@ export default class TocProcessor extends Service {
         "body > .wrap h1,body > .wrap h2,body > .wrap h3,body > .wrap h4,body > .wrap h5"
       );
 
+      // DEBUG: Log what we found
+      console.log("[DiscoTOC DEBUG] Direct headings found:", directHeadings.length, Array.from(directHeadings).map(h => h.textContent.substring(0, 30)));
+      console.log("[DiscoTOC DEBUG] Wrap headings found:", wrapHeadings.length, Array.from(wrapHeadings).map(h => h.textContent.substring(0, 30)));
+
+      // Try alternate selectors for wrap blocks
+      const allWrapBlocks = parsedPost.querySelectorAll(".wrap, [data-wrap], .no-email");
+      console.log("[DiscoTOC DEBUG] Total wrap blocks found:", allWrapBlocks.length);
+      allWrapBlocks.forEach((wrap, i) => {
+        console.log(`[DiscoTOC DEBUG] Wrap block ${i}:`, wrap.className, wrap.getAttribute('data-wrap'));
+        const headingsInWrap = wrap.querySelectorAll("h1,h2,h3,h4,h5");
+        console.log(`[DiscoTOC DEBUG] Headings in wrap ${i}:`, headingsInWrap.length, Array.from(headingsInWrap).map(h => h.textContent.substring(0, 30)));
+      });
+
       // Combine both sets of headings
       const allHeadings = [...directHeadings, ...wrapHeadings];
 
@@ -97,13 +114,19 @@ export default class TocProcessor extends Service {
         return a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1;
       });
 
+      console.log("[DiscoTOC DEBUG] Total headings after combining:", headings.length);
+      console.log("[DiscoTOC DEBUG] TOC minimum headings required:", settings.TOC_min_heading);
+
       if (headings.length < settings.TOC_min_heading) {
+        console.log("[DiscoTOC DEBUG] Not enough headings! Needed:", settings.TOC_min_heading, "Found:", headings.length);
         this.setOverlayVisible(false);
         return;
       }
 
+      console.log("[DiscoTOC DEBUG] Populating TOC with headings:", headings.length);
       this.populateTocData(postId, content, headings);
     } else {
+      console.log("[DiscoTOC DEBUG] No headings detected in content");
       this.setOverlayVisible(false);
     }
   }
