@@ -77,10 +77,25 @@ export default class TocProcessor extends Service {
     if (this.containsHeadings(content)) {
       const parsedPost = new DOMParser().parseFromString(content, "text/html");
 
-      // direct descendants to avoid picking up headings in quotes
-      const headings = parsedPost.querySelectorAll(
+      // Find headings that are either:
+      // 1. Direct descendants of body (to avoid picking up headings in quotes)
+      // 2. Inside wrap blocks (which are used for email filtering)
+      // This allows headings inside [wrap=no-email] to be included in TOC
+      const directHeadings = parsedPost.querySelectorAll(
         "body > h1,body > h2,body > h3,body > h4,body > h5"
       );
+
+      const wrapHeadings = parsedPost.querySelectorAll(
+        "body > .wrap h1,body > .wrap h2,body > .wrap h3,body > .wrap h4,body > .wrap h5"
+      );
+
+      // Combine both sets of headings
+      const allHeadings = [...directHeadings, ...wrapHeadings];
+
+      // Sort by document order
+      const headings = allHeadings.sort((a, b) => {
+        return a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1;
+      });
 
       if (headings.length < settings.TOC_min_heading) {
         this.setOverlayVisible(false);
