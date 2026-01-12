@@ -80,11 +80,7 @@ export default class TocProcessor extends Service {
       // Find headings that are either:
       // 1. Direct descendants of body (to avoid picking up headings in quotes)
       // 2. Inside wrap blocks (which are used for email filtering with [wrap=no-email])
-      const selector = [
-        "body > h1", "body > h2", "body > h3", "body > h4", "body > h5",
-        "body > .wrap h1", "body > .wrap h2", "body > .wrap h3", "body > .wrap h4", "body > .wrap h5",
-        "body > .d-wrap h1", "body > .d-wrap h2", "body > .d-wrap h3", "body > .d-wrap h4", "body > .d-wrap h5"
-      ].join(",");
+      const selector = "body > :is(h1, h2, h3, h4, h5), body > :is(.wrap, .d-wrap) :is(h1, h2, h3, h4, h5)";
 
       const allHeadings = parsedPost.querySelectorAll(selector);
 
