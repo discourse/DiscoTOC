@@ -80,13 +80,17 @@ export default class TocProcessor extends Service {
       // Find headings that are either:
       // 1. Direct descendants of body (to avoid picking up headings in quotes)
       // 2. Inside wrap blocks (which are used for email filtering with [wrap=no-email])
-      const selector = "body > :is(h1, h2, h3, h4, h5), body > :is(.wrap, .d-wrap) :is(h1, h2, h3, h4, h5)";
+      const selector =
+        "body > :is(h1, h2, h3, h4, h5), body > :is(.wrap, .d-wrap) :is(h1, h2, h3, h4, h5)";
 
       const allHeadings = parsedPost.querySelectorAll(selector);
 
       // Convert NodeList to Array and sort by document order
       const headings = Array.from(allHeadings).sort((a, b) => {
-        return a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1;
+        // eslint-disable-next-line no-bitwise
+        return a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING
+          ? -1
+          : 1;
       });
 
       if (headings.length < settings.TOC_min_heading) {
