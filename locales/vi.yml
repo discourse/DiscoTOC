@@ -5,3 +5,17 @@
 # https://translate.discourse.org/
 
 vi:
+  table_of_contents: Mục lục
+  insert_table_of_contents: Chèn mục lục
+  jump_bottom: Chuyển đến cuối
+  toggle_toc:
+    show_timeline: Dòng thời gian
+    show_toc: Các đề mục
+  theme_metadata:
+    settings:
+      minimum_trust_level_to_create_TOC: Độ tin cậy tối thiểu mà thành viên phải có để thấy nút Mục lục trong trình soạn thảo
+      composer_toc_text: Văn bản hiển thị ở đầu khung xem trước của trình soạn thảo để chỉ ra chủ đề sẽ có mục lục
+      auto_TOC_categories: Tự động bật mục lục cho các chủ đề trong các chuyên mục này
+      auto_TOC_tags: Tự động bật mục lục cho các chủ đề có chứa các thẻ này
+      TOC_min_heading: Số lượng tiêu đề tối thiểu trong một chủ đề để mục lục được hiển thị
+      enable_TOC_for_replies: Cho phép tạo mục lục (TOC) cho các phản hồi. Mục lục cho các phản hồi không bị ảnh hưởng bởi các <b>chuyên mục TOC tự động</b> và cài đặt <b>chuyên mục TOC tự động</b>, và phải được chèn thủ công.
