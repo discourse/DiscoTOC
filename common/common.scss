@@ -12,7 +12,7 @@ $padding-basis: 0.75em;
 .d-toc-main {
   min-width: 6em;
   max-width: 13em;
-  word-wrap: break-word;
+  overflow-wrap: break-word;
   box-sizing: border-box;
 
   .overlay & {
