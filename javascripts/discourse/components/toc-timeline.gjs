@@ -27,7 +27,8 @@ export default class TocTimeline extends Component {
         return true;
       }
 
-      return true;
+      // timeline state controlled by localStorage
+      return this.tocProcessor.isTocVisible;
     } else {
       // progress state controlled by overlay state
       return this.tocProcessor.isOverlayVisible;
