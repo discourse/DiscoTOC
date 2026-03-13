@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
@@ -10,9 +9,6 @@ import TocToggle from "../components/toc-toggle";
 
 export default class TocTimeline extends Component {
   @service tocProcessor;
-
-  @tracked
-  isTocVisible = localStorage.getItem("tocVisibility") === "true" || true;
 
   get shouldRenderToc() {
     if (!this.tocProcessor.hasTOC) {
