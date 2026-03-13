@@ -170,10 +170,9 @@ html.rtl SELECTOR {
 @include viewport.until(lg) {
   .topic-navigation {
     &:has(.d-toc-mini) {
-        position: sticky;
-        bottom: calc(env(safe-area-inset-bottom) + var(--composer-height, 0px));
-        z-index: z("timeline");
-
+      position: sticky;
+      bottom: calc(env(safe-area-inset-bottom) + var(--composer-height, 0px));
+      z-index: z("timeline");
 
       .d-toc-wrapper {
         position: fixed;
