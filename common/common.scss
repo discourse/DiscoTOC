@@ -158,20 +158,22 @@ html.rtl SELECTOR {
 .d-toc-mini {
   align-self: stretch;
 
-  button {
+  &__button {
+    border-radius: 0;
+    background: var(--secondary);
+    border: 1px solid var(--primary-low);
     height: 100%;
   }
 }
 
 // overlaid timeline (on mobile and narrow screens)
-@include viewport.until(md) {
+@include viewport.until(lg) {
   .topic-navigation {
     &:has(.d-toc-mini) {
-      @include viewport.until(md) {
         position: sticky;
         bottom: calc(env(safe-area-inset-bottom) + var(--composer-height, 0px));
         z-index: z("timeline");
-      }
+
 
       .d-toc-wrapper {
         position: fixed;
