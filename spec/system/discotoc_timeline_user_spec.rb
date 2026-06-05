@@ -179,6 +179,9 @@ RSpec.describe "DiscoTOC", system: true do
 
       visit("/t/-/#{topic_1.id}/2")
 
+      expect(page).to have_css("#post_2")
+      page.execute_script("document.querySelector('#post_2').scrollIntoView()")
+
       expect(page).to have_no_css(".d-toc-item.d-toc-h1")
     end
   end
