@@ -133,6 +133,9 @@ RSpec.describe "DiscoTOC", system: true, mobile: true do
 
       visit("/t/-/#{topic_1.id}/2")
 
+      expect(page).to have_css("#post_2")
+      page.execute_script("document.querySelector('#post_2').scrollIntoView()")
+
       expect(page).to have_no_css(".d-toc-mini")
     end
   end
